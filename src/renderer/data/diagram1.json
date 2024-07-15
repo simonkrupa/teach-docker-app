@@ -1,0 +1,14 @@
+{
+  "id": "1",
+  "position":
+    {
+      "x": 150,
+      "y": 100
+    },
+  "type": "containerNode",
+  "data": {
+    "label": "/my-nginx",
+    "ip": "undefined",
+    "state": "running"
+  }
+}

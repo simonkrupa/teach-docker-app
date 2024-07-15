@@ -1,0 +1,101 @@
+.text-updater-node {
+  height: 130px;
+  border: 1px solid black;
+  width: 100px;
+  border-radius: 5px;
+  background: white;
+  position: relative;
+}
+
+.container-category {
+  background: grey;
+  padding: 3px 0;
+  margin: 0;
+  border-radius: 4px 0 10px 0;
+  width: 50%;
+  font-size: 50%;
+  text-align: center;
+}
+
+.container-state {
+  font-size: 50%;
+  padding: 3px 0;
+  margin-left: 5px;
+  display: inline-block;
+}
+
+.state-indicator-running {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 50%;
+  margin-left: 3.5px;
+  background: green;
+  animation: flash 1s infinite alternate;
+}
+
+.state-indicator-paused {
+  width: 8px;
+  height: 8px;
+  margin-left: 3.5px;
+  display: inline-block;
+  border-radius: 50%;
+  background: yellow;
+}
+
+.state-indicator-exited {
+  width: 8px;
+  margin-left: 3.5px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 50%;
+  background: red;
+}
+
+@keyframes flash {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.ip-address {
+  font-size: 50%;
+  text-align: center;
+  background: #387adf;
+  position: absolute;
+  padding: 3px 5px;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.mac {
+  font-size: 50%;
+  margin-left: 5px;
+}
+
+.gateway {
+  font-size: 50%;
+  margin-left: 5px;
+}
+
+.text-updater-node label {
+  display: block;
+  color: #777;
+  font-size: 12px;
+}
+
+.veth-container {
+  padding: 2px 20px;
+  background: #387adf;
+  font-size: 60%;
+}
+
+.network-type-container {
+  padding: 2px 20px;
+  background: #27559c;
+  font-size: 80%;
+}
