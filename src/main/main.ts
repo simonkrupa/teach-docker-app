@@ -15,6 +15,8 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
+const DockerEventListener = require('./listeners/dockerEventListener');
+
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -102,14 +104,6 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  ipcMain.on('app-exit', () => {
-    app.quit();
-  });
-
-  ipcMain.on('app-minimize', () => {
-    mainWindow?.minimize();
-  });
-
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
@@ -140,6 +134,9 @@ app
   .whenReady()
   .then(() => {
     createWindow();
+    console.log('Preparing to listen for Docker events...');
+    const del = new DockerEventListener();
+    del.listenToEvents();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
@@ -147,3 +144,11 @@ app
     });
   })
   .catch(console.log);
+
+ipcMain.on('app-exit', () => {
+  app.quit();
+});
+
+ipcMain.on('app-minimize', () => {
+  mainWindow?.minimize();
+});
