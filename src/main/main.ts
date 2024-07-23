@@ -116,6 +116,10 @@ const createWindow = async () => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
+
+  console.log('Preparing to listen for Docker events...');
+  const dockerEventListener = new DockerEventListener(mainWindow);
+  dockerEventListener.listenToEvents();
 };
 
 /**
@@ -134,13 +138,11 @@ app
   .whenReady()
   .then(() => {
     createWindow();
-    console.log('Preparing to listen for Docker events...');
-    const del = new DockerEventListener();
-    del.listenToEvents();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (mainWindow === null) createWindow();
+      console.log('App is ready');
     });
   })
   .catch(console.log);

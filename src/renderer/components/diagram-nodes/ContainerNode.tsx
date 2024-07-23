@@ -29,7 +29,7 @@ export function ExitedState() {
   );
 }
 
-export default function ContainerNode(props: NodeProps) {
+export default function ContainerNode(props) {
   const [containerNodeComponent, setContainerNodeComponent] = useState(false);
 
   let componentToRender;
@@ -43,15 +43,15 @@ export default function ContainerNode(props: NodeProps) {
     componentToRender = <div />;
   }
 
-  const { data } = props;
-
   useEffect(() => {
+    console.log('rendering', props);
     if (props?.data.state === undefined) {
+      console.log('ContainerNode component not rendered');
       setContainerNodeComponent(false);
     } else {
+      console.log('ContainerNode component rendered');
       setContainerNodeComponent(true);
     }
-    console.log('ContainerNode component rendered');
   }, [props]);
 
   return (
@@ -59,10 +59,10 @@ export default function ContainerNode(props: NodeProps) {
       {containerNodeComponent ? (
         <div className="text-updater-node">
           <div style={{ display: 'flex' }}>
-            <div className="container-category">{data.label}</div>
+            <div className="container-category">{props.data.label}</div>
             {componentToRender}
           </div>
-          <div className="ip-address">eth0: {data.ip}</div>
+          <div className="ip-address">eth0: {props.data.ip}</div>
           <Handle type="source" position={Position.Bottom} />
           <Handle type="target" position={Position.Bottom} />
         </div>

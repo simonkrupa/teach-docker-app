@@ -1,3 +1,5 @@
+import { ipcMain, BrowserWindow } from 'electron';
+
 const Docker = require('dockerode');
 const { mapContainerData } = require('../mappers/mappers');
 
@@ -6,9 +8,12 @@ class DockerEventListener {
 
   lastData: any;
 
-  constructor() {
+  mainWindow: BrowserWindow;
+
+  constructor(mainWindow: BrowserWindow) {
     this.docker = new Docker();
     this.lastData = {};
+    this.mainWindow = mainWindow;
   }
 
   getContainerData(containerId: string) {
@@ -22,6 +27,10 @@ class DockerEventListener {
         console.log('No changes');
       } else {
         console.log('Changes detected: ', result);
+        this.mainWindow.webContents.send(
+          'container-data',
+          JSON.stringify(result),
+        );
       }
       this.lastData = result;
     });

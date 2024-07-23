@@ -1,42 +1,74 @@
-import { useEffect } from 'react';
-// import ReactFlow, { MiniMap, Controls } from 'react-flow-renderer';
-import ReactFlow from 'reactflow';
+import { useCallback, useEffect } from 'react';
+import { ReactFlow, useNodesState, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
 import ContainerNode from '../components/diagram-nodes/ContainerNode';
 
-export default function FirstDiagram() {
-  const nodeTypes = {
-    containerNode: ContainerNode,
-    // veth: Veth,
-    // networkType: NetworkType,
-  };
+const nodeTypes = {
+  containerNode: ContainerNode,
+  // veth: Veth,
+  // networkType: NetworkType,
+};
 
-  const initialNodes = [
-    {
-      id: '1',
-      position: { x: 150, y: 300 },
-      type: 'containerNode',
-      data: {
-        label: 'web',
-        ip: '172.22.168.91',
-        state: 'running',
-      },
+const initialNodes = [
+  {
+    id: '1',
+    position: { x: 150, y: 300 },
+    type: 'containerNode',
+    data: {
+      label: '/my-nginx',
+      ip: '172.22.168.91',
+      state: 'running',
     },
-  ];
+  },
+];
+
+export default function FirstDiagram() {
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+
+  const onEdit = useCallback(
+    (newData) => {
+      const res = nodes.map((item) => {
+        if (item.data.label === newData.label) {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              ip: newData.ip,
+              label: newData.label,
+              state: newData.status,
+            },
+          };
+        }
+        return item;
+      });
+      setNodes(res);
+    },
+    [nodes, setNodes],
+  );
+
+  const handleIncomingData = useCallback(
+    (data) => {
+      const jsonData = JSON.parse(data);
+      onEdit(jsonData);
+    },
+    [onEdit],
+  );
 
   useEffect(() => {
-    console.log('FirstDiagram component rendered');
-  }, []);
-
+    window.electron.ipcRenderer.on('container-data', handleIncomingData);
+  }, [handleIncomingData]);
   return (
     <div className="diagram-page">
       <ReactFlow
-        defaultNodes={initialNodes}
+        nodes={nodes}
         nodeTypes={nodeTypes}
+        onNodesChange={onNodesChange}
         // defaultEdges={initialEdges}
         fitView
-      />
+      >
+        <Controls showInteractive={false} />
+      </ReactFlow>
     </div>
   );
 }
