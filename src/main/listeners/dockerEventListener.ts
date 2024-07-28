@@ -39,7 +39,73 @@ class DockerEventListener {
     });
   }
 
-  listenToEvents(): void {
+  sendCurrentContainers(containerIds: string[]) {
+    containerIds.forEach((id) => {
+      this.docker.getContainer(id).inspect((err, container) => {
+        if (err) {
+          return console.error('Error:', err);
+        }
+        const containerData = mapContainerData(container);
+        this.mainWindow.webContents.send(
+          'container-data',
+          JSON.stringify(containerData),
+        );
+      });
+    });
+  }
+
+  // async sendCurrentContainers(containerIds: string[]) {
+  //   const result = [];
+
+  //   // Promisify the inspect function
+  //   const inspectContainer = (id) => {
+  //     return new Promise((resolve, reject) => {
+  //       this.docker.getContainer(id).inspect((err, container) => {
+  //         if (err) {
+  //           return reject('Error:', err);
+  //         }
+  //         const containerData = mapContainerData(container);
+  //         resolve(containerData);
+  //       });
+  //     });
+  //   };
+
+  //   // Use Promise.all to wait for all containers to be inspected
+  //   try {
+  //     const promises = containerIds.map((id) => inspectContainer(id));
+  //     const containerDataList = await Promise.all(promises);
+
+  //     result.push(...containerDataList);
+
+  //     console.log('Sending current containers:', result);
+  //     this.mainWindow.webContents.send(
+  //       'container-data',
+  //       JSON.stringify(result),
+  //     );
+  //   } catch (error) {
+  //     console.error('Failed to inspect some containers:', error);
+  //   }
+  // }
+
+  getCurrentStateOfContainers(containersToListen: string[]) {
+    console.log('Getting containers');
+    const containerIds: string[] = [];
+    this.docker.listContainers((err, containers) => {
+      console.log('Containers:', containers);
+      if (err) {
+        return console.error('Error:', err);
+      }
+      containers.forEach((containerInfo) => {
+        if (containersToListen.includes(containerInfo.Names[0].substring(1))) {
+          containerIds.push(containerInfo.Id);
+        }
+      });
+      console.log('Container IDs:', containerIds);
+      this.sendCurrentContainers(containerIds);
+    });
+  }
+
+  listenToEvents(containersToListen: string[]): void {
     this.docker.getEvents((err, stream) => {
       if (err) {
         return console.error('Error:', err);
@@ -48,10 +114,13 @@ class DockerEventListener {
       this.eventStream = stream;
 
       stream.on('data', (chunk) => {
+        console.log(containersToListen);
         const event = JSON.parse(chunk.toString('utf8'));
+        console.log(event.Actor.Attributes.name);
+
         if (
           event.Type === 'container' &&
-          event.Actor.Attributes.name === 'my-nginx'
+          containersToListen.includes(event.Actor.Attributes.name)
         ) {
           this.getContainerData(event.Actor.ID);
         }

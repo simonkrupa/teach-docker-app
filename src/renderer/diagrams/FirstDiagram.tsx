@@ -3,7 +3,6 @@ import { ReactFlow, useNodesState, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
 import ContainerNode from '../components/diagram-nodes/ContainerNode';
-import { Button } from 'antd';
 
 const nodeTypes = {
   containerNode: ContainerNode,
@@ -22,6 +21,19 @@ const initialNodes = [
       state: undefined,
     },
   },
+  {
+    id: '2',
+    position: {
+      x: 250,
+      y: 100,
+    },
+    type: 'containerNode',
+    data: {
+      label: '/my-nginx2',
+      ip: 'undefined',
+      state: undefined,
+    },
+  },
 ];
 
 export default function FirstDiagram() {
@@ -31,6 +43,7 @@ export default function FirstDiagram() {
     (newData) => {
       const res = nodes.map((item) => {
         if (item.data.label === newData.label) {
+          console.log('Found node:', item);
           return {
             ...item,
             data: {
@@ -60,9 +73,23 @@ export default function FirstDiagram() {
     window.electron.ipcRenderer.sendMessage('stop-listening');
   };
 
+  const handleStartListening = () => {
+    window.electron.ipcRenderer.sendMessage('start-listening-1');
+  };
+
+  // useEffect(() => {
+  // console.log('Inc event');
+  window.electron.ipcRenderer.on('container-data', handleIncomingData);
+  // }, [handleIncomingData]);
+
   useEffect(() => {
-    window.electron.ipcRenderer.on('container-data', handleIncomingData);
-  }, [handleIncomingData]);
+    console.log('FirstDiagram mounted');
+    handleStartListening();
+    return () => {
+      console.log('Component unmounted');
+      handleStopListening();
+    };
+  }, []);
 
   return (
     <div className="diagram-page">
@@ -75,7 +102,6 @@ export default function FirstDiagram() {
       >
         <Controls showInteractive={false} />
       </ReactFlow>
-      <Button onClick={handleStopListening}>Stop</Button>
     </div>
   );
 }

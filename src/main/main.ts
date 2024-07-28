@@ -16,6 +16,9 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import DockerEventListener from './listeners/dockerEventListener';
 
+// templates for each diagram page
+const diagram1 = require('./data/diagram1.json');
+
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -30,7 +33,6 @@ let dockerEventListener: DockerEventListener | null = null;
 function getDockerEventListener(mainWindow: BrowserWindow) {
   if (!dockerEventListener) {
     dockerEventListener = new DockerEventListener(mainWindow);
-    dockerEventListener.listenToEvents();
   }
   return dockerEventListener;
 }
@@ -129,6 +131,16 @@ const createWindow = async () => {
 
   ipcMain.on('stop-listening', () => {
     dockerEventListener?.stopListeningToEvents();
+  });
+
+  ipcMain.on('start-listening-1', () => {
+    const containersToListen: string[] = [];
+    diagram1.containers.forEach((container) => {
+      containersToListen.push(container.data.label);
+    });
+    console.log('Containers to listen to:', containersToListen);
+    dockerEventListener?.listenToEvents(containersToListen);
+    dockerEventListener?.getCurrentStateOfContainers(containersToListen);
   });
 };
 

@@ -7,7 +7,8 @@ export type Channels =
   | 'app-exit'
   | 'app-minimize'
   | 'container-data'
-  | 'stop-listening';
+  | 'stop-listening'
+  | 'start-listening-1';
 
 const electronHandler = {
   ipcRenderer: {
