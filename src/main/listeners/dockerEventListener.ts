@@ -1,4 +1,4 @@
-import { ipcMain, BrowserWindow } from 'electron';
+import { BrowserWindow } from 'electron';
 
 const Docker = require('dockerode');
 const { mapContainerData } = require('../mappers/mappers');
@@ -10,10 +10,13 @@ class DockerEventListener {
 
   mainWindow: BrowserWindow;
 
+  eventStream: NodeJS.ReadableStream | null;
+
   constructor(mainWindow: BrowserWindow) {
     this.docker = new Docker();
     this.lastData = {};
     this.mainWindow = mainWindow;
+    this.eventStream = null;
   }
 
   getContainerData(containerId: string) {
@@ -42,6 +45,8 @@ class DockerEventListener {
         return console.error('Error:', err);
       }
 
+      this.eventStream = stream;
+
       stream.on('data', (chunk) => {
         const event = JSON.parse(chunk.toString('utf8'));
         if (
@@ -58,10 +63,18 @@ class DockerEventListener {
 
       stream.on('end', () => {
         console.log('Stream ended');
+        this.eventStream = null;
       });
       return 0;
     });
   }
+
+  stopListeningToEvents(): void {
+    if (this.eventStream) {
+      this.eventStream.destroy(); // Destroy the stream to end listening
+      this.eventStream = null;
+    }
+  }
 }
 
-module.exports = DockerEventListener;
+export default DockerEventListener;

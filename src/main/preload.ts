@@ -6,7 +6,8 @@ export type Channels =
   | 'ipc-example'
   | 'app-exit'
   | 'app-minimize'
-  | 'container-data';
+  | 'container-data'
+  | 'stop-listening';
 
 const electronHandler = {
   ipcRenderer: {

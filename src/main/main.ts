@@ -14,8 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-
-const DockerEventListener = require('./listeners/dockerEventListener');
+import DockerEventListener from './listeners/dockerEventListener';
 
 class AppUpdater {
   constructor() {
@@ -26,6 +25,15 @@ class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+let dockerEventListener: DockerEventListener | null = null;
+
+function getDockerEventListener(mainWindow: BrowserWindow) {
+  if (!dockerEventListener) {
+    dockerEventListener = new DockerEventListener(mainWindow);
+    dockerEventListener.listenToEvents();
+  }
+  return dockerEventListener;
+}
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
@@ -116,10 +124,12 @@ const createWindow = async () => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
+  // Start listening to events
+  getDockerEventListener(mainWindow);
 
-  console.log('Preparing to listen for Docker events...');
-  const dockerEventListener = new DockerEventListener(mainWindow);
-  dockerEventListener.listenToEvents();
+  ipcMain.on('stop-listening', () => {
+    dockerEventListener?.stopListeningToEvents();
+  });
 };
 
 /**

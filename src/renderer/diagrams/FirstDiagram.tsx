@@ -3,6 +3,7 @@ import { ReactFlow, useNodesState, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
 import ContainerNode from '../components/diagram-nodes/ContainerNode';
+import { Button } from 'antd';
 
 const nodeTypes = {
   containerNode: ContainerNode,
@@ -18,7 +19,7 @@ const initialNodes = [
     data: {
       label: '/my-nginx',
       ip: '172.22.168.91',
-      state: 'running',
+      state: undefined,
     },
   },
 ];
@@ -55,9 +56,14 @@ export default function FirstDiagram() {
     [onEdit],
   );
 
+  const handleStopListening = () => {
+    window.electron.ipcRenderer.sendMessage('stop-listening');
+  };
+
   useEffect(() => {
     window.electron.ipcRenderer.on('container-data', handleIncomingData);
   }, [handleIncomingData]);
+
   return (
     <div className="diagram-page">
       <ReactFlow
@@ -69,6 +75,7 @@ export default function FirstDiagram() {
       >
         <Controls showInteractive={false} />
       </ReactFlow>
+      <Button onClick={handleStopListening}>Stop</Button>
     </div>
   );
 }

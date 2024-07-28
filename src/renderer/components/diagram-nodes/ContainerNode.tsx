@@ -1,6 +1,6 @@
 import { Handle, Position, NodeProps } from 'reactflow';
 import './ContainerNode.css';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 export function RunningState() {
   return (
@@ -29,7 +29,7 @@ export function ExitedState() {
   );
 }
 
-export default function ContainerNode(props) {
+const ContainerNode = memo(function ContainerNode(props) {
   const [containerNodeComponent, setContainerNodeComponent] = useState(false);
 
   let componentToRender;
@@ -71,4 +71,6 @@ export default function ContainerNode(props) {
       )}
     </div>
   );
-}
+});
+
+export default ContainerNode;
