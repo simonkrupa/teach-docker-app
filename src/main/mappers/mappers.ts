@@ -1,10 +1,14 @@
-function mapContainerData(containerData: any) {
-  // console.log('Mapping container data:', containerData);
-  // console.log('Container data:', containerData.NetworkSettings.IPAddress);
+function mapContainerData(containerData: any, value: string) {
+  let ipData;
+  if (containerData.NetworkSettings.Networks[value]) {
+    ipData = containerData.NetworkSettings.Networks[value].IPAddress;
+  } else {
+    ipData = containerData.NetworkSettings.IPAddress;
+  }
   return {
     label: containerData.Name,
     status: containerData.State.Status,
-    ip: containerData.NetworkSettings.IPAddress,
+    ip: ipData,
   };
 }
 

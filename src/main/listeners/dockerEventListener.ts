@@ -19,13 +19,13 @@ class DockerEventListener {
     this.eventStream = null;
   }
 
-  getContainerData(containerId: string) {
+  getContainerData(containerId: string, network: string) {
     this.docker.getContainer(containerId).inspect((err, container) => {
       if (err) {
         return console.error('Error:', err);
       }
 
-      const result = mapContainerData(container);
+      const result = mapContainerData(container, network);
       if (JSON.stringify(result) === JSON.stringify(this.lastData)) {
         console.log('No changes');
       } else {
@@ -39,13 +39,13 @@ class DockerEventListener {
     });
   }
 
-  sendCurrentContainers(containerIds: string[]) {
-    containerIds.forEach((id) => {
-      this.docker.getContainer(id).inspect((err, container) => {
+  sendCurrentContainers(containersMap) {
+    containersMap.forEach((value, key) => {
+      this.docker.getContainer(key).inspect((err, container) => {
         if (err) {
           return console.error('Error:', err);
         }
-        const containerData = mapContainerData(container);
+        const containerData = mapContainerData(container, value);
         console.log('Sending current containers:', containerData);
         this.mainWindow.webContents.send(
           'container-data',
@@ -55,51 +55,22 @@ class DockerEventListener {
     });
   }
 
-  // async sendCurrentContainers(containerIds: string[]) {
-  //   const result = [];
-
-  //   // Promisify the inspect function
-  //   const inspectContainer = (id) => {
-  //     return new Promise((resolve, reject) => {
-  //       this.docker.getContainer(id).inspect((err, container) => {
-  //         if (err) {
-  //           return reject('Error:', err);
-  //         }
-  //         const containerData = mapContainerData(container);
-  //         resolve(containerData);
-  //       });
-  //     });
-  //   };
-
-  //   // Use Promise.all to wait for all containers to be inspected
-  //   try {
-  //     const promises = containerIds.map((id) => inspectContainer(id));
-  //     const containerDataList = await Promise.all(promises);
-
-  //     result.push(...containerDataList);
-
-  //     console.log('Sending current containers:', result);
-  //     this.mainWindow.webContents.send(
-  //       'container-data',
-  //       JSON.stringify(result),
-  //     );
-  //   } catch (error) {
-  //     console.error('Failed to inspect some containers:', error);
-  //   }
-  // }
-
   getCurrentStateOfContainers(containersToListen) {
-    const containerIds: string[] = [];
+    const containersMap = new Map<string, string>();
     this.docker.listContainers((err, containers) => {
       if (err) {
         return console.error('Error:', err);
       }
       containers.forEach((containerInfo) => {
         if (containersToListen.has(containerInfo.Names[0].substring(1))) {
-          containerIds.push(containerInfo.Id);
+          containersMap.set(
+            containerInfo.Id,
+            containersToListen.get(containerInfo.Names[0].substring(1)),
+          );
+          // containerIds.push(containerInfo.Id);
         }
       });
-      this.sendCurrentContainers(containerIds);
+      this.sendCurrentContainers(containersMap);
     });
   }
 
@@ -117,7 +88,10 @@ class DockerEventListener {
           event.Type === 'container' &&
           containersToListen.has(event.Actor.Attributes.name)
         ) {
-          this.getContainerData(event.Actor.ID);
+          this.getContainerData(
+            event.Actor.ID,
+            containersToListen.get(event.Actor.Attributes.name),
+          );
         }
       });
 

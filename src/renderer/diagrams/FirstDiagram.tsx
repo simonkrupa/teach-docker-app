@@ -13,7 +13,7 @@ const nodeTypes = {
 const initialNodes = [
   {
     id: '1',
-    position: { x: 150, y: 300 },
+    position: { x: 140, y: 100 },
     type: 'containerNode',
     data: {
       label: '/my-nginx',
@@ -24,7 +24,7 @@ const initialNodes = [
   {
     id: '2',
     position: {
-      x: 250,
+      x: 260,
       y: 100,
     },
     type: 'containerNode',

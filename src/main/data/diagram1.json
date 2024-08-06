@@ -5,7 +5,7 @@
       "id": "1",
       "position":
         {
-          "x": 150,
+          "x": 140,
           "y": 100
         },
       "type": "containerNode",
@@ -21,7 +21,7 @@
       "id": "2",
       "position":
         {
-          "x": 250,
+          "x": 260,
           "y": 100
         },
       "type": "containerNode",
