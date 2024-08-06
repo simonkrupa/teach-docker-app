@@ -46,6 +46,7 @@ class DockerEventListener {
           return console.error('Error:', err);
         }
         const containerData = mapContainerData(container);
+        console.log('Sending current containers:', containerData);
         this.mainWindow.webContents.send(
           'container-data',
           JSON.stringify(containerData),
@@ -87,25 +88,22 @@ class DockerEventListener {
   //   }
   // }
 
-  getCurrentStateOfContainers(containersToListen: string[]) {
-    console.log('Getting containers');
+  getCurrentStateOfContainers(containersToListen) {
     const containerIds: string[] = [];
     this.docker.listContainers((err, containers) => {
-      console.log('Containers:', containers);
       if (err) {
         return console.error('Error:', err);
       }
       containers.forEach((containerInfo) => {
-        if (containersToListen.includes(containerInfo.Names[0].substring(1))) {
+        if (containersToListen.has(containerInfo.Names[0].substring(1))) {
           containerIds.push(containerInfo.Id);
         }
       });
-      console.log('Container IDs:', containerIds);
       this.sendCurrentContainers(containerIds);
     });
   }
 
-  listenToEvents(containersToListen: string[]): void {
+  listenToEvents(containersToListen): void {
     this.docker.getEvents((err, stream) => {
       if (err) {
         return console.error('Error:', err);
@@ -114,13 +112,10 @@ class DockerEventListener {
       this.eventStream = stream;
 
       stream.on('data', (chunk) => {
-        console.log(containersToListen);
         const event = JSON.parse(chunk.toString('utf8'));
-        console.log(event.Actor.Attributes.name);
-
         if (
           event.Type === 'container' &&
-          containersToListen.includes(event.Actor.Attributes.name)
+          containersToListen.has(event.Actor.Attributes.name)
         ) {
           this.getContainerData(event.Actor.ID);
         }

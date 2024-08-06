@@ -44,12 +44,12 @@ const ContainerNode = memo(function ContainerNode(props) {
   }
 
   useEffect(() => {
-    console.log('rendering', props);
+    // console.log('rendering', props);
     if (props?.data.state === undefined) {
-      console.log('ContainerNode component not rendered');
+      // console.log('ContainerNode component not rendered');
       setContainerNodeComponent(false);
     } else {
-      console.log('ContainerNode component rendered');
+      // console.log('ContainerNode component rendered');
       setContainerNodeComponent(true);
     }
   }, [props]);

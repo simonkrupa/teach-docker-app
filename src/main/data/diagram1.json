@@ -1,6 +1,7 @@
 {
   "containers": [
     {
+      "network": "my-bridge",
       "id": "1",
       "position":
         {
@@ -9,12 +10,14 @@
         },
       "type": "containerNode",
       "data": {
+        "network": "my-bridge",
         "label": "my-nginx",
         "ip": "undefined",
         "state": "running"
       }
     },
     {
+      "network": "my-bridge",
       "id": "2",
       "position":
         {
@@ -23,6 +26,7 @@
         },
       "type": "containerNode",
       "data": {
+        "network": "my-bridge",
         "label": "my-nginx2",
         "ip": "undefined",
         "state": "running"

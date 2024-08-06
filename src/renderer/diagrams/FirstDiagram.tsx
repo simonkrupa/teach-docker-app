@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { ReactFlow, useNodesState, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
@@ -38,12 +38,13 @@ const initialNodes = [
 
 export default function FirstDiagram() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const eventListenerRef = useRef<() => void | null>(null);
 
-  const onEdit = useCallback(
-    (newData) => {
-      const res = nodes.map((item) => {
+  const onEdit = useCallback((newData) => {
+    setNodes((prevNodes) => {
+      const updatedNodes = prevNodes.map((item) => {
         if (item.data.label === newData.label) {
-          console.log('Found node:', item);
+          // console.log('Found node:', item);
           return {
             ...item,
             data: {
@@ -56,13 +57,15 @@ export default function FirstDiagram() {
         }
         return item;
       });
-      setNodes(res);
-    },
-    [nodes, setNodes],
-  );
+      console.log('New nodes:', updatedNodes);
+      return updatedNodes;
+    });
+  }, []);
 
   const handleIncomingData = useCallback(
     (data) => {
+      console.log(Math.random());
+      console.log('Incoming data:', data);
       const jsonData = JSON.parse(data);
       onEdit(jsonData);
     },
@@ -77,19 +80,43 @@ export default function FirstDiagram() {
     window.electron.ipcRenderer.sendMessage('start-listening-1');
   };
 
-  // useEffect(() => {
-  // console.log('Inc event');
-  window.electron.ipcRenderer.on('container-data', handleIncomingData);
-  // }, [handleIncomingData]);
-
+  // start TODO fixlo sa to ale teraz mi ide len vzdy jeden container naraz
   useEffect(() => {
     console.log('FirstDiagram mounted');
     handleStartListening();
+
+    // Add the event listener and store the cleanup function
+    eventListenerRef.current = window.electron.ipcRenderer.on(
+      'container-data',
+      handleIncomingData,
+    );
+
     return () => {
       console.log('Component unmounted');
       handleStopListening();
+
+      // Call the cleanup function if it exists
+      if (eventListenerRef.current) {
+        eventListenerRef.current();
+      }
     };
   }, []);
+  // stop
+
+  // eventListenerRef = window.electron.ipcRenderer.on(
+  //   'container-data',
+  //   handleIncomingData,
+  // );
+
+  // useEffect(() => {
+  //   console.log('FirstDiagram mounted');
+  //   handleStartListening();
+  //   return () => {
+  //     console.log('Component unmounted');
+  //     handleStopListening();
+  //     eventListenerRef();
+  //   };
+  // }, []);
 
   return (
     <div className="diagram-page">
