@@ -55,7 +55,7 @@ const ContainerNode = memo(function ContainerNode(props) {
   }, [props]);
 
   return (
-    <div>
+    <div style={{ zIndex: '2' }}>
       {containerNodeComponent ? (
         <div className="text-updater-node">
           <div style={{ display: 'flex' }}>
@@ -63,6 +63,7 @@ const ContainerNode = memo(function ContainerNode(props) {
             {componentToRender}
           </div>
           <div className="ip-address">eth0: {props.data.ip}</div>
+          <div>{props.data.network}</div>
           <Handle type="source" position={Position.Bottom} />
           <Handle type="target" position={Position.Bottom} />
         </div>

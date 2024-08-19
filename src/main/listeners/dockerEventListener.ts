@@ -19,6 +19,35 @@ class DockerEventListener {
     this.eventStream = null;
   }
 
+  connectionNetworkEvent(event, containersToListen) {
+    // this.docker.getNetwork(network).inspect((err, networkData) => {
+    //   if (err) {
+    //     return console.error('Error:', err);
+    //   }
+    //   console.log('Network data:', networkData);
+    this.docker
+      .getContainer(event.Actor.Attributes.container)
+      .inspect((err, container) => {
+        if (err) {
+          return console.error('Error:', err);
+        }
+        if (
+          containersToListen.get(container.Name.substring(1)) ===
+          event.Actor.Attributes.name
+        ) {
+          const result = mapContainerData(
+            container,
+            event.Actor.Attributes.name,
+          );
+          this.mainWindow.webContents.send(
+            'container-data',
+            JSON.stringify(result),
+          );
+        }
+      });
+    // });
+  }
+
   getContainerData(containerId: string, network: string) {
     this.docker.getContainer(containerId).inspect((err, container) => {
       if (err) {
@@ -27,9 +56,9 @@ class DockerEventListener {
 
       const result = mapContainerData(container, network);
       if (JSON.stringify(result) === JSON.stringify(this.lastData)) {
-        console.log('No changes');
+        // console.log('No changes');
       } else {
-        console.log('Changes detected: ', result);
+        // console.log('Changes detected: ', result);
         this.mainWindow.webContents.send(
           'container-data',
           JSON.stringify(result),
@@ -72,6 +101,16 @@ class DockerEventListener {
       });
       this.sendCurrentContainers(containersMap);
     });
+    // this.getNetworkData(containersToListen.values().next().value);
+  }
+
+  hasValue(map, value) {
+    for (let [key, val] of map) {
+      if (val === value) {
+        return true;
+      }
+    }
+    return false;
   }
 
   listenToEvents(containersToListen): void {
@@ -92,6 +131,12 @@ class DockerEventListener {
             event.Actor.ID,
             containersToListen.get(event.Actor.Attributes.name),
           );
+        } else if (
+          event.Type === 'network' &&
+          this.hasValue(containersToListen, event.Actor.Attributes.name)
+        ) {
+          //TODO: Implement network event handling case connect disconnect
+          this.connectionNetworkEvent(event, containersToListen);
         }
       });
 
