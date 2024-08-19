@@ -26,4 +26,13 @@ function mapContainerData(containerData: any, value: string) {
   };
 }
 
-module.exports = { mapContainerData };
+function mapNetworkData(networkData: any) {
+  return {
+    name: networkData.Name,
+    subnet: networkData.IPAM.Config[0].Subnet,
+    driver: networkData.Driver,
+    gateway: networkData.IPAM.Config[0].Gateway,
+  };
+}
+
+module.exports = { mapContainerData, mapNetworkData };

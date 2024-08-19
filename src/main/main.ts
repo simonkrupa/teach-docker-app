@@ -135,11 +135,16 @@ const createWindow = async () => {
 
   ipcMain.on('start-listening-1', () => {
     const containerToListen = new Map<string, string>();
+    const uniqueNetworks = new Set<string>();
     diagram1.containers.forEach((container) => {
       containerToListen.set(container.data.label, container.network);
+      uniqueNetworks.add(container.network);
     });
     dockerEventListener?.listenToEvents(containerToListen);
-    dockerEventListener?.getCurrentStateOfContainers(containerToListen);
+    dockerEventListener?.getCurrentStateOfContainers(
+      containerToListen,
+      uniqueNetworks,
+    );
   });
 };
 

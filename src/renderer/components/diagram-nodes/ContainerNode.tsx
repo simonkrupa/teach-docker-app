@@ -1,4 +1,4 @@
-import { Handle, Position, NodeProps } from 'reactflow';
+import { Handle, Position } from 'reactflow';
 import './ContainerNode.css';
 import { memo, useEffect, useState } from 'react';
 

@@ -1,7 +1,7 @@
 import { BrowserWindow } from 'electron';
 
 const Docker = require('dockerode');
-const { mapContainerData } = require('../mappers/mappers');
+const { mapContainerData, mapNetworkData } = require('../mappers/mappers');
 
 class DockerEventListener {
   docker: any;
@@ -84,8 +84,23 @@ class DockerEventListener {
     });
   }
 
-  getCurrentStateOfContainers(containersToListen) {
+  getCurrentStateOfContainers(containersToListen, uniqueNetworks) {
     const containersMap = new Map<string, string>();
+
+    this.docker
+      .getNetwork(uniqueNetworks.values().next().value)
+      .inspect((err, networkData) => {
+        if (err) {
+          return console.error('Error:', err);
+        }
+        const result = mapNetworkData(networkData);
+        console.log('Network data sending:', result);
+        this.mainWindow.webContents.send(
+          'network-data',
+          JSON.stringify(result),
+        );
+      });
+
     this.docker.listContainers((err, containers) => {
       if (err) {
         return console.error('Error:', err);
