@@ -20,11 +20,6 @@ class DockerEventListener {
   }
 
   connectionNetworkEvent(event, containersToListen) {
-    // this.docker.getNetwork(network).inspect((err, networkData) => {
-    //   if (err) {
-    //     return console.error('Error:', err);
-    //   }
-    //   console.log('Network data:', networkData);
     this.docker
       .getContainer(event.Actor.Attributes.container)
       .inspect((err, container) => {
@@ -45,7 +40,6 @@ class DockerEventListener {
           );
         }
       });
-    // });
   }
 
   getContainerData(containerId: string, network: string) {
@@ -128,6 +122,31 @@ class DockerEventListener {
     return false;
   }
 
+  createNetwork(event) {
+    this.docker.getNetwork(event.Actor.ID).inspect((err, networkData) => {
+      if (err) {
+        return console.error('Error:', err);
+      }
+      const result = mapNetworkData(networkData);
+      console.log('Network data:', result);
+      this.mainWindow.webContents.send('network-data', JSON.stringify(result));
+    });
+  }
+
+  destroyNetwork(event) {
+    console.log('Network destroyed:', event);
+    const destroyedNetwork = {
+      name: event.Actor.Attributes.name,
+      subnet: undefined,
+      driver: undefined,
+      gateway: undefined,
+    };
+    this.mainWindow.webContents.send(
+      'network-data',
+      JSON.stringify(destroyedNetwork),
+    );
+  }
+
   listenToEvents(containersToListen): void {
     this.docker.getEvents((err, stream) => {
       if (err) {
@@ -150,8 +169,23 @@ class DockerEventListener {
           event.Type === 'network' &&
           this.hasValue(containersToListen, event.Actor.Attributes.name)
         ) {
-          //TODO: Implement network event handling case connect disconnect
-          this.connectionNetworkEvent(event, containersToListen);
+          switch (event.Action) {
+            case 'create': {
+              this.createNetwork(event);
+              break;
+            }
+            case 'destroy': {
+              this.destroyNetwork(event);
+              break;
+            }
+            case 'connect':
+            case 'disconnect': {
+              this.connectionNetworkEvent(event, containersToListen);
+              break;
+            }
+            default:
+              break;
+          }
         }
       });
 
