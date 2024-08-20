@@ -69,7 +69,6 @@ class DockerEventListener {
           return console.error('Error:', err);
         }
         const containerData = mapContainerData(container, value);
-        console.log('Sending current containers:', containerData);
         this.mainWindow.webContents.send(
           'container-data',
           JSON.stringify(containerData),
@@ -88,7 +87,6 @@ class DockerEventListener {
           return console.error('Error:', err);
         }
         const result = mapNetworkData(networkData);
-        console.log('Network data sending:', result);
         this.mainWindow.webContents.send(
           'network-data',
           JSON.stringify(result),
@@ -128,13 +126,26 @@ class DockerEventListener {
         return console.error('Error:', err);
       }
       const result = mapNetworkData(networkData);
-      console.log('Network data:', result);
       this.mainWindow.webContents.send('network-data', JSON.stringify(result));
     });
   }
 
+  destoryContainer(event) {
+    console.log('Container destroyed:', event);
+    const destroyedContainer = {
+      label: '/' + event.Actor.Attributes.name,
+      status: undefined,
+      ip: undefined,
+      network: undefined,
+    };
+    console.log('Destroyed container:', destroyedContainer);
+    this.mainWindow.webContents.send(
+      'container-data',
+      JSON.stringify(destroyedContainer),
+    );
+  }
+
   destroyNetwork(event) {
-    console.log('Network destroyed:', event);
     const destroyedNetwork = {
       name: event.Actor.Attributes.name,
       subnet: undefined,
@@ -161,10 +172,19 @@ class DockerEventListener {
           event.Type === 'container' &&
           containersToListen.has(event.Actor.Attributes.name)
         ) {
-          this.getContainerData(
-            event.Actor.ID,
-            containersToListen.get(event.Actor.Attributes.name),
-          );
+          console.log('Event:', event);
+          switch (event.Action) {
+            case 'destroy': {
+              this.destoryContainer(event);
+              break;
+            }
+            default:
+              this.getContainerData(
+                event.Actor.ID,
+                containersToListen.get(event.Actor.Attributes.name),
+              );
+              break;
+          }
         } else if (
           event.Type === 'network' &&
           this.hasValue(containersToListen, event.Actor.Attributes.name)

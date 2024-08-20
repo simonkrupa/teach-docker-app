@@ -68,7 +68,6 @@ export default function FirstDiagram() {
           item.data.label === newData.label &&
           item.type === 'containerNode'
         ) {
-          // console.log('Found node:', item);
           if (newData.network !== 'my-bridge') {
             item.position.y = 300;
           } else {
@@ -86,7 +85,6 @@ export default function FirstDiagram() {
           };
         }
         if (item.data.label === newData.name && item.type === 'networkNode') {
-          console.log('Found network node:', newData);
           return {
             ...item,
             data: {
@@ -99,15 +97,15 @@ export default function FirstDiagram() {
         }
         return item;
       });
-      console.log(updatedNodes);
+      // console.log(updatedNodes);
       return updatedNodes;
     });
   }, []);
 
   const handleIncomingData = useCallback(
     (data) => {
-      console.log(Math.random());
       const jsonData = JSON.parse(data);
+      console.log(jsonData);
       onEdit(jsonData);
     },
     [onEdit],
