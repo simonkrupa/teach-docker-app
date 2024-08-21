@@ -1,9 +1,14 @@
-import { useCallback, useEffect, useRef } from 'react';
-import { ReactFlow, useNodesState, Controls, useReactFlow } from 'reactflow';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ReactFlow, useNodesState, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
 import ContainerNode from '../components/diagram-nodes/ContainerNode';
 import NetworkNode from '../components/diagram-nodes/NetworkNode';
+import { Button } from 'antd';
+import nodesValidator from '../components/validators/nodesValidator';
+import MessageBox from '../components/MessageBox';
+
+const correctAnswers = require('../data/correctAnswers/firstDiagram.json');
 
 const nodeTypes = {
   containerNode: ContainerNode,
@@ -60,6 +65,7 @@ export default function FirstDiagram() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const containerEventListenerRef = useRef<() => void | null>(null);
   const networkEventListenerRef = useRef<() => void | null>(null);
+  const [messageBoxState, setMessageBoxState] = useState('hidden');
 
   const onEdit = useCallback((newData) => {
     setNodes((prevNodes) => {
@@ -104,8 +110,8 @@ export default function FirstDiagram() {
 
   const handleIncomingData = useCallback(
     (data) => {
+      setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
-      console.log(jsonData);
       onEdit(jsonData);
     },
     [onEdit],
@@ -121,11 +127,24 @@ export default function FirstDiagram() {
 
   const handleIncomingNetworkData = useCallback(
     (data) => {
+      setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
       onEdit(jsonData);
     },
     [onEdit],
   );
+
+  const handleValidateAnswer = () => {
+    console.log('nodes:', nodes);
+    console.log('correctAnswers:', correctAnswers);
+    if (nodesValidator(nodes, correctAnswers)) {
+      setMessageBoxState('success');
+      console.log('Correct');
+    } else {
+      setMessageBoxState('error');
+      console.log('Incorrect');
+    }
+  };
 
   useEffect(() => {
     console.log('FirstDiagram mounted');
@@ -167,6 +186,26 @@ export default function FirstDiagram() {
         fitView
       >
         <Controls showInteractive={false} />
+        {messageBoxState === 'success' && (
+          <MessageBox
+            type={messageBoxState}
+            message="Task completed successfully"
+          />
+        )}
+        {messageBoxState === 'error' && (
+          <MessageBox
+            type={messageBoxState}
+            message="Not all requirements fulfilled"
+          />
+        )}
+        <Button
+          // style={{ zIndex: 100 }}
+          className="validateButton"
+          type="primary"
+          onClick={handleValidateAnswer}
+        >
+          Validate Answer
+        </Button>
       </ReactFlow>
     </div>
   );

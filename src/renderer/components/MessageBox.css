@@ -1,0 +1,42 @@
+.message-box {
+  z-index: 100 !important;
+  position: absolute;
+  border-radius: 5px;
+  text-align: center;
+  padding: 0 3px;
+  bottom: 0;
+  margin-bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+
+  width: 80%;
+}
+
+.success {
+  color: green;
+  border: solid 2px green;
+}
+
+.error {
+  color: red;
+  border: solid 2px red;
+}
+
+.message-container {
+  width: 100%;
+  align-items: center;
+}
+
+.message-header {
+  margin-top: 1%;
+  margin-bottom: 0;
+}
+
+.message-text {
+  margin: 0 0;
+}
+
+.text-container {
+  display: flex;
+}

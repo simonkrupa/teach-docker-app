@@ -4,3 +4,13 @@
   width: 100vw;
   overflow: auto;
 }
+
+.validateButton {
+  margin: 10px;
+  z-index: 100;
+  background-color: #001529;
+}
+
+.validateButton:hover {
+  /* background-color: #001529 !important; */
+}
