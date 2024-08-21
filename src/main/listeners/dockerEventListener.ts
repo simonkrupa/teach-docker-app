@@ -93,7 +93,7 @@ class DockerEventListener {
         );
       });
 
-    this.docker.listContainers((err, containers) => {
+    this.docker.listContainers({ all: true }, (err, containers) => {
       if (err) {
         return console.error('Error:', err);
       }
