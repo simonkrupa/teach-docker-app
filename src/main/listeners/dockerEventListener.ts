@@ -78,6 +78,7 @@ class DockerEventListener {
   }
 
   getCurrentStateOfContainers(containersToListen, uniqueNetworks) {
+    console.log('Getting current state of containers');
     const containersMap = new Map<string, string>();
 
     this.docker

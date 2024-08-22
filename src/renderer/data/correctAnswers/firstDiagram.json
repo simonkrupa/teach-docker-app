@@ -5,9 +5,11 @@
     "type": "containerNode",
     "data": {
       "label": "/my-nginx",
-      "ip": "172.18.0.2",
+      "ip": "172.18.0.3",
       "state": "running",
-      "network": "my-bridge"
+      "network": "my-bridge",
+      "port": "",
+      "hostPort": ""
     }
     },
   {
@@ -16,9 +18,11 @@
     "type": "containerNode",
     "data": {
       "label": "/my-nginx2",
-      "ip": "172.18.0.3",
+      "ip": "172.18.0.2",
       "state": "running",
-      "network": "my-bridge"
+      "network": "my-bridge",
+      "port": "",
+      "hostPort": ""
     }
   },
   {

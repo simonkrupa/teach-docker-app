@@ -1,0 +1,29 @@
+.host-container {
+  height: 25px;
+  width: 50px;
+  border: 1px solid black;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  background-color: white;
+  text-align: center;
+}
+
+.port-container {
+  height: 15px;
+  width: 40px;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  border-bottom: 1px solid black;
+  position: absolute;
+  top: 25px; /* Aligns this div exactly below the host-container */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 0;
+  background-color: lightblue;
+  text-align: center;
+  line-height: 10px; /* Vertically centers the text */
+  border-bottom-left-radius: 5px; /* Optional: rounds the bottom corners */
+  border-bottom-right-radius: 5px; /* Optional: rounds the bottom corners */
+}

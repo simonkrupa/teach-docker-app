@@ -9,7 +9,9 @@ export type Channels =
   | 'container-data'
   | 'stop-listening'
   | 'start-listening-1'
-  | 'network-data';
+  | 'network-data'
+  | 'start-listening-2'
+  | 'start-listening-3';
 
 const electronHandler = {
   ipcRenderer: {

@@ -18,6 +18,8 @@ import DockerEventListener from './listeners/dockerEventListener';
 
 // templates for each diagram page
 const diagram1 = require('./data/diagram1.json');
+const diagram2 = require('./data/diagram2.json');
+const diagram3 = require('./data/diagram3.json');
 
 class AppUpdater {
   constructor() {
@@ -83,8 +85,8 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1920,
-    height: 1080,
+    width: 1720,
+    height: 880,
     icon: getAssetPath('icon.png'),
     frame: false,
     paintWhenInitiallyHidden: true,
@@ -137,6 +139,34 @@ const createWindow = async () => {
     const containerToListen = new Map<string, string>();
     const uniqueNetworks = new Set<string>();
     diagram1.containers.forEach((container) => {
+      containerToListen.set(container.data.label, container.network);
+      uniqueNetworks.add(container.network);
+    });
+    dockerEventListener?.listenToEvents(containerToListen);
+    dockerEventListener?.getCurrentStateOfContainers(
+      containerToListen,
+      uniqueNetworks,
+    );
+  });
+  ipcMain.on('start-listening-2', () => {
+    console.log('Starting listening to events for diagram 2');
+    const containerToListen = new Map<string, string>();
+    const uniqueNetworks = new Set<string>();
+    diagram2.containers.forEach((container) => {
+      containerToListen.set(container.data.label, container.network);
+      uniqueNetworks.add(container.network);
+    });
+    dockerEventListener?.listenToEvents(containerToListen);
+    dockerEventListener?.getCurrentStateOfContainers(
+      containerToListen,
+      uniqueNetworks,
+    );
+  });
+  ipcMain.on('start-listening-3', () => {
+    console.log('Starting listening to events for diagram 3 ');
+    const containerToListen = new Map<string, string>();
+    const uniqueNetworks = new Set<string>();
+    diagram3.containers.forEach((container) => {
       containerToListen.set(container.data.label, container.network);
       uniqueNetworks.add(container.network);
     });

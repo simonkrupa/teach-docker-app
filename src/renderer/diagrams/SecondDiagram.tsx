@@ -8,7 +8,7 @@ import { Button } from 'antd';
 import nodesValidator from '../components/validators/nodesValidator';
 import MessageBox from '../components/MessageBox';
 
-const correctAnswers = require('../data/correctAnswers/firstDiagram.json');
+const correctAnswers = require('../data/correctAnswers/secondDiagram.json');
 
 const nodeTypes = {
   containerNode: ContainerNode,
@@ -22,7 +22,7 @@ const initialNodes = [
     position: { x: 75, y: 80 },
     type: 'containerNode',
     data: {
-      label: '/my-nginx',
+      label: '/my-nginx3',
       ip: '172.22.168.91',
       state: undefined,
       network: '',
@@ -31,41 +31,9 @@ const initialNodes = [
     },
     draggable: false,
   },
-  {
-    id: '2',
-    position: {
-      x: 250,
-      y: 80,
-    },
-    type: 'containerNode',
-    data: {
-      label: '/my-nginx2',
-      ip: 'undefined',
-      state: undefined,
-      network: '',
-      port: '',
-      hostPort: '',
-    },
-    draggable: false,
-  },
-  {
-    id: '3',
-    position: {
-      x: 0,
-      y: 0,
-    },
-    type: 'networkNode',
-    data: {
-      label: 'my-bridge',
-      subnet: undefined,
-      driver: undefined,
-      gateway: undefined,
-    },
-    draggable: false,
-  },
 ];
 
-export default function FirstDiagram() {
+export default function SecondDiagram() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const containerEventListenerRef = useRef<() => void | null>(null);
   const networkEventListenerRef = useRef<() => void | null>(null);
@@ -78,11 +46,6 @@ export default function FirstDiagram() {
           item.data.label === newData.label &&
           item.type === 'containerNode'
         ) {
-          if (newData.network !== 'my-bridge') {
-            item.position.y = 300;
-          } else {
-            item.position.y = 80;
-          }
           return {
             ...item,
             data: {
@@ -96,20 +59,19 @@ export default function FirstDiagram() {
             },
           };
         }
-        if (item.data.label === newData.name && item.type === 'networkNode') {
-          return {
-            ...item,
-            data: {
-              ...item.data,
-              subnet: newData.subnet,
-              driver: newData.driver,
-              gateway: newData.gateway,
-            },
-          };
-        }
+        // if (item.data.label === newData.name && item.type === 'networkNode') {
+        //   return {
+        //     ...item,
+        //     data: {
+        //       ...item.data,
+        //       subnet: newData.subnet,
+        //       driver: newData.driver,
+        //       gateway: newData.gateway,
+        //     },
+        //   };
+        // }
         return item;
       });
-      // console.log(updatedNodes);
       return updatedNodes;
     });
   }, []);
@@ -119,7 +81,6 @@ export default function FirstDiagram() {
       setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
       console.log(jsonData);
-
       onEdit(jsonData);
     },
     [onEdit],
@@ -130,7 +91,7 @@ export default function FirstDiagram() {
   };
 
   const handleStartListening = () => {
-    window.electron.ipcRenderer.sendMessage('start-listening-1');
+    window.electron.ipcRenderer.sendMessage('start-listening-2');
   };
 
   const handleIncomingNetworkData = useCallback(
@@ -145,15 +106,13 @@ export default function FirstDiagram() {
   const handleValidateAnswer = () => {
     if (nodesValidator(nodes, correctAnswers)) {
       setMessageBoxState('success');
-      console.log('Correct');
     } else {
       setMessageBoxState('error');
-      console.log('Incorrect');
     }
   };
 
   useEffect(() => {
-    console.log('FirstDiagram mounted');
+    console.log('SecondDiagram mounted');
     handleStartListening();
 
     // Add the event listener and store the cleanup function
@@ -188,7 +147,6 @@ export default function FirstDiagram() {
         nodes={nodes}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
-        // defaultEdges={initialEdges}
         fitView
       >
         <Controls showInteractive={false} />

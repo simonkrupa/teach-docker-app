@@ -22,6 +22,8 @@ const nodesValidator = (currentNodes, correctNodes) => {
         continue;
       }
       if (!_.isEqual(correctNode[key], currentNode[key])) {
+        console.log('correct', correctNode[key]);
+        console.log('current', currentNode[key]);
         return false; // Attribute doesn't match
       }
     }

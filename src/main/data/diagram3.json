@@ -1,0 +1,21 @@
+{
+  "containers": [
+    {
+      "network": "bridge",
+      "id": "1",
+      "position":
+        {
+          "x": 140,
+          "y": 100
+        },
+      "type": "containerNode",
+      "data": {
+        "network": "bridge",
+        "label": "my-nginx4",
+        "ip": "undefined",
+        "state": "running"
+      }
+    }
+  ],
+  "networks": []
+}
