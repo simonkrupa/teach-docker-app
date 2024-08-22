@@ -53,7 +53,7 @@ const initialEdges = [
     source: '1',
     target: '2',
     animated: true,
-    // hidden: true,
+    hidden: true,
   },
 ];
 
@@ -70,6 +70,11 @@ export default function ThirdDiagram() {
           item.data.label === newData.label &&
           item.type === 'containerNode'
         ) {
+          if (newData.port) {
+            //TODO: fix this
+            console.log('newData.port', newData.port);
+            initialEdges[0].hidden = false;
+          }
           return {
             ...item,
             data: {

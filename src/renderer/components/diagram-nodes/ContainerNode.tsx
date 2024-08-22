@@ -1,8 +1,7 @@
 import { Handle, Position } from 'reactflow';
 import './ContainerNode.css';
 import { memo, useEffect, useState } from 'react';
-
-//TODO created status yellow
+import { ContainerNodeProps } from '../../types/types';
 
 export function RunningState() {
   return (
@@ -40,7 +39,7 @@ export function ExitedState() {
   );
 }
 
-const ContainerNode = memo(function ContainerNode(props) {
+const ContainerNode = memo(function ContainerNode(props: ContainerNodeProps) {
   const [containerNodeComponent, setContainerNodeComponent] = useState(false);
 
   let componentToRender;
@@ -57,7 +56,6 @@ const ContainerNode = memo(function ContainerNode(props) {
   }
 
   useEffect(() => {
-    console.log('rendering', props);
     if (props?.data.state === undefined) {
       // console.log('ContainerNode component not rendered');
       setContainerNodeComponent(false);
@@ -77,12 +75,16 @@ const ContainerNode = memo(function ContainerNode(props) {
           </div>
           <div className="ip-address">eth0: {props.data.ip}</div>
           <div>{props.data.network}</div>
-          <div className="port-container-o">
-            <div>Port: {props.data.port}</div>
-            <div>HostPort: {props.data.hostPort}</div>
-            <Handle type="source" position={Position.Bottom} />
-            <Handle type="target" position={Position.Bottom} />
-          </div>
+          {props.data.port ? (
+            <div className="port-container-o">
+              <div>Port: {props.data.port}</div>
+              <div>HostPort: {props.data.hostPort}</div>
+              <Handle type="source" position={Position.Bottom} />
+              <Handle type="target" position={Position.Bottom} />
+            </div>
+          ) : (
+            <div />
+          )}
         </div>
       ) : (
         <div />
