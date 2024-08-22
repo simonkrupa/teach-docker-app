@@ -13,6 +13,15 @@ export function RunningState() {
   );
 }
 
+export function CreatedState() {
+  return (
+    <div className="container-state">
+      Created
+      <div className="state-indicator-paused" />
+    </div>
+  );
+}
+
 export function PausedState() {
   return (
     <div className="container-state">
@@ -41,6 +50,8 @@ const ContainerNode = memo(function ContainerNode(props) {
     componentToRender = <ExitedState />;
   } else if (props?.data.state === 'paused') {
     componentToRender = <PausedState />;
+  } else if (props?.data.state === 'created') {
+    componentToRender = <CreatedState />;
   } else {
     componentToRender = <div />;
   }
