@@ -2,11 +2,15 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactFlow, useNodesState, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
+import { Button } from 'antd';
 import ContainerNode from '../components/diagram-nodes/ContainerNode';
 import NetworkNode from '../components/diagram-nodes/NetworkNode';
-import { Button } from 'antd';
 import nodesValidator from '../components/validators/nodesValidator';
 import MessageBox from '../components/MessageBox';
+import {
+  DockerEventContainerData,
+  DockerEventNetworkData,
+} from '../types/types';
 
 const correctAnswers = require('../data/correctAnswers/firstDiagram.json');
 
@@ -67,59 +71,59 @@ const initialNodes = [
 
 export default function FirstDiagram() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const containerEventListenerRef = useRef<() => void | null>(null);
-  const networkEventListenerRef = useRef<() => void | null>(null);
+  const containerEventListenerRef = useRef<() => void | null>();
+  const networkEventListenerRef = useRef<() => void | null>();
   const [messageBoxState, setMessageBoxState] = useState('hidden');
 
-  const onEdit = useCallback((newData) => {
-    setNodes((prevNodes) => {
-      const updatedNodes = prevNodes.map((item) => {
-        if (
-          item.data.label === newData.label &&
-          item.type === 'containerNode'
-        ) {
-          if (newData.network !== 'my-bridge') {
-            item.position.y = 300;
-          } else {
-            item.position.y = 80;
+  const onEdit = useCallback(
+    (newData: DockerEventContainerData | DockerEventNetworkData) => {
+      setNodes((prevNodes) => {
+        const updatedNodes = prevNodes.map((item) => {
+          if (
+            item.data.label === newData.label &&
+            item.type === 'containerNode'
+          ) {
+            if (newData.network !== 'my-bridge') {
+              item.position.y = 300;
+            } else {
+              item.position.y = 80;
+            }
+            return {
+              ...item,
+              data: {
+                ...item.data,
+                ip: newData.ip,
+                label: newData.label,
+                state: newData.status,
+                network: newData.network,
+                port: newData?.port || '',
+                hostPort: newData?.hostPort || '',
+              },
+            };
           }
-          return {
-            ...item,
-            data: {
-              ...item.data,
-              ip: newData.ip,
-              label: newData.label,
-              state: newData.status,
-              network: newData.network,
-              port: newData?.port || '',
-              hostPort: newData?.hostPort || '',
-            },
-          };
-        }
-        if (item.data.label === newData.name && item.type === 'networkNode') {
-          return {
-            ...item,
-            data: {
-              ...item.data,
-              subnet: newData.subnet,
-              driver: newData.driver,
-              gateway: newData.gateway,
-            },
-          };
-        }
-        return item;
+          if (item.data.label === newData.name && item.type === 'networkNode') {
+            return {
+              ...item,
+              data: {
+                ...item.data,
+                subnet: newData.subnet,
+                driver: newData.driver,
+                gateway: newData.gateway,
+              },
+            };
+          }
+          return item;
+        });
+        return updatedNodes;
       });
-      // console.log(updatedNodes);
-      return updatedNodes;
-    });
-  }, []);
+    },
+    [],
+  );
 
   const handleIncomingData = useCallback(
-    (data) => {
+    (data: string) => {
       setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
-      console.log(jsonData);
-
       onEdit(jsonData);
     },
     [onEdit],
@@ -134,7 +138,7 @@ export default function FirstDiagram() {
   };
 
   const handleIncomingNetworkData = useCallback(
-    (data) => {
+    (data: string) => {
       setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
       onEdit(jsonData);
@@ -145,15 +149,12 @@ export default function FirstDiagram() {
   const handleValidateAnswer = () => {
     if (nodesValidator(nodes, correctAnswers)) {
       setMessageBoxState('success');
-      console.log('Correct');
     } else {
       setMessageBoxState('error');
-      console.log('Incorrect');
     }
   };
 
   useEffect(() => {
-    console.log('FirstDiagram mounted');
     handleStartListening();
 
     // Add the event listener and store the cleanup function
@@ -168,10 +169,7 @@ export default function FirstDiagram() {
     );
 
     return () => {
-      console.log('Component unmounted');
       handleStopListening();
-
-      // Call the cleanup function if it exists
       if (containerEventListenerRef.current) {
         containerEventListenerRef.current();
       }
@@ -180,7 +178,7 @@ export default function FirstDiagram() {
         networkEventListenerRef.current();
       }
     };
-  }, []);
+  });
 
   return (
     <div className="diagram-page">
