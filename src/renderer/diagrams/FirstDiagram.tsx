@@ -19,7 +19,10 @@ const nodeTypes = {
 const initialNodes = [
   {
     id: '1',
-    position: { x: 75, y: 80 },
+    position: {
+      x: 100,
+      y: 80,
+    },
     type: 'containerNode',
     data: {
       label: '/my-nginx',
@@ -29,12 +32,12 @@ const initialNodes = [
       port: '',
       hostPort: '',
     },
-    draggable: false,
+    // draggable: false,
   },
   {
     id: '2',
     position: {
-      x: 250,
+      x: 340,
       y: 80,
     },
     type: 'containerNode',
@@ -46,13 +49,13 @@ const initialNodes = [
       port: '',
       hostPort: '',
     },
-    draggable: false,
+    // draggable: false,
   },
   {
     id: '3',
     position: {
-      x: 0,
-      y: 0,
+      x: 120,
+      y: 300,
     },
     type: 'networkNode',
     data: {
@@ -61,12 +64,30 @@ const initialNodes = [
       driver: undefined,
       gateway: undefined,
     },
-    draggable: false,
+    // draggable: false,
+  },
+];
+
+const initialEdges = [
+  {
+    id: '1-3',
+    source: '1',
+    target: '3',
+    animated: true,
+    hidden: false,
+  },
+  {
+    id: '2-3',
+    source: '2',
+    target: '3',
+    animated: true,
+    hidden: true,
   },
 ];
 
 export default function FirstDiagram() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useNodesState(initialEdges);
   const containerEventListenerRef = useRef<() => void | null>(null);
   const networkEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
@@ -78,11 +99,13 @@ export default function FirstDiagram() {
           item.data.label === newData.label &&
           item.type === 'containerNode'
         ) {
-          if (newData.network !== 'my-bridge') {
-            item.position.y = 300;
-          } else {
-            item.position.y = 80;
-          }
+          const newEdges = edges.map((edge) => {
+            if (edge.source === item.id) {
+              return { ...edge, hidden: newData.status !== 'running' };
+            }
+            return edge;
+          });
+          setEdges(newEdges);
           return {
             ...item,
             data: {
@@ -188,8 +211,11 @@ export default function FirstDiagram() {
         nodes={nodes}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
-        // defaultEdges={initialEdges}
+        edges={edges}
+        onEdgeUpdate={onEdgesChange}
         fitView
+        // panOnDrag={false}
+        // zoomOnScroll={false}
       >
         <Controls showInteractive={false} />
         {messageBoxState === 'success' && (
@@ -205,7 +231,6 @@ export default function FirstDiagram() {
           />
         )}
         <Button
-          // style={{ zIndex: 100 }}
           className="validateButton"
           type="primary"
           onClick={handleValidateAnswer}

@@ -1,4 +1,5 @@
 import { memo, useEffect, useState } from 'react';
+import { Handle, Position } from 'reactflow';
 import './NetworkNode.css';
 
 const NetworkNode = memo(function NetworkNode(props) {
@@ -16,6 +17,8 @@ const NetworkNode = memo(function NetworkNode(props) {
     <div>
       {networkNodeComponent ? (
         <div className="network-container">
+          <Handle type="source" position={Position.Top} />
+          <Handle type="target" position={Position.Top} />
           <div className="grid-container">
             <div className="grid-item">
               Name: <b>{props.data.label}</b>
