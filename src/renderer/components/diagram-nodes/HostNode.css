@@ -27,3 +27,8 @@
   border-bottom-left-radius: 5px; /* Optional: rounds the bottom corners */
   border-bottom-right-radius: 5px; /* Optional: rounds the bottom corners */
 }
+
+.host-node {
+  width: 50px;
+  height: 25px;
+}

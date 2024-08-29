@@ -28,10 +28,10 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem('Home', '/', <HomeOutlined />, undefined, undefined, 'home-item'),
-  getItem('1. Docker containers', '/first'),
-  getItem('Diagram test', '/first-diagram'),
-  getItem('Diagram test 2', '/second-diagram'),
-  getItem('Diagram test 3', '/third-diagram'),
+  getItem('Bridge', '/first-diagram'),
+  getItem('Default Bridge', '/second-diagram'),
+  getItem('Host', '/third-diagram'),
+  getItem('None', '/fourth-diagram'),
   // getItem('2. Docker networks', '/second'),
   // getItem('3. Exposing ports', '/third'),
   // getItem('4. Test page', '/fourth'),

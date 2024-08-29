@@ -7,16 +7,28 @@ import NetworkNode from '../components/diagram-nodes/NetworkNode';
 import { Button } from 'antd';
 import nodesValidator from '../components/validators/nodesValidator';
 import MessageBox from '../components/MessageBox';
+import HostNode from '../components/diagram-nodes/HostNode';
 
 const correctAnswers = require('../data/correctAnswers/firstDiagram.json');
 
 const nodeTypes = {
   containerNode: ContainerNode,
-  // veth: Veth,
+  hostNode: HostNode,
   networkNode: NetworkNode,
 };
 
 const initialNodes = [
+  {
+    id: '0',
+    position: {
+      x: 210,
+      y: 450,
+    },
+    type: 'hostNode',
+    data: {
+      label: 'host',
+    },
+  },
   {
     id: '1',
     position: {
