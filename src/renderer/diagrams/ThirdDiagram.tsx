@@ -160,7 +160,6 @@ export default function ThirdDiagram() {
     setNodes((prevNodes) => {
       const updatedNodes = prevNodes.map((item) => {
         if (item.type === 'hostNode') {
-          console.log('item', item);
           return {
             ...item,
             data: {
@@ -171,8 +170,6 @@ export default function ThirdDiagram() {
         }
         return item;
       });
-      console.log('item', updatedNodes);
-
       return updatedNodes;
     });
   }, []);
