@@ -227,14 +227,13 @@ export default function FirstDiagram() {
   );
 
   const handleValidateAnswer = () => {
-    console.log(edges);
-    // if (nodesValidator(nodes, correctAnswers)) {
-    //   setMessageBoxState('success');
-    //   console.log('Correct');
-    // } else {
-    //   setMessageBoxState('error');
-    //   console.log('Incorrect');
-    // }
+    if (nodesValidator(nodes, correctAnswers)) {
+      setMessageBoxState('success');
+      console.log('Correct');
+    } else {
+      setMessageBoxState('error');
+      console.log('Incorrect');
+    }
   };
 
   useEffect(() => {
