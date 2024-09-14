@@ -131,14 +131,12 @@ class DockerEventListener {
   }
 
   destoryContainer(event) {
-    console.log('Container destroyed:', event);
     const destroyedContainer = {
       label: '/' + event.Actor.Attributes.name,
       status: undefined,
       ip: undefined,
       network: undefined,
     };
-    console.log('Destroyed container:', destroyedContainer);
     this.mainWindow.webContents.send(
       'container-data',
       JSON.stringify(destroyedContainer),
@@ -172,7 +170,6 @@ class DockerEventListener {
           event.Type === 'container' &&
           containersToListen.has(event.Actor.Attributes.name)
         ) {
-          console.log('Event:', event);
           switch (event.Action) {
             case 'destroy': {
               this.destoryContainer(event);

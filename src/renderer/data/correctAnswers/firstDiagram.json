@@ -1,11 +1,19 @@
 [
   {
+    "id": "0",
+    "type": "hostNode",
+    "data": {
+      "label": "host",
+      "ip": "undefined"
+    }
+  },
+  {
     "network": "my-bridge",
     "id": "1",
     "type": "containerNode",
     "data": {
       "label": "/my-nginx",
-      "ip": "192.168.100.3",
+      "ip": "192.168.99.2",
       "state": "running",
       "network": "my-bridge",
       "port": "",
@@ -18,7 +26,7 @@
     "type": "containerNode",
     "data": {
       "label": "/my-nginx2",
-      "ip": "192.168.100.2",
+      "ip": "192.168.99.3",
       "state": "running",
       "network": "my-bridge",
       "port": "",
@@ -31,8 +39,8 @@
     "data": {
       "label": "my-bridge",
       "driver": "bridge",
-      "subnet": "192.168.100.0/24",
-      "gateway": "192.168.100.1"
+      "subnet": "192.168.99.0/24",
+      "gateway": "192.168.99.1"
     }
   }
 ]

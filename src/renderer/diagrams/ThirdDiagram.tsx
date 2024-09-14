@@ -34,7 +34,7 @@ const initialNodes = [
     // draggable: false,
   },
   {
-    id: '2',
+    id: '0',
     position: {
       x: 100,
       y: 300,
@@ -50,9 +50,9 @@ const initialNodes = [
 
 const initialEdges = [
   {
-    id: 'e1-2',
+    id: 'e1-0',
     source: '1',
-    target: '2',
+    target: '0',
     animated: true,
     hidden: true,
   },

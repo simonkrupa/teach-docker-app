@@ -7,6 +7,10 @@ const nodesValidator = (currentNodes, correctNodes) => {
   }
 
   for (let i = 0; i < currentNodes.length; i++) {
+    //skip host
+    if (currentNodes[i].id === '0') {
+      continue;
+    }
     const currentNode = currentNodes[i];
     const correctNode = correctNodes.find((node) => node.id === currentNode.id);
 

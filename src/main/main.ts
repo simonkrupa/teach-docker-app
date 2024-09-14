@@ -60,7 +60,6 @@ function getHostIPAddress(): string {
 }
 
 function sendHostIpAddress(hostIpAddress: string) {
-  console.log('Sending host IP address to renderer process');
   mainWindow?.webContents.send('host-ip-address', hostIpAddress);
 }
 
