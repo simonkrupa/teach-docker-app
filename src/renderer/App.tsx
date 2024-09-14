@@ -8,6 +8,7 @@ import FrameBar from './components/FrameBar';
 import FirstDiagram from './diagrams/FirstDiagram';
 import SecondDiagram from './diagrams/SecondDiagram';
 import ThirdDiagram from './diagrams/ThirdDiagram';
+import FourthDiagram from './diagrams/FourthDiagram';
 
 export default function App() {
   const [isNavbarCollapsed, setNavbarCollapsed] = useState(false);
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/first-diagram" element={<FirstDiagram />} />
           <Route path="/second-diagram" element={<SecondDiagram />} />
           <Route path="/third-diagram" element={<ThirdDiagram />} />
+          <Route path="/fourth-diagram" element={<FourthDiagram />} />
         </Routes>
       </Layout>
     </div>

@@ -1,0 +1,24 @@
+[
+  {
+    "id": "0",
+    "type": "hostNode",
+    "data": {
+      "label": "host",
+      "ip": "undefined"
+    }
+  },
+  {
+    "network": "none",
+    "id": "1",
+    "type": "containerNode",
+    "data": {
+      "label": "/my-nginx5",
+      "ip": "",
+      "state": "running",
+      "network": "none",
+      "port": "",
+      "hostPort": ""
+    }
+  }
+]
+

@@ -12,6 +12,7 @@ export type Channels =
   | 'network-data'
   | 'start-listening-2'
   | 'start-listening-3'
+  | 'start-listening-4'
   | 'host-ip-address';
 
 const electronHandler = {

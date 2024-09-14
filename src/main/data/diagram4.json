@@ -1,0 +1,21 @@
+{
+  "containers": [
+    {
+      "network": "none",
+      "id": "1",
+      "position":
+        {
+          "x": 140,
+          "y": 100
+        },
+      "type": "containerNode",
+      "data": {
+        "network": "none",
+        "label": "my-nginx5",
+        "ip": "undefined",
+        "state": "running"
+      }
+    }
+  ],
+  "networks": []
+}

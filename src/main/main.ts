@@ -21,6 +21,7 @@ import DockerEventListener from './listeners/dockerEventListener';
 const diagram1 = require('./data/diagram1.json');
 const diagram2 = require('./data/diagram2.json');
 const diagram3 = require('./data/diagram3.json');
+const diagram4 = require('./data/diagram4.json');
 
 const osShell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
@@ -195,6 +196,21 @@ const createWindow = async () => {
     const containerToListen = new Map<string, string>();
     const uniqueNetworks = new Set<string>();
     diagram3.containers.forEach((container) => {
+      containerToListen.set(container.data.label, container.network);
+      uniqueNetworks.add(container.network);
+    });
+    dockerEventListener?.listenToEvents(containerToListen);
+    dockerEventListener?.getCurrentStateOfContainers(
+      containerToListen,
+      uniqueNetworks,
+    );
+    sendHostIpAddress(hostIpAddress);
+  });
+  ipcMain.on('start-listening-4', () => {
+    console.log('Starting listening to events for diagram 4 ');
+    const containerToListen = new Map<string, string>();
+    const uniqueNetworks = new Set<string>();
+    diagram4.containers.forEach((container) => {
       containerToListen.set(container.data.label, container.network);
       uniqueNetworks.add(container.network);
     });
