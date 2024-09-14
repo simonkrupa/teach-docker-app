@@ -8,6 +8,7 @@ import { Button } from 'antd';
 import nodesValidator from '../components/validators/nodesValidator';
 import MessageBox from '../components/MessageBox';
 import HostNode from '../components/diagram-nodes/HostNode';
+import { throttle } from 'lodash';
 
 const correctAnswers = require('../data/correctAnswers/firstDiagram.json');
 
@@ -38,7 +39,7 @@ const initialNodes = [
     type: 'containerNode',
     data: {
       label: '/my-nginx',
-      ip: '172.22.168.91',
+      ip: 'undefined',
       state: undefined,
       network: '',
       port: '',
@@ -86,7 +87,7 @@ const initialEdges = [
     source: '1',
     target: '3',
     animated: true,
-    hidden: false,
+    hidden: true,
   },
   {
     id: '2-3',
@@ -94,6 +95,13 @@ const initialEdges = [
     target: '3',
     animated: true,
     hidden: true,
+  },
+  {
+    id: '3-0',
+    source: '3',
+    sourceHandle: 'host',
+    target: '0',
+    animated: true,
   },
 ];
 
@@ -103,6 +111,39 @@ export default function FirstDiagram() {
   const containerEventListenerRef = useRef<() => void | null>(null);
   const networkEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
+  const [startEdge, setStartEdge] = useState(null);
+  const [deleteEdge, setDeleteEdge] = useState(null);
+
+  // Your existing ResizeObserver code
+  const resizeObserver = new ResizeObserver(
+    throttle((entries) => {
+      // Your resize handling logic
+    }, 100), // Adjust the throttle delay as needed
+  );
+
+  const startEdges = useCallback((nodeId) => {
+    setEdges((prevEdges) => {
+      return prevEdges.map((edge) => {
+        if (edge.source === nodeId) {
+          setStartEdge(null);
+          return { ...edge, hidden: false };
+        }
+        return edge;
+      });
+    });
+  }, []);
+
+  const deleteEdges = useCallback((nodeId) => {
+    setEdges((prevEdges) => {
+      return prevEdges.map((edge) => {
+        if (edge.source === nodeId) {
+          setDeleteEdge(null);
+          return { ...edge, hidden: true };
+        }
+        return edge;
+      });
+    });
+  }, []);
 
   const onEdit = useCallback((newData) => {
     setNodes((prevNodes) => {
@@ -111,13 +152,12 @@ export default function FirstDiagram() {
           item.data.label === newData.label &&
           item.type === 'containerNode'
         ) {
-          const newEdges = edges.map((edge) => {
-            if (edge.source === item.id) {
-              return { ...edge, hidden: newData.status !== 'running' };
-            }
-            return edge;
-          });
-          setEdges(newEdges);
+          if (newData.status === 'running') {
+            setStartEdge(item.id);
+          } else {
+            setDeleteEdge(item.id);
+          }
+
           return {
             ...item,
             data: {
@@ -144,7 +184,6 @@ export default function FirstDiagram() {
         }
         return item;
       });
-      // console.log(updatedNodes);
       return updatedNodes;
     });
   }, []);
@@ -153,12 +192,22 @@ export default function FirstDiagram() {
     (data) => {
       setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
-      console.log(jsonData);
-
       onEdit(jsonData);
     },
     [onEdit],
   );
+
+  useEffect(() => {
+    if (deleteEdge !== null) {
+      deleteEdges(deleteEdge);
+    }
+  }, [deleteEdge, deleteEdges]);
+
+  useEffect(() => {
+    if (startEdge !== null) {
+      startEdges(startEdge);
+    }
+  }, [startEdge, startEdges]);
 
   const handleStopListening = () => {
     window.electron.ipcRenderer.sendMessage('stop-listening');
@@ -178,13 +227,14 @@ export default function FirstDiagram() {
   );
 
   const handleValidateAnswer = () => {
-    if (nodesValidator(nodes, correctAnswers)) {
-      setMessageBoxState('success');
-      console.log('Correct');
-    } else {
-      setMessageBoxState('error');
-      console.log('Incorrect');
-    }
+    console.log(edges);
+    // if (nodesValidator(nodes, correctAnswers)) {
+    //   setMessageBoxState('success');
+    //   console.log('Correct');
+    // } else {
+    //   setMessageBoxState('error');
+    //   console.log('Incorrect');
+    // }
   };
 
   useEffect(() => {

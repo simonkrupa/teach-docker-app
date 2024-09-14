@@ -17,7 +17,7 @@ const NetworkNode = memo(function NetworkNode(props) {
     <div>
       {networkNodeComponent ? (
         <div className="network-container">
-          <Handle type="source" position={Position.Top} />
+          {/* <Handle type="source" id="cont" position={Position.Top} /> */}
           <Handle type="target" position={Position.Top} />
           <div className="grid-container">
             <div className="grid-item">
@@ -33,6 +33,7 @@ const NetworkNode = memo(function NetworkNode(props) {
               Gateway: <b>{props.data.gateway}</b>
             </div>
           </div>
+          <Handle type="source" id="host" position={Position.Bottom} />
         </div>
       ) : (
         <div />
