@@ -1,6 +1,6 @@
 .host-container {
-  height: 25px;
-  width: 50px;
+  height: 50px;
+  width: 100px;
   border: 1px solid black;
   border-radius: 5px;
   position: relative;
@@ -29,6 +29,6 @@
 }
 
 .host-node {
-  width: 50px;
-  height: 25px;
+  width: 100px;
+  height: 50px;
 }

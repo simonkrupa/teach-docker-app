@@ -9,6 +9,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
+import os from 'os';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
@@ -20,6 +21,8 @@ import DockerEventListener from './listeners/dockerEventListener';
 const diagram1 = require('./data/diagram1.json');
 const diagram2 = require('./data/diagram2.json');
 const diagram3 = require('./data/diagram3.json');
+
+const osShell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
 class AppUpdater {
   constructor() {
@@ -37,6 +40,28 @@ function getDockerEventListener(mainWindow: BrowserWindow) {
     dockerEventListener = new DockerEventListener(mainWindow);
   }
   return dockerEventListener;
+}
+
+function getHostIPAddress(): string {
+  const networkInterfaces = os.networkInterfaces();
+  let hostIP: string = '';
+
+  //windows
+  if (os.platform() === 'win32') {
+    networkInterfaces['Wi-Fi'].forEach((network) => {
+      if (network.family === 'IPv4') {
+        hostIP = network.address;
+      }
+    });
+    return hostIP;
+  }
+  return hostIP;
+  //todo if linux or mac
+}
+
+function sendHostIpAddress(hostIpAddress: string) {
+  console.log('Sending host IP address to renderer process');
+  mainWindow?.webContents.send('host-ip-address', hostIpAddress);
 }
 
 ipcMain.on('ipc-example', async (event, arg) => {
@@ -130,6 +155,8 @@ const createWindow = async () => {
   new AppUpdater();
   // Start listening to events
   getDockerEventListener(mainWindow);
+  const hostIpAddress: string = getHostIPAddress();
+  console.log('Host IP Address:', hostIpAddress);
 
   ipcMain.on('stop-listening', () => {
     dockerEventListener?.stopListeningToEvents();
@@ -147,6 +174,7 @@ const createWindow = async () => {
       containerToListen,
       uniqueNetworks,
     );
+    sendHostIpAddress(hostIpAddress);
   });
   ipcMain.on('start-listening-2', () => {
     console.log('Starting listening to events for diagram 2');
@@ -161,6 +189,7 @@ const createWindow = async () => {
       containerToListen,
       uniqueNetworks,
     );
+    sendHostIpAddress(hostIpAddress);
   });
   ipcMain.on('start-listening-3', () => {
     console.log('Starting listening to events for diagram 3 ');
@@ -175,6 +204,7 @@ const createWindow = async () => {
       containerToListen,
       uniqueNetworks,
     );
+    sendHostIpAddress(hostIpAddress);
   });
 };
 
