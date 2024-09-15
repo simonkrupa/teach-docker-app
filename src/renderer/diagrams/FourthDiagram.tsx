@@ -5,113 +5,52 @@ import './Diagrams.css';
 import { Button } from 'antd';
 import ContainerNode from '../components/diagram-nodes/ContainerNode';
 import NetworkNode from '../components/diagram-nodes/NetworkNode';
-import HostNode from '../components/diagram-nodes/HostNode';
 import nodesValidator from '../components/validators/nodesValidator';
 import MessageBox from '../components/MessageBox';
+import HostNode from '../components/diagram-nodes/HostNode';
 
-const correctAnswers = require('../data/correctAnswers/secondDiagram.json');
+const correctAnswers = require('../data/correctAnswers/fourthDiagram.json');
 
 const nodeTypes = {
   containerNode: ContainerNode,
   // veth: Veth,
-  hostNode: HostNode,
   networkNode: NetworkNode,
+  hostNode: HostNode,
 };
 
 const initialNodes = [
-  {
-    id: '0',
-    position: {
-      x: 210,
-      y: 450,
-    },
-    type: 'hostNode',
-    data: {
-      label: 'host',
-      ip: 'undefined',
-    },
-  },
   {
     id: '1',
     position: { x: 75, y: 80 },
     type: 'containerNode',
     data: {
-      label: '/my-nginx3',
-      ip: '172.22.168.91',
+      label: '/my-nginx5',
+      ip: '',
       state: undefined,
       network: '',
       port: '',
       hostPort: '',
     },
-    // draggable: false,
   },
   {
-    id: '2',
+    id: '0',
     position: {
-      x: 120,
+      x: 100,
       y: 300,
     },
-    type: 'networkNode',
+    type: 'hostNode',
     data: {
-      label: 'bridge',
-      subnet: undefined,
-      driver: undefined,
-      gateway: undefined,
+      label: 'Host',
+      ip: 'undefined',
     },
-    // draggable: false,
   },
 ];
 
-const initialEdges = [
-  {
-    id: '1-2',
-    source: '1',
-    target: '2',
-    animated: true,
-    hidden: true,
-  },
-  {
-    id: '2-0',
-    source: '2',
-    sourceHandle: 'host',
-    target: '0',
-    animated: true,
-  },
-];
-
-export default function SecondDiagram() {
+export default function FourthDiagram() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useNodesState(initialEdges);
   const containerEventListenerRef = useRef<() => void | null>(null);
-  const networkEventListenerRef = useRef<() => void | null>(null);
   const hostEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
-  const [startEdge, setStartEdge] = useState(null);
-  const [deleteEdge, setDeleteEdge] = useState(null);
-
-  const startEdges = useCallback((nodeId) => {
-    setEdges((prevEdges) => {
-      return prevEdges.map((edge) => {
-        if (edge.source === nodeId) {
-          setStartEdge(null);
-          return { ...edge, hidden: false };
-        }
-        return edge;
-      });
-    });
-  }, []);
-
-  const deleteEdges = useCallback((nodeId) => {
-    setEdges((prevEdges) => {
-      return prevEdges.map((edge) => {
-        if (edge.source === nodeId) {
-          setDeleteEdge(null);
-          return { ...edge, hidden: true };
-        }
-        return edge;
-      });
-    });
-  }, []);
 
   const onEdit = useCallback((newData) => {
     setNodes((prevNodes) => {
@@ -120,11 +59,6 @@ export default function SecondDiagram() {
           item.data.label === newData.label &&
           item.type === 'containerNode'
         ) {
-          if (newData.status === 'running') {
-            setStartEdge(item.id);
-          } else {
-            setDeleteEdge(item.id);
-          }
           return {
             ...item,
             data: {
@@ -138,17 +72,6 @@ export default function SecondDiagram() {
             },
           };
         }
-        if (item.data.label === newData.name && item.type === 'networkNode') {
-          return {
-            ...item,
-            data: {
-              ...item.data,
-              subnet: newData.subnet,
-              driver: newData.driver,
-              gateway: newData.gateway,
-            },
-          };
-        }
         return item;
       });
       return updatedNodes;
@@ -156,36 +79,6 @@ export default function SecondDiagram() {
   }, []);
 
   const handleIncomingData = useCallback(
-    (data) => {
-      console.log('Container data:', data);
-      setMessageBoxState('hidden');
-      const jsonData = JSON.parse(data);
-      onEdit(jsonData);
-    },
-    [onEdit],
-  );
-
-  useEffect(() => {
-    if (deleteEdge !== null) {
-      deleteEdges(deleteEdge);
-    }
-  }, [deleteEdge, deleteEdges]);
-
-  useEffect(() => {
-    if (startEdge !== null) {
-      startEdges(startEdge);
-    }
-  }, [startEdge, startEdges]);
-
-  const handleStopListening = () => {
-    window.electron.ipcRenderer.sendMessage('stop-listening');
-  };
-
-  const handleStartListening = () => {
-    window.electron.ipcRenderer.sendMessage('start-listening-2');
-  };
-
-  const handleIncomingNetworkData = useCallback(
     (data) => {
       setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
@@ -212,6 +105,14 @@ export default function SecondDiagram() {
     });
   }, []);
 
+  const handleStopListening = () => {
+    window.electron.ipcRenderer.sendMessage('stop-listening');
+  };
+
+  const handleStartListening = () => {
+    window.electron.ipcRenderer.sendMessage('start-listening-4');
+  };
+
   const handleValidateAnswer = () => {
     if (nodesValidator(nodes, correctAnswers)) {
       setMessageBoxState('success');
@@ -221,18 +122,13 @@ export default function SecondDiagram() {
   };
 
   useEffect(() => {
-    console.log('SecondDiagram mounted');
+    console.log('FourthDiagram mounted');
     handleStartListening();
 
     // Add the event listener and store the cleanup function
     containerEventListenerRef.current = window.electron.ipcRenderer.on(
       'container-data',
       handleIncomingData,
-    );
-
-    networkEventListenerRef.current = window.electron.ipcRenderer.on(
-      'network-data',
-      handleIncomingNetworkData,
     );
 
     hostEventListenerRef.current = window.electron.ipcRenderer.on(
@@ -249,10 +145,6 @@ export default function SecondDiagram() {
         containerEventListenerRef.current();
       }
 
-      if (networkEventListenerRef.current) {
-        networkEventListenerRef.current();
-      }
-
       if (hostEventListenerRef.current) {
         hostEventListenerRef.current();
       }
@@ -265,8 +157,6 @@ export default function SecondDiagram() {
         nodes={nodes}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
-        edges={edges}
-        onEdgeUpdate={onEdgesChange}
         fitView
       >
         <Controls showInteractive={false} />

@@ -54,6 +54,11 @@ function mapNetworkData(networkData: any) {
       name: networkData.Name,
       driver: 'host',
     };
+  } else if (networkData.Name === 'none') {
+    return {
+      name: networkData.Name,
+      driver: 'none',
+    };
   } else {
     console.log('placehodlder');
     return {

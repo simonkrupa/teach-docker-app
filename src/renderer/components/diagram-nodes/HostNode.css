@@ -1,6 +1,6 @@
 .host-container {
-  height: 25px;
-  width: 50px;
+  height: 50px;
+  width: 100px;
   border: 1px solid black;
   border-radius: 5px;
   position: relative;
@@ -26,4 +26,9 @@
   line-height: 10px; /* Vertically centers the text */
   border-bottom-left-radius: 5px; /* Optional: rounds the bottom corners */
   border-bottom-right-radius: 5px; /* Optional: rounds the bottom corners */
+}
+
+.host-node {
+  width: 100px;
+  height: 50px;
 }

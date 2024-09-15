@@ -8,14 +8,14 @@
     }
   },
   {
-    "network": "host",
+    "network": "none",
     "id": "1",
     "type": "containerNode",
     "data": {
-      "label": "/my-nginx4",
+      "label": "/my-nginx5",
       "ip": "",
       "state": "running",
-      "network": "host",
+      "network": "none",
       "port": "",
       "hostPort": ""
     }

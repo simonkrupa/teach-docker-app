@@ -75,7 +75,7 @@ const ContainerNode = memo(function ContainerNode(props: ContainerNodeProps) {
           </div>
           <div className="ip-address">eth0: {props.data.ip}</div>
           <div>{props.data.network}</div>
-          {props.data.port ? (
+          {/* {props.data.port ? (
             <div className="port-container-o">
               <div>Port: {props.data.port}</div>
               <div>HostPort: {props.data.hostPort}</div>
@@ -84,7 +84,9 @@ const ContainerNode = memo(function ContainerNode(props: ContainerNodeProps) {
             </div>
           ) : (
             <div />
-          )}
+          )} */}
+          <Handle type="source" position={Position.Bottom} />
+          <Handle type="target" position={Position.Bottom} />
         </div>
       ) : (
         <div />

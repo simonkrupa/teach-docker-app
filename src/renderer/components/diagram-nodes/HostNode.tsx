@@ -1,24 +1,22 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect } from 'react';
 import { Handle, Position } from 'reactflow';
 import './HostNode.css';
 
-const HostNode = memo(function HostNode() {
-  // const [hostNodeComponent, setHostNodeComponent] = useState(false);
-
+const HostNode = memo(function HostNode(props: any) {
   // useEffect(() => {
-  //   if (props.data.driver === undefined) {
-  //     setHostNodeComponent(false);
-  //   } else {
-  //     setHostNodeComponent(true);
+  //   if (props?.data?.ip !== undefined) {
+  //     console.log('HostNode component not rendered');
   //   }
   // }, [props]);
 
   return (
-    <div>
-      {/* {setHostNodeComponent ? ( */}
+    <div className="host-node">
       <Handle type="source" position={Position.Top} />
       <Handle type="target" position={Position.Top} />
-      <div className="host-container">Host</div>
+      <div className="host-container">
+        <div>Host</div>
+        <div>{props.data.ip}</div>
+      </div>
     </div>
   );
 });

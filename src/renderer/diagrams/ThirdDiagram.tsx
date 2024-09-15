@@ -2,9 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactFlow, useNodesState, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
+import { Button } from 'antd';
 import ContainerNode from '../components/diagram-nodes/ContainerNode';
 import NetworkNode from '../components/diagram-nodes/NetworkNode';
-import { Button } from 'antd';
 import nodesValidator from '../components/validators/nodesValidator';
 import MessageBox from '../components/MessageBox';
 import HostNode from '../components/diagram-nodes/HostNode';
@@ -31,10 +31,10 @@ const initialNodes = [
       port: '',
       hostPort: '',
     },
-    draggable: false,
+    // draggable: false,
   },
   {
-    id: '2',
+    id: '0',
     position: {
       x: 100,
       y: 300,
@@ -42,6 +42,7 @@ const initialNodes = [
     type: 'hostNode',
     data: {
       label: 'Host',
+      ip: 'undefined',
     },
     // draggable: false,
   },
@@ -49,9 +50,9 @@ const initialNodes = [
 
 const initialEdges = [
   {
-    id: 'e1-2',
+    id: 'e1-0',
     source: '1',
-    target: '2',
+    target: '0',
     animated: true,
     hidden: true,
   },
@@ -59,9 +60,37 @@ const initialEdges = [
 
 export default function ThirdDiagram() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useNodesState(initialEdges);
   const containerEventListenerRef = useRef<() => void | null>(null);
   const networkEventListenerRef = useRef<() => void | null>(null);
+  const hostEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
+  const [startEdge, setStartEdge] = useState(null);
+  const [deleteEdge, setDeleteEdge] = useState(null);
+
+  const startEdges = useCallback((nodeId) => {
+    setEdges((prevEdges) => {
+      return prevEdges.map((edge) => {
+        if (edge.source === nodeId) {
+          setStartEdge(null);
+          return { ...edge, hidden: false };
+        }
+        return edge;
+      });
+    });
+  }, []);
+
+  const deleteEdges = useCallback((nodeId) => {
+    setEdges((prevEdges) => {
+      return prevEdges.map((edge) => {
+        if (edge.source === nodeId) {
+          setDeleteEdge(null);
+          return { ...edge, hidden: true };
+        }
+        return edge;
+      });
+    });
+  }, []);
 
   const onEdit = useCallback((newData) => {
     setNodes((prevNodes) => {
@@ -70,11 +99,12 @@ export default function ThirdDiagram() {
           item.data.label === newData.label &&
           item.type === 'containerNode'
         ) {
-          if (newData.port) {
-            //TODO: fix this
-            console.log('newData.port', newData.port);
-            initialEdges[0].hidden = false;
+          if (newData.status === 'running') {
+            setStartEdge(item.id);
+          } else {
+            setDeleteEdge(item.id);
           }
+
           return {
             ...item,
             data: {
@@ -113,6 +143,36 @@ export default function ThirdDiagram() {
     },
     [onEdit],
   );
+
+  useEffect(() => {
+    if (deleteEdge !== null) {
+      deleteEdges(deleteEdge);
+    }
+  }, [deleteEdge, deleteEdges]);
+
+  useEffect(() => {
+    if (startEdge !== null) {
+      startEdges(startEdge);
+    }
+  }, [startEdge, startEdges]);
+
+  const handleIncomingHostData = useCallback((data) => {
+    setNodes((prevNodes) => {
+      const updatedNodes = prevNodes.map((item) => {
+        if (item.type === 'hostNode') {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              ip: data,
+            },
+          };
+        }
+        return item;
+      });
+      return updatedNodes;
+    });
+  }, []);
 
   const handleStopListening = () => {
     window.electron.ipcRenderer.sendMessage('stop-listening');
@@ -154,6 +214,11 @@ export default function ThirdDiagram() {
       handleIncomingNetworkData,
     );
 
+    hostEventListenerRef.current = window.electron.ipcRenderer.on(
+      'host-ip-address',
+      handleIncomingHostData,
+    );
+
     return () => {
       console.log('Component unmounted');
       handleStopListening();
@@ -166,6 +231,10 @@ export default function ThirdDiagram() {
       if (networkEventListenerRef.current) {
         networkEventListenerRef.current();
       }
+
+      if (hostEventListenerRef.current) {
+        hostEventListenerRef.current();
+      }
     };
   }, []);
 
@@ -175,7 +244,8 @@ export default function ThirdDiagram() {
         nodes={nodes}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
-        defaultEdges={initialEdges}
+        edges={edges}
+        onEdgeUpdate={onEdgesChange}
         fitView
       >
         <Controls showInteractive={false} />
