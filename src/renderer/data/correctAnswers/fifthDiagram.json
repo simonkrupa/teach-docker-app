@@ -1,0 +1,34 @@
+[
+  {
+    "id": "0",
+    "type": "hostNode",
+    "data": {
+      "label": "host",
+      "ip": "undefined"
+    }
+  },
+  {
+    "network": "my-overlay",
+    "id": "1",
+    "type": "containerNode",
+    "data": {
+      "label": "/my-nginx6",
+      "ip": "10.0.1.2",
+      "state": "running",
+      "network": "my-bridge",
+      "port": "",
+      "hostPort": ""
+    }
+  },
+  {
+    "id": "2",
+    "type": "networkNode",
+    "data": {
+      "label": "my-overlay",
+      "driver": "default",
+      "subnet": "10.0.1.0/24",
+      "gateway": "10.0.1.1"
+    }
+  }
+]
+

@@ -59,8 +59,15 @@ function mapNetworkData(networkData: any) {
       name: networkData.Name,
       driver: 'none',
     };
+  } else if (networkData.Driver === 'overlay') {
+    return {
+      name: networkData.Name,
+      driver: networkData.Driver,
+      subnet: networkData.IPAM.Config[0].Subnet,
+      gateway: networkData.IPAM.Config[0].Gateway,
+      peers: networkData.Peers,
+    };
   } else {
-    console.log('placehodlder');
     return {
       name: networkData.Name,
       subnet: networkData.IPAM.Config[0].Subnet,
