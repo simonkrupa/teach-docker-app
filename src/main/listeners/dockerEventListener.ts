@@ -14,6 +14,10 @@ class DockerEventListener {
 
   constructor(mainWindow: BrowserWindow) {
     this.docker = new Docker();
+    // this.docker = new Docker({
+    //   host: '192.168.56.106',
+    //   port: 2375,
+    // });
     this.lastData = {};
     this.mainWindow = mainWindow;
     this.eventStream = null;

@@ -47,6 +47,19 @@ const initialNodes = [
     draggable: false,
   },
   {
+    id: '-1',
+    position: {
+      x: 300,
+      y: 300,
+    },
+    type: 'hostNode',
+    data: {
+      label: 'Host2',
+      ip: 'undefined',
+    },
+    draggable: false,
+  },
+  {
     id: '2',
     position: { x: 75, y: 200 },
     type: 'networkNode',

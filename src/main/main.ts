@@ -162,6 +162,7 @@ const createWindow = async () => {
   // Start listening to events
   getDockerEventListener(mainWindow);
   const hostIpAddress: string = getHostIPAddress();
+  // const hostIpAddress: string = '192.168.56.106';
   console.log('Host IP Address:', hostIpAddress);
 
   ipcMain.on('stop-listening', () => {
