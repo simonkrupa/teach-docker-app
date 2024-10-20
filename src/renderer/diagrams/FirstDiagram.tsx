@@ -38,6 +38,7 @@ const initialNodes = [
       y: 80,
     },
     type: 'containerNode',
+    desiredNetwork: 'my-bridge',
     data: {
       label: '/my-nginx',
       ip: 'undefined',
@@ -55,6 +56,7 @@ const initialNodes = [
       y: 80,
     },
     type: 'containerNode',
+    desiredNetwork: 'my-bridge',
     data: {
       label: '/my-nginx2',
       ip: 'undefined',
@@ -154,7 +156,10 @@ export default function FirstDiagram() {
           item.data.label === newData.label &&
           item.type === 'containerNode'
         ) {
-          if (newData.status === 'running') {
+          if (
+            newData.status === 'running' &&
+            newData.network === item.desiredNetwork
+          ) {
             setStartEdge(item.id);
           } else {
             setDeleteEdge(item.id);
