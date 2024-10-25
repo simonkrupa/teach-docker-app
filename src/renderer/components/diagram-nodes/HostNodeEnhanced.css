@@ -1,0 +1,81 @@
+.host-container-enhanced {
+  height: 250px;
+  width: 250px;
+  border: 1px solid black;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+  z-index: -1;
+  text-align: center;
+  font-size: 8px;
+}
+
+.host-state {
+  font-size: 100%;
+  padding: 3px 0;
+  display: inline-block;
+  width: 50%;
+}
+
+.host-ip {
+  font-size: 100%;
+  padding: 3px 0;
+  display: inline-block;
+  text-align: center;
+  width: 50%;
+}
+
+.host-info {
+  font-size: 100%;
+  padding: 3px 0;
+  margin: 0;
+  width: 50%;
+  text-align: center;
+}
+
+.host-category {
+  background: grey;
+  padding: 3px 0;
+  margin: 0;
+  border-radius: 4px 0 10px 0;
+  width: 50%;
+  font-size: 100%;
+  text-align: center;
+}
+
+.state-indicator-running {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 50%;
+  margin-left: 3.5px;
+  background: green;
+  animation: flash 1s infinite alternate;
+}
+
+.state-indicator-paused {
+  width: 8px;
+  height: 8px;
+  margin-left: 3.5px;
+  display: inline-block;
+  border-radius: 50%;
+  background: yellow;
+}
+
+.state-indicator-exited {
+  width: 8px;
+  margin-left: 3.5px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 50%;
+  background: red;
+}
+
+@keyframes flash {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

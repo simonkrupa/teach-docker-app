@@ -14,7 +14,8 @@ export type Channels =
   | 'start-listening-3'
   | 'start-listening-4'
   | 'start-listening-5'
-  | 'host-ip-address';
+  | 'host-ip-address'
+  | 'node-vm-data';
 
 const electronHandler = {
   ipcRenderer: {

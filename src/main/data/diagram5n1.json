@@ -1,0 +1,20 @@
+{
+  "containers": [
+    {
+      "network": "my-overlay",
+      "id": "1",
+      "position": {
+        "x": 140,
+        "y": 100
+      },
+      "type": "containerNode",
+      "data": {
+        "network": "my-overlay",
+        "label": "my-nginx7",
+        "ip": "undefined",
+        "state": "running"
+      }
+    }
+  ],
+  "networks": []
+}

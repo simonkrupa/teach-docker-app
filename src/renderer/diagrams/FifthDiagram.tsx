@@ -8,20 +8,21 @@ import NetworkNode from '../components/diagram-nodes/NetworkNode';
 import nodesValidator from '../components/validators/nodesValidator';
 import MessageBox from '../components/MessageBox';
 import HostNode from '../components/diagram-nodes/HostNode';
+import HostNodeEnhanced from '../components/diagram-nodes/HostNodeEnhanced';
 
 const correctAnswers = require('../data/correctAnswers/fifthDiagram.json');
 
 const nodeTypes = {
   containerNode: ContainerNode,
-  // veth: Veth,
   networkNode: NetworkNode,
   hostNode: HostNode,
+  hostNodeEnhanced: HostNodeEnhanced,
 };
 
 const initialNodes = [
   {
     id: '1',
-    position: { x: 75, y: 80 },
+    position: { x: 100, y: 80 },
     type: 'containerNode',
     data: {
       label: '/my-nginx6',
@@ -34,34 +35,56 @@ const initialNodes = [
     draggable: false,
   },
   {
-    id: '0',
-    position: {
-      x: 100,
-      y: 300,
-    },
-    type: 'hostNode',
+    id: '3',
+    position: { x: 550, y: 80 },
+    type: 'containerNode',
     data: {
-      label: 'Host',
-      ip: 'undefined',
+      label: '/my-nginx7',
+      ip: undefined,
+      state: undefined,
+      network: '',
+      port: '',
+      hostPort: '',
+    },
+    draggable: false,
+  },
+  {
+    id: '-2',
+    position: {
+      x: 50,
+      y: 20,
+    },
+    type: 'hostNodeEnhanced',
+    data: {
+      role: '',
+      status: '',
+      ip: '192.168.56.106',
+      id: '',
+      label: '',
+      availability: undefined,
     },
     draggable: false,
   },
   {
     id: '-1',
     position: {
-      x: 300,
-      y: 300,
+      x: 450,
+      y: 20,
     },
-    type: 'hostNode',
+    type: 'hostNodeEnhanced',
     data: {
-      label: 'Host2',
-      ip: 'undefined',
+      role: '',
+      status: '',
+      ip: '192.168.56.108',
+      id: '',
+      label: '',
+      availability: undefined,
     },
     draggable: false,
   },
   {
     id: '2',
-    position: { x: 75, y: 200 },
+    position: { x: 230, y: 200 },
     type: 'networkNode',
     data: {
       label: 'my-overlay',
@@ -70,10 +93,28 @@ const initialNodes = [
       gateway: undefined,
       peers: undefined,
     },
+    draggable: false,
   },
 ];
 
-const initialEdges = [];
+const initialEdges = [
+  {
+    id: 'e1-2',
+    source: '1',
+    target: '2',
+    targetHandle: 'left',
+    animated: true,
+    hidden: true,
+  },
+  {
+    id: 'e3-2',
+    source: '3',
+    target: '2',
+    targetHandle: 'right',
+    animated: true,
+    hidden: true,
+  },
+];
 
 export default function FifthDiagram() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -81,6 +122,7 @@ export default function FifthDiagram() {
   const containerEventListenerRef = useRef<() => void | null>(null);
   const networkEventListenerRef = useRef<() => void | null>(null);
   const hostEventListenerRef = useRef<() => void | null>(null);
+  const nodeEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
   const [startEdge, setStartEdge] = useState(null);
   const [deleteEdge, setDeleteEdge] = useState(null);
@@ -136,6 +178,20 @@ export default function FifthDiagram() {
           };
         }
         if (item.data.label === newData.name && item.type === 'networkNode') {
+          if (newData.driver === undefined) {
+            let flag = false;
+            prevNodes.forEach((node) => {
+              if (
+                node.type === 'containerNode' &&
+                node.data.state === 'running'
+              ) {
+                flag = true;
+              }
+            });
+            if (flag) {
+              return item;
+            }
+          }
           return {
             ...item,
             data: {
@@ -147,6 +203,24 @@ export default function FifthDiagram() {
             },
           };
         }
+        if (
+          item.data.ip === newData.ip &&
+          item.data.ip !== '' &&
+          item.type === 'hostNodeEnhanced'
+        ) {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              role: newData.role,
+              status: newData.status,
+              ip: newData.ip,
+              id: newData.id,
+              label: newData.hostname,
+              availability: newData.availability,
+            },
+          };
+        }
         return item;
       });
       return updatedNodes;
@@ -155,8 +229,10 @@ export default function FifthDiagram() {
 
   const handleIncomingData = useCallback(
     (data) => {
+      console.log('handleIncomingData');
       setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
+      console.log(jsonData);
       onEdit(jsonData);
     },
     [onEdit],
@@ -174,24 +250,6 @@ export default function FifthDiagram() {
     }
   }, [startEdge, startEdges]);
 
-  const handleIncomingHostData = useCallback((data) => {
-    setNodes((prevNodes) => {
-      const updatedNodes = prevNodes.map((item) => {
-        if (item.type === 'hostNode') {
-          return {
-            ...item,
-            data: {
-              ...item.data,
-              ip: data,
-            },
-          };
-        }
-        return item;
-      });
-      return updatedNodes;
-    });
-  }, []);
-
   const handleStopListening = () => {
     window.electron.ipcRenderer.sendMessage('stop-listening');
   };
@@ -202,6 +260,17 @@ export default function FifthDiagram() {
 
   const handleIncomingNetworkData = useCallback(
     (data) => {
+      console.log('handleIncomingNetworkData');
+      setMessageBoxState('hidden');
+      const jsonData = JSON.parse(data);
+      onEdit(jsonData);
+    },
+    [onEdit],
+  );
+
+  const handleIncomingNodeData = useCallback(
+    (data) => {
+      console.log('handleIncomingNodeData');
       setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
       onEdit(jsonData);
@@ -232,9 +301,9 @@ export default function FifthDiagram() {
       handleIncomingNetworkData,
     );
 
-    hostEventListenerRef.current = window.electron.ipcRenderer.on(
-      'host-ip-address',
-      handleIncomingHostData,
+    nodeEventListenerRef.current = window.electron.ipcRenderer.on(
+      'node-vm-data',
+      handleIncomingNodeData,
     );
 
     return () => {
@@ -252,6 +321,10 @@ export default function FifthDiagram() {
 
       if (hostEventListenerRef.current) {
         hostEventListenerRef.current();
+      }
+
+      if (nodeEventListenerRef.current) {
+        nodeEventListenerRef.current();
       }
     };
   }, []);

@@ -19,6 +19,8 @@ const NetworkNode = memo(function NetworkNode(props) {
         <div className="network-container">
           {/* <Handle type="source" id="cont" position={Position.Top} /> */}
           <Handle type="target" position={Position.Top} />
+          <Handle type="target" id="left" position={Position.Left} />
+          <Handle type="target" id="right" position={Position.Right} />
           <div className="grid-container">
             <div className="grid-item">
               Name: <b>{props.data.label}</b>

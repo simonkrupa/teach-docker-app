@@ -23,6 +23,7 @@ const diagram2 = require('./data/diagram2.json');
 const diagram3 = require('./data/diagram3.json');
 const diagram4 = require('./data/diagram4.json');
 const diagram5 = require('./data/diagram5.json');
+const diagram5n1 = require('./data/diagram5n1.json');
 
 const osShell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
@@ -36,12 +37,23 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 let dockerEventListener: DockerEventListener | null = null;
+let dockerEventListenerOverlay: DockerEventListener | null = null;
 
 function getDockerEventListener(mainWindow: BrowserWindow) {
   if (!dockerEventListener) {
-    dockerEventListener = new DockerEventListener(mainWindow);
+    dockerEventListener = new DockerEventListener(mainWindow, '192.168.56.106');
   }
   return dockerEventListener;
+}
+
+function getDockerEventListenerOverlay(mainWindow: BrowserWindow) {
+  if (!dockerEventListenerOverlay) {
+    dockerEventListenerOverlay = new DockerEventListener(
+      mainWindow,
+      '192.168.56.108',
+    );
+  }
+  return dockerEventListenerOverlay;
 }
 
 function getHostIPAddress(): string {
@@ -161,8 +173,9 @@ const createWindow = async () => {
   new AppUpdater();
   // Start listening to events
   getDockerEventListener(mainWindow);
-  const hostIpAddress: string = getHostIPAddress();
-  // const hostIpAddress: string = '192.168.56.106';
+  getDockerEventListenerOverlay(mainWindow);
+  // const hostIpAddress: string = getHostIPAddress();
+  const hostIpAddress: string = '192.168.56.106';
   console.log('Host IP Address:', hostIpAddress);
 
   ipcMain.on('stop-listening', () => {
@@ -236,12 +249,23 @@ const createWindow = async () => {
       containerToListen.set(container.data.label, container.network);
       uniqueNetworks.add(container.network);
     });
+    const containerToListenOverlay = new Map<string, string>();
+    diagram5n1.containers.forEach((container) => {
+      containerToListenOverlay.set(container.data.label, container.network);
+      uniqueNetworks.add(container.network);
+    });
+    dockerEventListenerOverlay?.listenToEvents(containerToListenOverlay);
+    dockerEventListenerOverlay?.getCurrentStateOfContainers(
+      containerToListenOverlay,
+      uniqueNetworks,
+    );
     dockerEventListener?.listenToEvents(containerToListen);
     dockerEventListener?.getCurrentStateOfContainers(
       containerToListen,
       uniqueNetworks,
     );
-    sendHostIpAddress(hostIpAddress);
+    dockerEventListener?.getVMNodes();
+    // sendHostIpAddress(hostIpAddress);
   });
 };
 

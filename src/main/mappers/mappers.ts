@@ -48,6 +48,17 @@ function mapContainerData(containerData: any, value: string) {
   };
 }
 
+function mapVMHostData(nodeInfo: any) {
+  return {
+    role: nodeInfo.Spec.Role,
+    status: nodeInfo.Status.State,
+    availability: nodeInfo.Spec.Availability,
+    ip: nodeInfo.Status.Addr,
+    id: nodeInfo.ID,
+    hostname: nodeInfo.Description.Hostname,
+  };
+}
+
 function mapNetworkData(networkData: any) {
   if (networkData.Name === 'host') {
     return {
@@ -77,4 +88,4 @@ function mapNetworkData(networkData: any) {
   }
 }
 
-module.exports = { mapContainerData, mapNetworkData };
+module.exports = { mapContainerData, mapNetworkData, mapVMHostData };

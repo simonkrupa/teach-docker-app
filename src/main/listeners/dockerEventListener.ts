@@ -1,7 +1,11 @@
 import { BrowserWindow } from 'electron';
 
 const Docker = require('dockerode');
-const { mapContainerData, mapNetworkData } = require('../mappers/mappers');
+const {
+  mapContainerData,
+  mapNetworkData,
+  mapVMHostData,
+} = require('../mappers/mappers');
 
 class DockerEventListener {
   docker: any;
@@ -12,12 +16,12 @@ class DockerEventListener {
 
   eventStream: NodeJS.ReadableStream | null;
 
-  constructor(mainWindow: BrowserWindow) {
-    this.docker = new Docker();
-    // this.docker = new Docker({
-    //   host: '192.168.56.106',
-    //   port: 2375,
-    // });
+  constructor(mainWindow: BrowserWindow, ipAddress: string) {
+    // this.docker = new Docker();
+    this.docker = new Docker({
+      host: ipAddress,
+      port: 2375,
+    });
     this.lastData = {};
     this.mainWindow = mainWindow;
     this.eventStream = null;
@@ -207,6 +211,15 @@ class DockerEventListener {
             default:
               break;
           }
+        } else if (event.Type === 'node') {
+          switch (event.Action) {
+            case 'update': {
+              this.getVMNodeData(event.Actor.ID);
+              break;
+            }
+            default:
+              break;
+          }
         }
       });
 
@@ -227,6 +240,49 @@ class DockerEventListener {
       this.eventStream.destroy(); // Destroy the stream to end listening
       this.eventStream = null;
     }
+  }
+
+  getVMNodes(): void {
+    this.docker.listNodes((err, nodes) => {
+      if (err) {
+        return console.error('Error:', err);
+      }
+      const filteredNodes = nodes.reduce((uniqueNodes, node) => {
+        const nodeIPAddr = node.Status.Addr;
+        const existingNode = uniqueNodes.get(nodeIPAddr);
+
+        if (
+          !existingNode ||
+          (existingNode.Status.State === 'down' && node.Status.State !== 'down')
+        ) {
+          uniqueNodes.set(nodeIPAddr, node);
+        }
+
+        return uniqueNodes;
+      }, new Map());
+
+      const result = Array.from(filteredNodes.values());
+      //TODO add validation for nodes
+      result.forEach((nodeInfo) => {
+        this.mainWindow.webContents.send(
+          'node-vm-data',
+          JSON.stringify(mapVMHostData(nodeInfo)),
+        );
+      });
+      // this.sendCurrentContainers(containersMap);
+    });
+  }
+
+  getVMNodeData(nodeId: string): void {
+    this.docker.getNode(nodeId).inspect((err, nodeInfo) => {
+      if (err) {
+        return console.error('Error:', err);
+      }
+      this.mainWindow.webContents.send(
+        'node-vm-data',
+        JSON.stringify(mapVMHostData(nodeInfo)),
+      );
+    });
   }
 }
 

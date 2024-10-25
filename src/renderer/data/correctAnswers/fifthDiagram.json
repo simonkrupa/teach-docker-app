@@ -1,13 +1,5 @@
 [
   {
-    "id": "0",
-    "type": "hostNode",
-    "data": {
-      "label": "host",
-      "ip": "undefined"
-    }
-  },
-  {
     "network": "my-overlay",
     "id": "1",
     "type": "containerNode",
@@ -25,7 +17,7 @@
     "type": "networkNode",
     "data": {
       "label": "my-overlay",
-      "driver": "default",
+      "driver": "overlay",
       "subnet": "10.0.1.0/24",
       "gateway": "10.0.1.1"
     }
