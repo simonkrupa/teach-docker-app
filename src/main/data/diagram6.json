@@ -1,0 +1,21 @@
+{
+  "containers": [
+    {
+      "network": "my-macvlan",
+      "id": "1",
+      "position":
+        {
+          "x": 140,
+          "y": 100
+        },
+      "type": "containerNode",
+      "data": {
+        "network": "my-macvlan",
+        "label": "my-nginx8",
+        "ip": "undefined",
+        "state": "running"
+      }
+    }
+  ],
+  "networks": []
+}

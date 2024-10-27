@@ -24,6 +24,7 @@ const diagram3 = require('./data/diagram3.json');
 const diagram4 = require('./data/diagram4.json');
 const diagram5 = require('./data/diagram5.json');
 const diagram5n1 = require('./data/diagram5n1.json');
+const diagram6 = require('./data/diagram6.json');
 
 const osShell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
@@ -67,15 +68,14 @@ function getHostIPAddress(): string {
         hostIP = network.address;
       }
     });
-    return hostIP;
   } else {
     networkInterfaces['en0'].forEach((network) => {
       if (network.family === 'IPv4') {
         hostIP = network.address;
       }
     });
-    return hostIP;
   }
+  return hostIP;
 }
 
 function sendHostIpAddress(hostIpAddress: string) {
@@ -266,6 +266,21 @@ const createWindow = async () => {
     );
     dockerEventListener?.getVMNodes();
     // sendHostIpAddress(hostIpAddress);
+  });
+  ipcMain.on('start-listening-6', () => {
+    console.log('Starting listening to events for diagram 6');
+    const containerToListen = new Map<string, string>();
+    const uniqueNetworks = new Set<string>();
+    diagram6.containers.forEach((container) => {
+      containerToListen.set(container.data.label, container.network);
+      uniqueNetworks.add(container.network);
+    });
+    dockerEventListener?.listenToEvents(containerToListen);
+    dockerEventListener?.getCurrentStateOfContainers(
+      containerToListen,
+      uniqueNetworks,
+    );
+    sendHostIpAddress(hostIpAddress);
   });
 };
 

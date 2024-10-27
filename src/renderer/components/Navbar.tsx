@@ -32,6 +32,7 @@ const items: MenuItem[] = [
   getItem('Default Bridge', '/second-diagram'),
   getItem('Host', '/third-diagram'),
   getItem('None', '/fourth-diagram'),
+  getItem('Macvlan', '/sixth-diagram'),
   getItem('Overlay', '/fifth-diagram'),
   // getItem('2. Docker networks', '/second'),
   // getItem('3. Exposing ports', '/third'),

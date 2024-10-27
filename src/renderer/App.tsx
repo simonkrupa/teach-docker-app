@@ -10,6 +10,7 @@ import SecondDiagram from './diagrams/SecondDiagram';
 import ThirdDiagram from './diagrams/ThirdDiagram';
 import FourthDiagram from './diagrams/FourthDiagram';
 import FifthDiagram from './diagrams/FifthDiagram';
+import SixthDiagram from './diagrams/SixthDiagram';
 
 export default function App() {
   const [isNavbarCollapsed, setNavbarCollapsed] = useState(false);
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/third-diagram" element={<ThirdDiagram />} />
           <Route path="/fourth-diagram" element={<FourthDiagram />} />
           <Route path="/fifth-diagram" element={<FifthDiagram />} />
+          <Route path="/sixth-diagram" element={<SixthDiagram />} />
         </Routes>
       </Layout>
     </div>
