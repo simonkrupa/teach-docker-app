@@ -1,0 +1,26 @@
+[
+  {
+    "network": "my-ipvlan",
+    "id": "1",
+    "type": "containerNode",
+    "data": {
+      "label": "/my-nginx11",
+      "ip": "192.168.100.2",
+      "state": "running",
+      "network": "my-ipvlan",
+      "port": "",
+      "hostPort": ""
+    }
+  },
+  {
+    "id": "2",
+    "type": "networkNode",
+    "data": {
+      "label": "my-ipvlan",
+      "driver": "ipvlan",
+      "subnet": "192.168.100.0/24",
+      "gateway": "192.168.100.1"
+    }
+  }
+]
+

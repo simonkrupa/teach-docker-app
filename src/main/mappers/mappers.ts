@@ -16,6 +16,7 @@ function mapContainerData(containerData: any, value: string) {
   let ipData;
   let networkUsed;
   let portMapping;
+  let macAddr;
   if (containerData.HostConfig.PortBindings) {
     portMapping = parsePortMapping(containerData.HostConfig.PortBindings);
   } else {
@@ -23,6 +24,7 @@ function mapContainerData(containerData: any, value: string) {
   }
   if (containerData.NetworkSettings.Networks[value]) {
     ipData = containerData.NetworkSettings.Networks[value].IPAddress;
+    macAddr = containerData.NetworkSettings.Networks[value].MacAddress;
     networkUsed = value;
   } else {
     console.log('No network found');
@@ -31,9 +33,11 @@ function mapContainerData(containerData: any, value: string) {
       Object.keys(containerData.NetworkSettings.Networks).length > 0
     ) {
       ipData = containerData.NetworkSettings.IPAddress;
+      macAddr = containerData.NetworkSettings.MacAddress;
       networkUsed = Object.keys(containerData.NetworkSettings.Networks).at(0);
     } else {
       ipData = containerData.NetworkSettings.IPAddress;
+      macAddr = containerData.NetworkSettings.MacAddress;
       //TODO
       networkUsed = '';
     }
@@ -45,6 +49,7 @@ function mapContainerData(containerData: any, value: string) {
     network: networkUsed,
     port: portMapping?.key,
     hostPort: portMapping?.hostPort,
+    mac: macAddr,
   };
 }
 

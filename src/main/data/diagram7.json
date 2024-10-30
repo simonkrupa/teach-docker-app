@@ -1,0 +1,37 @@
+{
+  "containers": [
+    {
+      "network": "my-ipvlan",
+      "id": "1",
+      "position":
+        {
+          "x": 140,
+          "y": 100
+        },
+      "type": "containerNode",
+      "data": {
+        "network": "my-macvlan",
+        "label": "my-nginx11",
+        "ip": "undefined",
+        "state": "running"
+      }
+    },
+    {
+      "network": "my-ipvlan",
+      "id": "3",
+      "position":
+        {
+          "x": 140,
+          "y": 100
+        },
+      "type": "containerNode",
+      "data": {
+        "network": "my-macvlan",
+        "label": "my-nginx12",
+        "ip": "undefined",
+        "state": "running"
+      }
+    }
+  ],
+  "networks": []
+}

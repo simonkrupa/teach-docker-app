@@ -3,68 +3,94 @@ import { ReactFlow, useNodesState, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
 import { Button } from 'antd';
+import { throttle } from 'lodash';
 import ContainerNode from '../components/diagram-nodes/ContainerNode';
 import NetworkNode from '../components/diagram-nodes/NetworkNode';
-import HostNode from '../components/diagram-nodes/HostNode';
 import nodesValidator from '../components/validators/nodesValidator';
 import MessageBox from '../components/MessageBox';
+import HostNode from '../components/diagram-nodes/HostNode';
+import LanNode from '../components/diagram-nodes/LanNode';
 
-const correctAnswers = require('../data/correctAnswers/secondDiagram.json');
+const correctAnswers = require('../data/correctAnswers/seventhDiagram.json');
 
 const nodeTypes = {
   containerNode: ContainerNode,
-  // veth: Veth,
   hostNode: HostNode,
   networkNode: NetworkNode,
+  lanNode: LanNode,
 };
 
 const initialNodes = [
   {
-    id: '0',
-    position: {
-      x: 210,
-      y: 450,
-    },
-    type: 'hostNode',
-    data: {
-      label: 'host',
-      ip: 'undefined',
-    },
-  },
-  {
     id: '1',
-    position: { x: 75, y: 80 },
+    position: {
+      x: 200,
+      y: 80,
+    },
     type: 'containerNode',
+    desiredNetwork: 'my-ipvlan',
     data: {
-      label: '/my-nginx3',
-      ip: '172.22.168.91',
+      label: '/my-nginx11',
+      ip: 'undefined',
       state: undefined,
       network: '',
       port: '',
       hostPort: '',
+      mac: '',
+    },
+    // draggable: false,
+  },
+  {
+    id: '3',
+    position: {
+      x: 320,
+      y: 80,
+    },
+    type: 'containerNode',
+    desiredNetwork: 'my-ipvlan',
+    data: {
+      label: '/my-nginx12',
+      ip: 'undefined',
+      state: undefined,
+      network: '',
+      port: '',
+      hostPort: '',
+      mac: '',
     },
     // draggable: false,
   },
   {
     id: '2',
     position: {
-      x: 120,
+      x: 200,
       y: 300,
     },
     type: 'networkNode',
     data: {
-      label: 'bridge',
+      label: 'my-ipvlan',
       subnet: undefined,
       driver: undefined,
       gateway: undefined,
     },
     // draggable: false,
   },
+  {
+    id: '5',
+    position: {
+      x: 120,
+      y: 500,
+    },
+    type: 'lanNode',
+    data: {
+      cidr: '',
+      mac: '',
+    },
+  },
 ];
 
 const initialEdges = [
   {
-    id: '1-2',
+    id: 'e1-2',
     source: '1',
     target: '2',
     animated: true,
@@ -72,30 +98,40 @@ const initialEdges = [
     reconnectable: false,
   },
   {
-    id: '2-0',
-    source: '2',
-    sourceHandle: 'host',
-    target: '0',
+    id: 'e3-2',
+    source: '3',
+    target: '2',
     animated: true,
+    hidden: true,
+    reconnectable: false,
+  },
+  {
+    id: 'e2-5',
+    source: '2',
+    target: '5',
+    animated: true,
+    hidden: true,
     reconnectable: false,
   },
 ];
-
-export default function SecondDiagram() {
+export default function SeventhDiagram() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useNodesState(initialEdges);
   const containerEventListenerRef = useRef<() => void | null>(null);
   const networkEventListenerRef = useRef<() => void | null>(null);
-  const hostEventListenerRef = useRef<() => void | null>(null);
+  const lanEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
-  const [startEdge, setStartEdge] = useState(null);
-  const [deleteEdge, setDeleteEdge] = useState(null);
+  const [startEdge, setStartEdge] = useState({ node: null, newData: null });
+  const [deleteEdge, setDeleteEdge] = useState({ node: null, newData: null });
 
-  const startEdges = useCallback((nodeId) => {
+  const startEdges = useCallback((node, newData) => {
     setEdges((prevEdges) => {
       return prevEdges.map((edge) => {
-        if (edge.source === nodeId) {
-          setStartEdge(null);
+        if (edge.source === node.id) {
+          setStartEdge({ node: null, newData: null });
+          return { ...edge, hidden: false };
+        }
+        if (edge.id === 'e2-5' && edge.hidden === true) {
           return { ...edge, hidden: false };
         }
         return edge;
@@ -103,11 +139,14 @@ export default function SecondDiagram() {
     });
   }, []);
 
-  const deleteEdges = useCallback((nodeId) => {
+  const deleteEdges = useCallback((node, newData) => {
     setEdges((prevEdges) => {
       return prevEdges.map((edge) => {
-        if (edge.source === nodeId) {
-          setDeleteEdge(null);
+        if (edge.source === node.id) {
+          setDeleteEdge(null, null);
+          return { ...edge, hidden: true };
+        }
+        if (edge.id === 'e2-5' && edge.hidden === false) {
           return { ...edge, hidden: true };
         }
         return edge;
@@ -122,10 +161,13 @@ export default function SecondDiagram() {
           item.data.label === newData.label &&
           item.type === 'containerNode'
         ) {
-          if (newData.status === 'running') {
-            setStartEdge(item.id);
+          if (
+            newData.status === 'running' &&
+            newData.network === item.desiredNetwork
+          ) {
+            setStartEdge({ node: item, newData: newData });
           } else {
-            setDeleteEdge(item.id);
+            setDeleteEdge({ node: item, newData: newData });
           }
           return {
             ...item,
@@ -137,6 +179,7 @@ export default function SecondDiagram() {
               network: newData.network,
               port: newData?.port || '',
               hostPort: newData?.hostPort || '',
+              mac: newData?.mac || '',
             },
           };
         }
@@ -159,7 +202,6 @@ export default function SecondDiagram() {
 
   const handleIncomingData = useCallback(
     (data) => {
-      console.log('Container data:', data);
       setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
       onEdit(jsonData);
@@ -169,13 +211,17 @@ export default function SecondDiagram() {
 
   useEffect(() => {
     if (deleteEdge !== null) {
-      deleteEdges(deleteEdge);
+      if (deleteEdge?.node !== null) {
+        deleteEdges(deleteEdge.node, deleteEdge.newData);
+      }
     }
   }, [deleteEdge, deleteEdges]);
 
   useEffect(() => {
     if (startEdge !== null) {
-      startEdges(startEdge);
+      if (startEdge?.node !== null) {
+        startEdges(startEdge.node, startEdge.newData);
+      }
     }
   }, [startEdge, startEdges]);
 
@@ -184,8 +230,28 @@ export default function SecondDiagram() {
   };
 
   const handleStartListening = () => {
-    window.electron.ipcRenderer.sendMessage('start-listening-2');
+    window.electron.ipcRenderer.sendMessage('start-listening-7');
   };
+
+  const handleIncomingLanData = useCallback((data) => {
+    const jsonData = JSON.parse(data);
+    setNodes((prevNodes) => {
+      const updatedNodes = prevNodes.map((item) => {
+        if (item.type === 'lanNode') {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              cidr: jsonData.cidr,
+              mac: jsonData.mac,
+            },
+          };
+        }
+        return item;
+      });
+      return updatedNodes;
+    });
+  }, []);
 
   const handleIncomingNetworkData = useCallback(
     (data) => {
@@ -196,34 +262,18 @@ export default function SecondDiagram() {
     [onEdit],
   );
 
-  const handleIncomingHostData = useCallback((data) => {
-    setNodes((prevNodes) => {
-      const updatedNodes = prevNodes.map((item) => {
-        if (item.type === 'hostNode') {
-          return {
-            ...item,
-            data: {
-              ...item.data,
-              ip: data,
-            },
-          };
-        }
-        return item;
-      });
-      return updatedNodes;
-    });
-  }, []);
-
   const handleValidateAnswer = () => {
     if (nodesValidator(nodes, correctAnswers)) {
       setMessageBoxState('success');
+      console.log('Correct');
     } else {
       setMessageBoxState('error');
+      console.log('Incorrect');
     }
   };
 
   useEffect(() => {
-    console.log('SecondDiagram mounted');
+    console.log('SeventhDiagram mounted');
     handleStartListening();
 
     // Add the event listener and store the cleanup function
@@ -237,9 +287,9 @@ export default function SecondDiagram() {
       handleIncomingNetworkData,
     );
 
-    hostEventListenerRef.current = window.electron.ipcRenderer.on(
-      'host-ip-address',
-      handleIncomingHostData,
+    lanEventListenerRef.current = window.electron.ipcRenderer.on(
+      'lan-data',
+      handleIncomingLanData,
     );
 
     return () => {
@@ -255,8 +305,8 @@ export default function SecondDiagram() {
         networkEventListenerRef.current();
       }
 
-      if (hostEventListenerRef.current) {
-        hostEventListenerRef.current();
+      if (lanEventListenerRef.current) {
+        lanEventListenerRef.current();
       }
     };
   }, []);
@@ -285,7 +335,6 @@ export default function SecondDiagram() {
           />
         )}
         <Button
-          // style={{ zIndex: 100 }}
           className="validateButton"
           type="primary"
           onClick={handleValidateAnswer}

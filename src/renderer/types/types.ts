@@ -6,5 +6,6 @@ export type ContainerNodeProps = {
     network: string;
     port: string;
     hostPort: string;
+    mac: string;
   };
 };

@@ -1,8 +1,8 @@
 import { memo, useEffect } from 'react';
 import { Handle, Position } from 'reactflow';
-import './HostNode.css';
+import './LanNode.css';
 
-const HostNode = memo(function HostNode(props: any) {
+const LanNode = memo(function LanNode(props: any) {
   // useEffect(() => {
   //   if (props?.data?.ip !== undefined) {
   //     console.log('HostNode component not rendered');
@@ -10,16 +10,16 @@ const HostNode = memo(function HostNode(props: any) {
   // }, [props]);
 
   return (
-    <div className="host-node">
+    <div className="lan-node">
       <Handle type="source" position={Position.Top} />
       <Handle type="target" position={Position.Top} />
-      <Handle type="source" id="target-lan" position={Position.Bottom} />
-      <div className="host-container">
-        <div>Host</div>
-        <div>{props.data.ip}</div>
+      <div className="lan-container">
+        <div>LAN</div>
+        <div>{props.data.cidr}</div>
+        <div>{props.data.mac}</div>
       </div>
     </div>
   );
 });
 
-export default HostNode;
+export default LanNode;

@@ -55,6 +55,7 @@ const initialEdges = [
     target: '0',
     animated: true,
     hidden: true,
+    reconnectable: false,
   },
 ];
 

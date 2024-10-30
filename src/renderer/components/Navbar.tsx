@@ -33,6 +33,7 @@ const items: MenuItem[] = [
   getItem('Host', '/third-diagram'),
   getItem('None', '/fourth-diagram'),
   getItem('Macvlan', '/sixth-diagram'),
+  getItem('Ipvlan', '/seventh-diagram'),
   getItem('Overlay', '/fifth-diagram'),
   // getItem('2. Docker networks', '/second'),
   // getItem('3. Exposing ports', '/third'),

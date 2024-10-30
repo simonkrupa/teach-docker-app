@@ -91,6 +91,7 @@ const initialEdges = [
     target: '3',
     animated: true,
     hidden: true,
+    reconnectable: false,
   },
   {
     id: '2-3',
@@ -98,6 +99,7 @@ const initialEdges = [
     target: '3',
     animated: true,
     hidden: true,
+    reconnectable: false,
   },
   {
     id: '3-0',
@@ -105,6 +107,7 @@ const initialEdges = [
     sourceHandle: 'host',
     target: '0',
     animated: true,
+    reconnectable: false,
   },
 ];
 

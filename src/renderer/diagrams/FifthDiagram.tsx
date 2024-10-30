@@ -105,6 +105,7 @@ const initialEdges = [
     targetHandle: 'left',
     animated: true,
     hidden: true,
+    reconnectable: false,
   },
   {
     id: 'e3-2',
@@ -113,6 +114,7 @@ const initialEdges = [
     targetHandle: 'right',
     animated: true,
     hidden: true,
+    reconnectable: false,
   },
 ];
 
