@@ -25,6 +25,7 @@ const diagram4 = require('./data/diagram4.json');
 const diagram5 = require('./data/diagram5.json');
 const diagram5n1 = require('./data/diagram5n1.json');
 const diagram6 = require('./data/diagram6.json');
+const diagram7 = require('./data/diagram7.json');
 
 const osShell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
@@ -78,8 +79,34 @@ function getHostIPAddress(): string {
   return hostIP;
 }
 
+function getNetworkInterfaces() {
+  const interfaces = os.networkInterfaces();
+  const filteredInterfaces = Object.keys(interfaces)
+    .filter((key) => !key.toLowerCase().startsWith('lo')) // Filter out interfaces starting with 'lo'
+    .flatMap(
+      (key) =>
+        interfaces[key]
+          .filter((address) => address.family === 'IPv4') // Filter only IPv4 addresses
+          .map((address) => ({ key, ...address })), // Include the key with each address
+    );
+
+  //TODO temp change
+  const tempInterfaces = Object.values(filteredInterfaces).filter(
+    (item) => item.key === 'Wi-Fi',
+  );
+  return tempInterfaces.length > 0 ? tempInterfaces[0] : null;
+}
+
 function sendHostIpAddress(hostIpAddress: string) {
   mainWindow?.webContents.send('host-ip-address', hostIpAddress);
+}
+
+function sendLan(hostIpAddress: string) {
+  // console.log(JSON.stringify(getNetworkInterfaces()));
+  mainWindow?.webContents.send(
+    'lan-data',
+    JSON.stringify(getNetworkInterfaces()),
+  );
 }
 
 ipcMain.on('ipc-example', async (event, arg) => {
@@ -175,7 +202,7 @@ const createWindow = async () => {
   getDockerEventListener(mainWindow);
   getDockerEventListenerOverlay(mainWindow);
   // const hostIpAddress: string = getHostIPAddress();
-  const hostIpAddress: string = '192.168.56.106';
+  const hostIpAddress: string = '192.168.100.33';
   console.log('Host IP Address:', hostIpAddress);
 
   ipcMain.on('stop-listening', () => {
@@ -281,6 +308,22 @@ const createWindow = async () => {
       uniqueNetworks,
     );
     sendHostIpAddress(hostIpAddress);
+    sendLan(hostIpAddress);
+  });
+  ipcMain.on('start-listening-7', () => {
+    console.log('Starting listening to events for diagram 7');
+    const containerToListen = new Map<string, string>();
+    const uniqueNetworks = new Set<string>();
+    diagram7.containers.forEach((container) => {
+      containerToListen.set(container.data.label, container.network);
+      uniqueNetworks.add(container.network);
+    });
+    dockerEventListener?.listenToEvents(containerToListen);
+    dockerEventListener?.getCurrentStateOfContainers(
+      containerToListen,
+      uniqueNetworks,
+    );
+    sendLan(hostIpAddress);
   });
 };
 

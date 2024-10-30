@@ -15,6 +15,38 @@
         "ip": "undefined",
         "state": "running"
       }
+    },
+    {
+      "network": "host",
+      "id": "4",
+      "position":
+        {
+          "x": 140,
+          "y": 100
+        },
+      "type": "containerNode",
+      "data": {
+        "network": "host",
+        "label": "my-nginx9",
+        "ip": "undefined",
+        "state": "running"
+      }
+    },
+    {
+      "network": "my-macvlan",
+      "id": "6",
+      "position":
+        {
+          "x": 140,
+          "y": 100
+        },
+      "type": "containerNode",
+      "data": {
+        "network": "my-macvlan",
+        "label": "my-nginx10",
+        "ip": "undefined",
+        "state": "running"
+      }
     }
   ],
   "networks": []
