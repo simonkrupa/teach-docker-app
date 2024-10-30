@@ -42,10 +42,12 @@
   border-radius: 0;
   background: #001529;
   transition: none !important;
+  box-shadow: none !important;
+  position: inherit;
 }
 
 .button-group {
-  width: 150px;
+  width: 200px;
   align-items: center;
   height: 30px;
   transition: none !important;

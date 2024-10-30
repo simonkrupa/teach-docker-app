@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Layout } from 'antd';
 import Home from './pages/Home';
 import './App.css';
@@ -12,9 +12,12 @@ import FourthDiagram from './diagrams/FourthDiagram';
 import FifthDiagram from './diagrams/FifthDiagram';
 import SixthDiagram from './diagrams/SixthDiagram';
 import SeventhDiagram from './diagrams/SeventhDiagram';
+import Settings from './pages/Settings';
 
 export default function App() {
   const [isNavbarCollapsed, setNavbarCollapsed] = useState(false);
+  const location = useLocation();
+  const isSettingsPage = location.pathname === '/settings';
 
   const toggleNavbar = () => {
     setNavbarCollapsed(!isNavbarCollapsed);
@@ -24,7 +27,9 @@ export default function App() {
     <div className="full-window">
       <FrameBar isCollapsed={isNavbarCollapsed} toggleNavbar={toggleNavbar} />
       <Layout>
-        <NavBar isCollapsed={isNavbarCollapsed} toggleNavbar={toggleNavbar} />
+        {!isSettingsPage && (
+          <NavBar isCollapsed={isNavbarCollapsed} toggleNavbar={toggleNavbar} />
+        )}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/first-diagram" element={<FirstDiagram />} />
@@ -34,6 +39,7 @@ export default function App() {
           <Route path="/fifth-diagram" element={<FifthDiagram />} />
           <Route path="/sixth-diagram" element={<SixthDiagram />} />
           <Route path="/seventh-diagram" element={<SeventhDiagram />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </Layout>
     </div>

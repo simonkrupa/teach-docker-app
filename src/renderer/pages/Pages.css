@@ -12,3 +12,19 @@
 .generic-button {
   background: #001529;
 }
+
+.settings-page {
+  overflow: auto;
+  overflow-y: auto;
+  width: 100%;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  height: calc(100vh - 30px);
+  color: black;
+  padding: 5%;
+  padding-top: 2%;
+  text-align: center;
+}
+
+.input-component {
+  width: 100%;
+}

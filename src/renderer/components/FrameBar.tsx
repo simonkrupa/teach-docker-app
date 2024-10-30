@@ -1,13 +1,17 @@
+import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import {
   LeftOutlined,
   RightOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
 import './FrameBar.css';
 
 export default function FrameBar({ isCollapsed, toggleNavbar }) {
+  const navigate = useNavigate();
+
   const handleExitClick = () => {
     window.electron.ipcRenderer.sendMessage('app-exit', ['ping']);
   };
@@ -31,6 +35,13 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
         </Button>
         <Button className="collapseBtn no-drag" type="primary">
           <RightOutlined />
+        </Button>
+        <Button
+          onClick={() => navigate('/settings')}
+          className="collapseBtn no-drag"
+          type="primary"
+        >
+          <SettingOutlined />
         </Button>
       </div>
       <div className="appName">Learn Docker</div>

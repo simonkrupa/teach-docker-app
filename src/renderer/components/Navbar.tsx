@@ -55,7 +55,7 @@ export default function NavBar({ isCollapsed, toggleNavbar }) {
       trigger={null}
     >
       <Menu
-        defaultSelectedKeys={['/']}
+        defaultSelectedKeys={['/settings']}
         theme="dark"
         style={{ overflow: 'auto', height: '100%' }}
         onClick={({ key }) => {
