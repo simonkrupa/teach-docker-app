@@ -17,7 +17,7 @@ import Settings from './pages/Settings';
 export default function App() {
   const [isNavbarCollapsed, setNavbarCollapsed] = useState(false);
   const location = useLocation();
-  const isSettingsPage = location.pathname === '/settings';
+  const isSettingsPage = location.pathname === '/settings' || '/';
 
   const toggleNavbar = () => {
     setNavbarCollapsed(!isNavbarCollapsed);
@@ -31,7 +31,7 @@ export default function App() {
           <NavBar isCollapsed={isNavbarCollapsed} toggleNavbar={toggleNavbar} />
         )}
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/first-diagram" element={<FirstDiagram />} />
           <Route path="/second-diagram" element={<SecondDiagram />} />
           <Route path="/third-diagram" element={<ThirdDiagram />} />
@@ -40,6 +40,7 @@ export default function App() {
           <Route path="/sixth-diagram" element={<SixthDiagram />} />
           <Route path="/seventh-diagram" element={<SeventhDiagram />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/" element={<Settings />} />
         </Routes>
       </Layout>
     </div>

@@ -1,13 +1,112 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Input, Space } from 'antd';
+import { Button, Input, Space, Alert } from 'antd';
 import './Pages.css';
 
 export default function Settings() {
   const navigate = useNavigate();
+  const [primaryIpValue, setPrimaryIpValue] = useState('');
+  const [secondaryIpValue, setSecondaryIpValue] = useState('');
+  const [primaryIpValid, setPrimaryIpValid] = useState(false);
+  const [secondaryIpValid, setSecondaryIpValid] = useState(false);
+  const [alertInfoPrimary, setAlertInfoPrimary] = useState({
+    visible: false,
+    type: '',
+    message: '',
+  });
+  const [alertInfoSecondary, setAlertInfoSecondary] = useState({
+    visible: false,
+    type: '',
+    message: '',
+  });
 
-  const handlePrimaryIpTest = () => {};
+  const handleStartApp = () => {
+    //TODO temp
+    // if (!primaryIpValid || !secondaryIpValid) {
+    //   return;
+    // }
+    window.electron.ipcRenderer.sendMessage('set-docker-vms', [
+      primaryIpValue,
+      secondaryIpValue,
+    ]);
+    navigate('/home');
+  };
 
-  const handleSecondaryIpTest = () => {};
+  const handlePrimaryIpChange = (e) => {
+    setPrimaryIpValid(false);
+    setPrimaryIpValue(e.target.value);
+  };
+
+  const handleSecondaryIpChange = (e) => {
+    setSecondaryIpValid(false);
+    setSecondaryIpValue(e.target.value);
+  };
+
+  const handlePrimaryIpTest = () => {
+    if (primaryIpValue === secondaryIpValue) {
+      setAlertInfoPrimary({
+        visible: true,
+        type: 'error',
+        message: 'IPs can not be same for both VMs.',
+      });
+      return;
+    }
+    window.electron.ipcRenderer.sendMessage('validate-primary-ip', [
+      primaryIpValue,
+    ]);
+  };
+
+  const handleSecondaryIpTest = () => {
+    if (primaryIpValue === secondaryIpValue) {
+      setAlertInfoSecondary({
+        visible: true,
+        type: 'error',
+        message: 'IPs can not be same for both VMs.',
+      });
+      return;
+    }
+    window.electron.ipcRenderer.sendMessage('validate-secondary-ip', [
+      secondaryIpValue,
+    ]);
+  };
+
+  window.electron.ipcRenderer.once('validate-primary-ip', (arg) => {
+    // eslint-disable-next-line no-console
+    if (arg[0]) {
+      setAlertInfoPrimary({
+        visible: true,
+        type: 'success',
+        message: 'Primary IP address is reachable!',
+      });
+      setPrimaryIpValid(true);
+    } else {
+      setAlertInfoPrimary({
+        visible: true,
+        type: 'error',
+        message: 'Failed to reach the primary IP address.',
+      });
+      setPrimaryIpValid(false);
+    }
+  });
+
+  window.electron.ipcRenderer.once('validate-secondary-ip', (arg) => {
+    // eslint-disable-next-line no-console
+    if (arg[0]) {
+      setAlertInfoSecondary({
+        visible: true,
+        type: 'success',
+        message: 'Secondary IP address is reachable!',
+      });
+      setSecondaryIpValid(true);
+    } else {
+      setAlertInfoSecondary({
+        visible: true,
+        type: 'error',
+        message: 'Failed to reach the secondary IP address.',
+      });
+      setSecondaryIpValid(false);
+    }
+  });
 
   return (
     <div className="settings-page">
@@ -16,7 +115,11 @@ export default function Settings() {
       <h3>Primary VM's IP address</h3>
       <div>
         <Space.Compact>
-          <Input className="input-component" />
+          <Input
+            className="input-component"
+            value={primaryIpValue}
+            onChange={handlePrimaryIpChange}
+          />
           <Button
             className="generic-button"
             type="primary"
@@ -25,11 +128,27 @@ export default function Settings() {
             Test
           </Button>
         </Space.Compact>
+        {alertInfoPrimary.visible && (
+          <Alert
+            className="alert"
+            message={alertInfoPrimary.message}
+            type={alertInfoPrimary.type}
+            showIcon
+            closable
+            onClose={() =>
+              setAlertInfoPrimary({ ...alertInfoPrimary, visible: false })
+            }
+          />
+        )}
       </div>
       <h3>Secondary VM's IP address (for Overlay network task)</h3>
       <div>
         <Space.Compact>
-          <Input className="input-component" />
+          <Input
+            className="input-component"
+            value={secondaryIpValue}
+            onChange={handleSecondaryIpChange}
+          />
           <Button
             className="generic-button"
             type="primary"
@@ -38,12 +157,29 @@ export default function Settings() {
             Test
           </Button>
         </Space.Compact>
+        {alertInfoSecondary.visible && (
+          <Alert
+            className="alert"
+            message={alertInfoSecondary.message}
+            type={alertInfoSecondary.type}
+            showIcon
+            closable
+            onClose={() =>
+              setAlertInfoSecondary({ ...alertInfoSecondary, visible: false })
+            }
+          />
+        )}
       </div>
       <Button
-        onClick={() => navigate('/')}
+        onClick={handleStartApp}
         className="generic-button"
         type="primary"
-        style={{ marginTop: '30%' }}
+        style={{
+          marginTop: '20%',
+          height: '50px',
+          width: '100px',
+          fontSize: '20px',
+        }}
       >
         Start
       </Button>

@@ -30,6 +30,7 @@ const initialNodes = [
       network: '',
       port: '',
       hostPort: '',
+      mac: '',
     },
     // draggable: false,
   },
@@ -116,6 +117,7 @@ export default function ThirdDiagram() {
               network: newData.network,
               port: newData?.port || '',
               hostPort: newData?.hostPort || '',
+              mac: newData.mac,
             },
           };
         }
@@ -242,6 +244,7 @@ export default function ThirdDiagram() {
   return (
     <div className="diagram-page">
       <ReactFlow
+        className="diagram-background"
         nodes={nodes}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}

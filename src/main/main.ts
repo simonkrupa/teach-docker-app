@@ -17,6 +17,8 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import DockerEventListener from './listeners/dockerEventListener';
 
+const Docker = require('dockerode');
+
 // templates for each diagram page
 const diagram1 = require('./data/diagram1.json');
 const diagram2 = require('./data/diagram2.json');
@@ -41,42 +43,17 @@ let mainWindow: BrowserWindow | null = null;
 let dockerEventListener: DockerEventListener | null = null;
 let dockerEventListenerOverlay: DockerEventListener | null = null;
 
-function getDockerEventListener(mainWindow: BrowserWindow) {
-  if (!dockerEventListener) {
-    dockerEventListener = new DockerEventListener(mainWindow, '192.168.56.106');
-  }
+function setDockerEventListener(mainWindow: BrowserWindow, ipAddress: string) {
+  dockerEventListener = new DockerEventListener(mainWindow, ipAddress);
   return dockerEventListener;
 }
 
-function getDockerEventListenerOverlay(mainWindow: BrowserWindow) {
-  if (!dockerEventListenerOverlay) {
-    dockerEventListenerOverlay = new DockerEventListener(
-      mainWindow,
-      '192.168.56.108',
-    );
-  }
+function setDockerEventListenerOverlay(
+  mainWindow: BrowserWindow,
+  ipAddress: string,
+) {
+  dockerEventListenerOverlay = new DockerEventListener(mainWindow, ipAddress);
   return dockerEventListenerOverlay;
-}
-
-function getHostIPAddress(): string {
-  const networkInterfaces = os.networkInterfaces();
-  let hostIP: string = '';
-
-  //windows
-  if (os.platform() === 'win32') {
-    networkInterfaces['Wi-Fi'].forEach((network) => {
-      if (network.family === 'IPv4') {
-        hostIP = network.address;
-      }
-    });
-  } else {
-    networkInterfaces['en0'].forEach((network) => {
-      if (network.family === 'IPv4') {
-        hostIP = network.address;
-      }
-    });
-  }
-  return hostIP;
 }
 
 function getNetworkInterfaces() {
@@ -199,14 +176,49 @@ const createWindow = async () => {
   // eslint-disable-next-line
   new AppUpdater();
   // Start listening to events
-  getDockerEventListener(mainWindow);
-  getDockerEventListenerOverlay(mainWindow);
+
   // const hostIpAddress: string = getHostIPAddress();
   const hostIpAddress: string = '192.168.100.33';
   console.log('Host IP Address:', hostIpAddress);
 
   ipcMain.on('stop-listening', () => {
     dockerEventListener?.stopListeningToEvents();
+  });
+
+  async function validateDockerAPI(ipAddress) {
+    // Initialize Dockerode with the provided IP address
+    const docker = new Docker({
+      host: ipAddress,
+      port: 2375, // Default Docker API port for HTTP
+      timeout: 2000, // Set a timeout to avoid long waits
+    });
+
+    try {
+      // Attempt to get Docker version info
+      await docker.version();
+      console.log('Docker API is reachable at this IP address.');
+      return true;
+    } catch (error) {
+      console.error('Failed to reach Docker API:', error.message);
+      return false;
+    }
+  }
+
+  ipcMain.on('validate-primary-ip', async (event, arg) => {
+    const isValid = await validateDockerAPI(arg[0]);
+    event.reply('validate-primary-ip', [isValid]);
+  });
+
+  ipcMain.on('validate-secondary-ip', async (event, arg) => {
+    const isValid = await validateDockerAPI(arg[0]);
+    event.reply('validate-secondary-ip', [isValid]);
+  });
+
+  ipcMain.on('set-docker-vms', async (event, arg) => {
+    const primaryIpValue = arg[0];
+    const secondaryIpValue = arg[1];
+    setDockerEventListener(mainWindow, primaryIpValue);
+    setDockerEventListenerOverlay(mainWindow, secondaryIpValue);
   });
 
   ipcMain.on('start-listening-1', () => {

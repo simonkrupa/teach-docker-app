@@ -28,3 +28,9 @@
 .input-component {
   width: 100%;
 }
+
+.alert {
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 1%;
+}

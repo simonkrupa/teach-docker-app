@@ -31,6 +31,7 @@ const initialNodes = [
       network: '',
       port: '',
       hostPort: '',
+      mac: '',
     },
     draggable: false,
   },
@@ -45,6 +46,7 @@ const initialNodes = [
       network: '',
       port: '',
       hostPort: '',
+      mac: '',
     },
     draggable: false,
   },
@@ -176,6 +178,7 @@ export default function FifthDiagram() {
               network: newData.network,
               port: newData?.port || '',
               hostPort: newData?.hostPort || '',
+              mac: newData?.mac,
             },
           };
         }
@@ -334,6 +337,7 @@ export default function FifthDiagram() {
   return (
     <div className="diagram-page">
       <ReactFlow
+        className="diagram-background"
         nodes={nodes}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}

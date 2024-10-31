@@ -314,6 +314,7 @@ export default function SeventhDiagram() {
   return (
     <div className="diagram-page">
       <ReactFlow
+        className="diagram-background"
         nodes={nodes}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}

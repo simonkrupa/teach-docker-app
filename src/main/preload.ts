@@ -18,7 +18,10 @@ export type Channels =
   | 'node-vm-data'
   | 'start-listening-6'
   | 'start-listening-7'
-  | 'lan-data';
+  | 'validate-primary-ip'
+  | 'validate-secondary-ip'
+  | 'lan-data'
+  | 'set-docker-vms';
 
 const electronHandler = {
   ipcRenderer: {
