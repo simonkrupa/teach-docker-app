@@ -42,9 +42,12 @@ class AppUpdater {
 let mainWindow: BrowserWindow | null = null;
 let dockerEventListener: DockerEventListener | null = null;
 let dockerEventListenerOverlay: DockerEventListener | null = null;
+let hostIpAddress: string | null = null;
 
 function setDockerEventListener(mainWindow: BrowserWindow, ipAddress: string) {
   dockerEventListener = new DockerEventListener(mainWindow, ipAddress);
+  hostIpAddress = ipAddress;
+  console.log('Host IP Address:', hostIpAddress);
   return dockerEventListener;
 }
 
@@ -177,10 +180,6 @@ const createWindow = async () => {
   new AppUpdater();
   // Start listening to events
 
-  // const hostIpAddress: string = getHostIPAddress();
-  const hostIpAddress: string = '192.168.100.33';
-  console.log('Host IP Address:', hostIpAddress);
-
   ipcMain.on('stop-listening', () => {
     dockerEventListener?.stopListeningToEvents();
   });
@@ -248,6 +247,8 @@ const createWindow = async () => {
       containerToListen,
       uniqueNetworks,
     );
+    console.log('Host IP Address2:', hostIpAddress);
+
     sendHostIpAddress(hostIpAddress);
   });
   ipcMain.on('start-listening-3', () => {

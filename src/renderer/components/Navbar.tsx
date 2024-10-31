@@ -27,7 +27,7 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem('Home', '/', <HomeOutlined />, undefined, undefined, 'home-item'),
+  getItem('Home', '/home', <HomeOutlined />, undefined, undefined, 'home-item'),
   getItem('Bridge', '/first-diagram'),
   getItem('Default Bridge', '/second-diagram'),
   getItem('Host', '/third-diagram'),

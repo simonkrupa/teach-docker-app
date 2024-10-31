@@ -17,7 +17,8 @@ import Settings from './pages/Settings';
 export default function App() {
   const [isNavbarCollapsed, setNavbarCollapsed] = useState(false);
   const location = useLocation();
-  const isSettingsPage = location.pathname === '/settings' || '/';
+  const isSettingsPage =
+    location.pathname === '/settings' || location.pathname === '/';
 
   const toggleNavbar = () => {
     setNavbarCollapsed(!isNavbarCollapsed);
