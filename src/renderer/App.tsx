@@ -13,6 +13,8 @@ import FifthDiagram from './diagrams/FifthDiagram';
 import SixthDiagram from './diagrams/SixthDiagram';
 import SeventhDiagram from './diagrams/SeventhDiagram';
 import Settings from './pages/Settings';
+import BridgeOverview from './pages/bridge/BridgeOverview';
+import BridgeTask from './pages/bridge/BridgeTask';
 
 export default function App() {
   const [isNavbarCollapsed, setNavbarCollapsed] = useState(false);
@@ -33,7 +35,9 @@ export default function App() {
         )}
         <Routes>
           <Route path="/home" element={<Home />} />
-          <Route path="/first-diagram" element={<FirstDiagram />} />
+          <Route path="/bridge/first-diagram" element={<FirstDiagram />} />
+          <Route path="/bridge/overview" element={<BridgeOverview />} />
+          <Route path="/bridge/task" element={<BridgeTask />} />
           <Route path="/second-diagram" element={<SecondDiagram />} />
           <Route path="/third-diagram" element={<ThirdDiagram />} />
           <Route path="/fourth-diagram" element={<FourthDiagram />} />

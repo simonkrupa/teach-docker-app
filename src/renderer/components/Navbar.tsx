@@ -28,26 +28,31 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem('Home', '/home', <HomeOutlined />, undefined, undefined, 'home-item'),
-  getItem('Bridge', '/first-diagram'),
-  getItem('Default Bridge', '/second-diagram'),
-  getItem('Host', '/third-diagram'),
-  getItem('None', '/fourth-diagram'),
-  getItem('Macvlan', '/sixth-diagram'),
-  getItem('Ipvlan', '/seventh-diagram'),
-  getItem('Overlay', '/fifth-diagram'),
-  // getItem('2. Docker networks', '/second'),
-  // getItem('3. Exposing ports', '/third'),
-  // getItem('4. Test page', '/fourth'),
-  // getItem('5. Smth', '/fifth'),
-  // getItem('6. Smth2', '/sixth'),
-  // getItem('7. smth3', '/seventh'),
+  getItem(
+    '1. Bridge',
+    '/bridge',
+    undefined,
+    [
+      getItem('Bridge Overview', '/bridge/overview'),
+      getItem('Bridge Task', '/bridge/task'),
+      getItem('Bridge Diagram', '/bridge/first-diagram'),
+    ],
+    undefined,
+    'bridge-item',
+  ),
+  getItem('2. Default Bridge', '/second-diagram'),
+  getItem('3. Host', '/third-diagram'),
+  getItem('4. None', '/fourth-diagram'),
+  getItem('5. Macvlan', '/sixth-diagram'),
+  getItem('6. Ipvlan', '/seventh-diagram'),
+  getItem('7. Overlay', '/fifth-diagram'),
 ];
 
 export default function NavBar({ isCollapsed, toggleNavbar }) {
   const navigate = useNavigate();
   return (
     <Sider
-      width={150}
+      width={200}
       collapsedWidth={0}
       collapsible
       collapsed={isCollapsed}
