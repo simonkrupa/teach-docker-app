@@ -1,0 +1,50 @@
+.scrollable-sidebar {
+  height: calc(100vh - 30px); /* Full viewport height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Disable horizontal scrolling */
+  scrollbar-gutter: stable; /* Add margin to both sides of the scrollbar */
+}
+
+.scrollable-sidebar::-webkit-scrollbar {
+  width: 5px; /* Width of the scrollbar */
+}
+
+.scrollable-sidebar::-webkit-scrollbar-track {
+  /* background: #1f1f1f; Background of the scrollbar track */
+  /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); */
+  background-color: #001529;
+}
+
+.scrollable-sidebar::-webkit-scrollbar-thumb {
+  /* background-color: #1890ff; Color of the scrollbar thumb */
+  /* background-color: #001529; */
+
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 4px; /*Rounded corners for the scrollbar thumb*/
+}
+
+.scrollable-sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: #40a9ff; /* Color of the scrollbar thumb on hover */
+}
+
+:where(.css-dev-only-do-not-override-98ntnt).ant-menu-dark
+  .ant-menu-item-selected,
+:where(.css-dev-only-do-not-override-98ntnt).ant-menu-dark
+  > .ant-menu
+  .ant-menu-item-selected {
+  background-color: #000c17;
+}
+
+:where(.css-dev-only-do-not-override-98ntnt).ant-menu-dark,
+:where(.css-dev-only-do-not-override-98ntnt).ant-menu-dark > .ant-menu {
+  color: rgba(255, 255, 255, 0.65);
+  background: #001529;
+}
+
+:where(.css-dev-only-do-not-override-98ntnt).ant-menu-dark.ant-menu-inline
+  .ant-menu-sub.ant-menu-inline,
+:where(.css-dev-only-do-not-override-98ntnt).ant-menu-dark
+  > .ant-menu.ant-menu-inline
+  .ant-menu-sub.ant-menu-inline {
+  background: #001529;
+}
