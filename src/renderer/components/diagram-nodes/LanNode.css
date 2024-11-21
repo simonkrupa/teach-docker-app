@@ -9,6 +9,30 @@
   background-color: white;
   text-align: center;
   font-size: 80%;
+  display: flex;
+}
+
+.en-node-name {
+  display: flex;
+  background: #c3195d;
+  border-radius: 4px 0 20px 0;
+  width: 40%;
+  height: 100%;
+  font-size: 135%;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.en-node-info {
+  display: grid;
+  /* align-items: center; */
+  place-items: center;
+  /* justify-content: center; */
+  font-weight: bold;
+  width: 60%;
+  height: 100%;
 }
 
 .lan-node {

@@ -21,7 +21,7 @@ const nodeTypes = {
 const initialNodes = [
   {
     id: '1',
-    position: { x: 75, y: 80 },
+    position: { x: 250, y: 200 },
     type: 'containerNode',
     data: {
       label: '/my-nginx5',
@@ -36,8 +36,8 @@ const initialNodes = [
   {
     id: '0',
     position: {
-      x: 100,
-      y: 300,
+      x: 50,
+      y: 50,
     },
     type: 'hostNode',
     data: {

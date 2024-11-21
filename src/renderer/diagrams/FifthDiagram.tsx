@@ -37,7 +37,7 @@ const initialNodes = [
   },
   {
     id: '3',
-    position: { x: 550, y: 80 },
+    position: { x: 500, y: 80 },
     type: 'containerNode',
     data: {
       label: '/my-nginx7',
@@ -70,7 +70,7 @@ const initialNodes = [
   {
     id: '-1',
     position: {
-      x: 450,
+      x: 400,
       y: 20,
     },
     type: 'hostNodeEnhanced',
@@ -86,7 +86,7 @@ const initialNodes = [
   },
   {
     id: '2',
-    position: { x: 230, y: 200 },
+    position: { x: 270, y: 200 },
     type: 'networkNode',
     data: {
       label: 'my-overlay',

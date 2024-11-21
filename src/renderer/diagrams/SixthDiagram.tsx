@@ -24,8 +24,8 @@ const initialNodes = [
   {
     id: '0',
     position: {
-      x: 75,
-      y: 300,
+      x: 50,
+      y: 50,
     },
     type: 'hostNode',
     desiredNetwork: 'host',
@@ -37,8 +37,8 @@ const initialNodes = [
   {
     id: '1',
     position: {
-      x: 200,
-      y: 80,
+      x: 250,
+      y: 150,
     },
     type: 'containerNode',
     desiredNetwork: 'my-macvlan',
@@ -51,13 +51,13 @@ const initialNodes = [
       hostPort: '',
       mac: '',
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '6',
     position: {
-      x: 320,
-      y: 80,
+      x: 400,
+      y: 150,
     },
     type: 'containerNode',
     desiredNetwork: 'my-macvlan',
@@ -70,11 +70,11 @@ const initialNodes = [
       hostPort: '',
       mac: '',
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '4',
-    position: { x: 75, y: 80 },
+    position: { x: 85, y: 150 },
     type: 'containerNode',
     desiredNetwork: 'host',
     data: {
@@ -85,13 +85,13 @@ const initialNodes = [
       port: '',
       hostPort: '',
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '2',
     position: {
-      x: 200,
-      y: 300,
+      x: 300,
+      y: 400,
     },
     type: 'networkNode',
     data: {
@@ -100,19 +100,20 @@ const initialNodes = [
       driver: undefined,
       gateway: undefined,
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '5',
     position: {
-      x: 120,
-      y: 500,
+      x: 160,
+      y: 700,
     },
     type: 'lanNode',
     data: {
       cidr: '',
       mac: '',
     },
+    draggable: false,
   },
 ];
 
@@ -152,6 +153,7 @@ const initialEdges = [
     animated: true,
     hidden: true,
     reconnectable: false,
+    type: 'straight',
   },
   {
     id: 'e0-5',
@@ -314,9 +316,7 @@ export default function SixthDiagram() {
   };
 
   const handleIncomingLanData = useCallback((data) => {
-    console.log('Lan Data:', data);
     const jsonData = JSON.parse(data);
-    console.log('json Lan Data:', jsonData);
     setNodes((prevNodes) => {
       const updatedNodes = prevNodes.map((item) => {
         if (item.type === 'lanNode') {

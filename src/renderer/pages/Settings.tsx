@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, Space, Alert } from 'antd';
 import './Pages.css';
+import DockerLogo from '../../../assets/Docker.png';
 
 export default function Settings() {
   const navigate = useNavigate();
+  const primaryIpEventListenerRef = useRef<() => void | null>(null);
+  const secondaryIpEventListenerRef = useRef<() => void | null>(null);
   const [primaryIpValue, setPrimaryIpValue] = useState('');
   const [secondaryIpValue, setSecondaryIpValue] = useState('');
   const [primaryIpValid, setPrimaryIpValid] = useState(false);
@@ -51,6 +54,7 @@ export default function Settings() {
       });
       return;
     }
+    console.log('Primary IP:', primaryIpValue);
     window.electron.ipcRenderer.sendMessage('validate-primary-ip', [
       primaryIpValue,
     ]);
@@ -70,112 +74,166 @@ export default function Settings() {
     ]);
   };
 
-  window.electron.ipcRenderer.once('validate-primary-ip', (arg) => {
-    // eslint-disable-next-line no-console
-    if (arg[0]) {
-      setAlertInfoPrimary({
-        visible: true,
-        type: 'success',
-        message: 'Primary IP address is reachable!',
-      });
-      setPrimaryIpValid(true);
-    } else {
-      setAlertInfoPrimary({
-        visible: true,
-        type: 'error',
-        message: 'Failed to reach the primary IP address.',
-      });
-      setPrimaryIpValid(false);
-    }
-  });
+  useEffect(() => {
+    const validatePrimaryHandler = (arg) => {
+      // eslint-disable-next-line no-console
+      if (arg[0]) {
+        setAlertInfoPrimary({
+          visible: true,
+          type: 'success',
+          message: 'Primary IP address is reachable!',
+        });
+        setPrimaryIpValid(true);
+      } else {
+        setAlertInfoPrimary({
+          visible: true,
+          type: 'error',
+          message: 'Failed to reach the primary IP address.',
+        });
+        setPrimaryIpValid(false);
+      }
+    };
 
-  window.electron.ipcRenderer.once('validate-secondary-ip', (arg) => {
-    // eslint-disable-next-line no-console
-    if (arg[0]) {
-      setAlertInfoSecondary({
-        visible: true,
-        type: 'success',
-        message: 'Secondary IP address is reachable!',
-      });
-      setSecondaryIpValid(true);
-    } else {
-      setAlertInfoSecondary({
-        visible: true,
-        type: 'error',
-        message: 'Failed to reach the secondary IP address.',
-      });
-      setSecondaryIpValid(false);
-    }
-  });
+    const validateSecondaryHandler = (arg) => {
+      // eslint-disable-next-line no-console
+      if (arg[0]) {
+        setAlertInfoSecondary({
+          visible: true,
+          type: 'success',
+          message: 'Secondary IP address is reachable!',
+        });
+        setSecondaryIpValid(true);
+      } else {
+        setAlertInfoSecondary({
+          visible: true,
+          type: 'error',
+          message: 'Failed to reach the secondary IP address.',
+        });
+        setSecondaryIpValid(false);
+      }
+    };
+
+    primaryIpEventListenerRef.current = window.electron.ipcRenderer.once(
+      'validate-primary-ip',
+      validatePrimaryHandler,
+    );
+    secondaryIpEventListenerRef.current = window.electron.ipcRenderer.once(
+      'validate-secondary-ip',
+      validateSecondaryHandler,
+    );
+
+    return () => {
+      if (primaryIpEventListenerRef.current) {
+        primaryIpEventListenerRef.current();
+      }
+      if (secondaryIpEventListenerRef.current) {
+        secondaryIpEventListenerRef.current();
+      }
+      // window.electron.ipcRenderer.removeListener(
+      //   'validate-primary-ip',
+      //   validatePrimaryHandler,
+      // );
+      // window.electron.ipcRenderer.removeListener(
+      //   'validate-secondary-ip',
+      //   validateSecondaryHandler,
+      // );
+    };
+  }, []);
 
   return (
     <div className="settings-page">
-      <h1>SETTINGS</h1>
-      <h2>Please provide IP Addresses for VMs with Docker</h2>
-      <h3>Primary VM's IP address</h3>
-      <div>
-        <Space.Compact>
-          <Input
-            className="input-component"
-            value={primaryIpValue}
-            onChange={handlePrimaryIpChange}
-          />
-          <Button
-            className="generic-button"
-            type="primary"
-            onClick={handlePrimaryIpTest}
-          >
-            Test
-          </Button>
-        </Space.Compact>
-        {alertInfoPrimary.visible && (
-          <Alert
-            className="alert"
-            message={alertInfoPrimary.message}
-            type={alertInfoPrimary.type}
-            showIcon
-            closable
-            onClose={() =>
-              setAlertInfoPrimary({ ...alertInfoPrimary, visible: false })
-            }
-          />
-        )}
-      </div>
-      <h3>Secondary VM's IP address (for Overlay network task)</h3>
-      <div>
-        <Space.Compact>
-          <Input
-            className="input-component"
-            value={secondaryIpValue}
-            onChange={handleSecondaryIpChange}
-          />
-          <Button
-            className="generic-button"
-            type="primary"
-            onClick={handleSecondaryIpTest}
-          >
-            Test
-          </Button>
-        </Space.Compact>
-        {alertInfoSecondary.visible && (
-          <Alert
-            className="alert"
-            message={alertInfoSecondary.message}
-            type={alertInfoSecondary.type}
-            showIcon
-            closable
-            onClose={() =>
-              setAlertInfoSecondary({ ...alertInfoSecondary, visible: false })
-            }
-          />
-        )}
+      <div className="header-settings">
+        <div className="first-row">
+          <div className="headers-settings">
+            <div className="first-col-header">
+              <h1 className="header-name">Learn Docker Networking</h1>
+              <h2>Settings Page</h2>
+              <h2>Please provide IP Addresses for VMs with Docker</h2>
+            </div>
+            <img
+              className="docker-settings-logo"
+              src={DockerLogo}
+              alt="docker logo"
+            />
+          </div>
+        </div>
+        <div className="content-settings">
+          <div className="primary-ip-container">
+            <h3>Primary Virutal Machine's IP address</h3>
+            <div>
+              <Space.Compact>
+                <Input
+                  className="input-component"
+                  value={primaryIpValue}
+                  onChange={handlePrimaryIpChange}
+                />
+                <Button
+                  className="generic-button"
+                  type="primary"
+                  onClick={handlePrimaryIpTest}
+                >
+                  Test
+                </Button>
+              </Space.Compact>
+              {alertInfoPrimary.visible && (
+                <Alert
+                  className="alert"
+                  message={alertInfoPrimary.message}
+                  type={alertInfoPrimary.type}
+                  showIcon
+                  closable
+                  onClose={() =>
+                    setAlertInfoPrimary({ ...alertInfoPrimary, visible: false })
+                  }
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="secondary-ip-container">
+            <h3>
+              Secondary Virtual Machine's IP address (used for Overlay network
+              task)
+            </h3>
+            <div>
+              <Space.Compact>
+                <Input
+                  className="input-component"
+                  value={secondaryIpValue}
+                  onChange={handleSecondaryIpChange}
+                />
+                <Button
+                  className="generic-button"
+                  type="primary"
+                  onClick={handleSecondaryIpTest}
+                >
+                  Test
+                </Button>
+              </Space.Compact>
+              {alertInfoSecondary.visible && (
+                <Alert
+                  className="alert"
+                  message={alertInfoSecondary.message}
+                  type={alertInfoSecondary.type}
+                  showIcon
+                  closable
+                  onClose={() =>
+                    setAlertInfoSecondary({
+                      ...alertInfoSecondary,
+                      visible: false,
+                    })
+                  }
+                />
+              )}
+            </div>
+          </div>
+        </div>
       </div>
       <Button
         onClick={handleStartApp}
         className="generic-button"
         type="primary"
         style={{
-          marginTop: '20%',
           height: '50px',
           width: '100px',
           fontSize: '20px',

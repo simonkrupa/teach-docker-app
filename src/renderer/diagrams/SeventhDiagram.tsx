@@ -24,8 +24,8 @@ const initialNodes = [
   {
     id: '1',
     position: {
-      x: 200,
-      y: 80,
+      x: 150,
+      y: 130,
     },
     type: 'containerNode',
     desiredNetwork: 'my-ipvlan',
@@ -38,13 +38,13 @@ const initialNodes = [
       hostPort: '',
       mac: '',
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '3',
     position: {
-      x: 320,
-      y: 80,
+      x: 360,
+      y: 130,
     },
     type: 'containerNode',
     desiredNetwork: 'my-ipvlan',
@@ -57,13 +57,13 @@ const initialNodes = [
       hostPort: '',
       mac: '',
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '2',
     position: {
-      x: 200,
-      y: 300,
+      x: 230,
+      y: 350,
     },
     type: 'networkNode',
     data: {
@@ -72,19 +72,34 @@ const initialNodes = [
       driver: undefined,
       gateway: undefined,
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '5',
     position: {
-      x: 120,
-      y: 500,
+      x: 180,
+      y: 600,
     },
     type: 'lanNode',
     data: {
       cidr: '',
       mac: '',
     },
+    draggable: false,
+  },
+  {
+    id: '0',
+    position: {
+      x: 50,
+      y: 50,
+    },
+    type: 'hostNode',
+    desiredNetwork: 'host',
+    data: {
+      label: 'host',
+      ip: 'undefined',
+    },
+    draggable: false,
   },
 ];
 
@@ -119,6 +134,7 @@ export default function SeventhDiagram() {
   const [edges, setEdges, onEdgesChange] = useNodesState(initialEdges);
   const containerEventListenerRef = useRef<() => void | null>(null);
   const networkEventListenerRef = useRef<() => void | null>(null);
+  const hostEventListenerRef = useRef<() => void | null>(null);
   const lanEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
   const [startEdge, setStartEdge] = useState({ node: null, newData: null });
@@ -262,6 +278,33 @@ export default function SeventhDiagram() {
     [onEdit],
   );
 
+  const handleIncomingHostData = useCallback((data) => {
+    setNodes((prevNodes) => {
+      const updatedNodes = prevNodes.map((item) => {
+        if (item.type === 'hostNode') {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              ip: data,
+            },
+          };
+        }
+        if (item.type === 'containerNode' && item.desiredNetwork === 'host') {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              ip: data,
+            },
+          };
+        }
+        return item;
+      });
+      return updatedNodes;
+    });
+  }, []);
+
   const handleValidateAnswer = () => {
     if (nodesValidator(nodes, correctAnswers)) {
       setMessageBoxState('success');
@@ -287,6 +330,11 @@ export default function SeventhDiagram() {
       handleIncomingNetworkData,
     );
 
+    hostEventListenerRef.current = window.electron.ipcRenderer.on(
+      'host-ip-address',
+      handleIncomingHostData,
+    );
+
     lanEventListenerRef.current = window.electron.ipcRenderer.on(
       'lan-data',
       handleIncomingLanData,
@@ -303,6 +351,10 @@ export default function SeventhDiagram() {
 
       if (networkEventListenerRef.current) {
         networkEventListenerRef.current();
+      }
+
+      if (hostEventListenerRef.current) {
+        hostEventListenerRef.current();
       }
 
       if (lanEventListenerRef.current) {

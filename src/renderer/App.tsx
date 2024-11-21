@@ -27,50 +27,58 @@ export default function App() {
   };
 
   return (
-    <div className="full-window">
-      <FrameBar isCollapsed={isNavbarCollapsed} toggleNavbar={toggleNavbar} />
-      <Layout>
-        {!isSettingsPage && (
-          <NavBar isCollapsed={isNavbarCollapsed} toggleNavbar={toggleNavbar} />
-        )}
-        <Routes>
-          {/* base pages */}
-          <Route path="/home" element={<Home />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/" element={<Settings />} />
-          {/* bridge */}
-          <Route path="/bridge/first-diagram" element={<FirstDiagram />} />
-          <Route path="/bridge/overview" element={<BridgeOverview />} />
-          <Route path="/bridge/task" element={<BridgeTask />} />
-          {/* default bridge */}
-          <Route
-            path="/default-bridge/second-diagram"
-            element={<SecondDiagram />}
-          />
-          <Route path="/default-bridge/overview" element={<div />} />
-          <Route path="/default-bridge/task" element={<div />} />
-          {/* host */}
-          <Route path="/host/third-diagram" element={<ThirdDiagram />} />
-          <Route path="/host/overview" element={<div />} />
-          <Route path="/host/task" element={<div />} />
-          {/* none */}
-          <Route path="/none/fourth-diagram" element={<FourthDiagram />} />
-          <Route path="/none/overview" element={<div />} />
-          <Route path="/none/task" element={<div />} />
-          {/* overlay */}
-          <Route path="/overlay/fifth-diagram" element={<FifthDiagram />} />
-          <Route path="/overlay/overview" element={<div />} />
-          <Route path="/overlay/task" element={<div />} />
-          {/* macvlan */}
-          <Route path="/macvlan/sixth-diagram" element={<SixthDiagram />} />
-          <Route path="/macvlan/overview" element={<div />} />
-          <Route path="/macvlan/task" element={<div />} />
-          {/* ipvlan */}
-          <Route path="/ipvlan/seventh-diagram" element={<SeventhDiagram />} />
-          <Route path="/ipvlan/overview" element={<div />} />
-          <Route path="/ipvlan/task" element={<div />} />
-        </Routes>
-      </Layout>
-    </div>
+    <section className="main-app">
+      <div className="full-window">
+        <FrameBar isCollapsed={isNavbarCollapsed} toggleNavbar={toggleNavbar} />
+        <Layout>
+          {!isSettingsPage && (
+            <NavBar
+              isCollapsed={isNavbarCollapsed}
+              toggleNavbar={toggleNavbar}
+            />
+          )}
+          <Routes>
+            {/* base pages */}
+            <Route path="/home" element={<Home />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/" element={<Settings />} />
+            {/* bridge */}
+            <Route path="/bridge/first-diagram" element={<FirstDiagram />} />
+            <Route path="/bridge/overview" element={<BridgeOverview />} />
+            <Route path="/bridge/task" element={<BridgeTask />} />
+            {/* default bridge */}
+            <Route
+              path="/default-bridge/second-diagram"
+              element={<SecondDiagram />}
+            />
+            <Route path="/default-bridge/overview" element={<div />} />
+            <Route path="/default-bridge/task" element={<div />} />
+            {/* host */}
+            <Route path="/host/third-diagram" element={<ThirdDiagram />} />
+            <Route path="/host/overview" element={<div />} />
+            <Route path="/host/task" element={<div />} />
+            {/* none */}
+            <Route path="/none/fourth-diagram" element={<FourthDiagram />} />
+            <Route path="/none/overview" element={<div />} />
+            <Route path="/none/task" element={<div />} />
+            {/* overlay */}
+            <Route path="/overlay/fifth-diagram" element={<FifthDiagram />} />
+            <Route path="/overlay/overview" element={<div />} />
+            <Route path="/overlay/task" element={<div />} />
+            {/* macvlan */}
+            <Route path="/macvlan/sixth-diagram" element={<SixthDiagram />} />
+            <Route path="/macvlan/overview" element={<div />} />
+            <Route path="/macvlan/task" element={<div />} />
+            {/* ipvlan */}
+            <Route
+              path="/ipvlan/seventh-diagram"
+              element={<SeventhDiagram />}
+            />
+            <Route path="/ipvlan/overview" element={<div />} />
+            <Route path="/ipvlan/task" element={<div />} />
+          </Routes>
+        </Layout>
+      </div>
+    </section>
   );
 }

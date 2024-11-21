@@ -11,12 +11,12 @@ const HostNode = memo(function HostNode(props: any) {
 
   return (
     <div className="host-node">
-      <Handle type="source" position={Position.Top} />
-      <Handle type="target" position={Position.Top} />
+      {/* <Handle type="source" position={Position.Top} /> */}
+      <Handle type="target" position={Position.Bottom} />
       <Handle type="source" id="target-lan" position={Position.Bottom} />
       <div className="host-container">
-        <div>Host</div>
-        <div>{props.data.ip}</div>
+        <div className="host-node-category">Host</div>
+        <div className="host-node-ip">{props.data.ip}</div>
       </div>
     </div>
   );

@@ -204,6 +204,7 @@ const createWindow = async () => {
   }
 
   ipcMain.on('validate-primary-ip', async (event, arg) => {
+    console.log('Validating primary IP address:', arg[0]);
     const isValid = await validateDockerAPI(arg[0]);
     event.reply('validate-primary-ip', [isValid]);
   });
@@ -336,6 +337,7 @@ const createWindow = async () => {
       containerToListen,
       uniqueNetworks,
     );
+    sendHostIpAddress(hostIpAddress);
     sendLan(hostIpAddress);
   });
 };

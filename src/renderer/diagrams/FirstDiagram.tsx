@@ -22,20 +22,21 @@ const initialNodes = [
   {
     id: '0',
     position: {
-      x: 210,
-      y: 450,
+      x: 50,
+      y: 50,
     },
     type: 'hostNode',
     data: {
       label: 'host',
       ip: 'undefined',
     },
+    draggable: false,
   },
   {
     id: '1',
     position: {
-      x: 100,
-      y: 80,
+      x: 140,
+      y: 120,
     },
     type: 'containerNode',
     desiredNetwork: 'my-bridge',
@@ -48,13 +49,13 @@ const initialNodes = [
       hostPort: '',
       mac: '',
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '2',
     position: {
       x: 340,
-      y: 80,
+      y: 120,
     },
     type: 'containerNode',
     desiredNetwork: 'my-bridge',
@@ -67,13 +68,13 @@ const initialNodes = [
       hostPort: '',
       mac: '',
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '3',
     position: {
-      x: 120,
-      y: 300,
+      x: 220,
+      y: 360,
     },
     type: 'networkNode',
     data: {
@@ -82,7 +83,7 @@ const initialNodes = [
       driver: undefined,
       gateway: undefined,
     },
-    // draggable: false,
+    draggable: false,
   },
 ];
 
@@ -110,6 +111,7 @@ const initialEdges = [
     target: '0',
     animated: true,
     reconnectable: false,
+    type: 'straight',
   },
 ];
 
