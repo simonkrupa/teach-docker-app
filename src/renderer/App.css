@@ -11,6 +11,10 @@ body {
   margin: 0;
 }
 
+.content-container {
+  height: 100vh;
+}
+
 .full-window {
   overflow: auto;
   overflow-y: auto;

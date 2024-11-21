@@ -3,7 +3,7 @@
   overflow-y: auto;
   width: 100%;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  height: calc(100vh - 30px);
+  height: calc(100vh - 30px - 195px);
   color: black;
   padding: 5%;
   padding-top: 2%;
@@ -17,15 +17,16 @@
 }
 
 .settings-page {
-  overflow: auto;
+  overflow-x: hidden;
   overflow-y: auto;
   width: 100%;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  height: calc(100vh - 30px);
+  height: calc(100vh - 30px - 195px);
   color: black;
   padding: 5%;
   padding-top: 2%;
   text-align: center;
+  scrollbar-gutter: stable;
 }
 
 .input-component {
@@ -56,5 +57,53 @@
 }
 
 .all-pages::-webkit-scrollbar-thumb:hover {
+  background-color: #40a9ff; /* Color of the scrollbar thumb on hover */
+}
+
+.settings-page::-webkit-scrollbar {
+  width: 5px; /* Width of the scrollbar */
+}
+
+.settings-page::-webkit-scrollbar-track {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.settings-page::-webkit-scrollbar-thumb {
+  background-color: #001529;
+  border-radius: 4px; /*Rounded corners for the scrollbar thumb*/
+}
+
+.settings-page::-webkit-scrollbar-thumb:hover {
+  background-color: #40a9ff; /* Color of the scrollbar thumb on hover */
+}
+
+.terminal-container {
+  /* width: 100%;
+  background: #001529;
+  height: 195px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable; */
+}
+
+.terminal-container::-webkit-scrollbar {
+  width: 5px; /* Width of the scrollbar */
+}
+
+.terminal-container::-webkit-scrollbar-track {
+  /* background: #1f1f1f; Background of the scrollbar track */
+  /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); */
+  background-color: #001529;
+}
+
+.terminal-container::-webkit-scrollbar-thumb {
+  /* background-color: #1890ff; Color of the scrollbar thumb */
+  /* background-color: #001529; */
+
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 4px; /*Rounded corners for the scrollbar thumb*/
+}
+
+.terminal-container::-webkit-scrollbar-thumb:hover {
   background-color: #40a9ff; /* Color of the scrollbar thumb on hover */
 }

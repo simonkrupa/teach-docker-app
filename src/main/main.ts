@@ -10,6 +10,7 @@
  */
 import path from 'path';
 import os from 'os';
+import * as pty from 'node-pty';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
@@ -162,12 +163,33 @@ const createWindow = async () => {
     }
   });
 
+  mainWindow.on('resize', () => {
+    mainWindow?.webContents.send('window-resize', 'data');
+  });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
+
+  const ptyProcess = pty.spawn(osShell, [], {
+    name: 'xterm-color',
+    cols: 160,
+    rows: 30,
+    // cwd: process.env.HOME,
+    env: process.env,
+    encoding: 'utf-8',
+  });
+
+  ptyProcess.onData((data) => {
+    mainWindow?.webContents.send('terminal.incomingData', data);
+  });
+
+  ipcMain.on('terminal.keystroke', (event, key) => {
+    ptyProcess.write(key[0]);
+  });
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {

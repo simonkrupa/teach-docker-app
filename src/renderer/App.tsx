@@ -15,6 +15,7 @@ import SeventhDiagram from './diagrams/SeventhDiagram';
 import Settings from './pages/Settings';
 import BridgeOverview from './pages/bridge/BridgeOverview';
 import BridgeTask from './pages/bridge/BridgeTask';
+import TerminalObject from './components/TerminalObject';
 
 export default function App() {
   const [isNavbarCollapsed, setNavbarCollapsed] = useState(false);
@@ -71,6 +72,7 @@ export default function App() {
           <Route path="/ipvlan/task" element={<div />} />
         </Routes>
       </Layout>
+      <TerminalObject />
     </div>
   );
 }

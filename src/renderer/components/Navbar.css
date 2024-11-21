@@ -1,5 +1,5 @@
 .scrollable-sidebar {
-  height: calc(100vh - 30px); /* Full viewport height */
+  height: calc(100vh - 30px - 195px); /* Full viewport height */
   overflow-y: auto; /* Enable vertical scrolling */
   overflow-x: hidden; /* Disable horizontal scrolling */
   scrollbar-gutter: stable; /* Add margin to both sides of the scrollbar */
