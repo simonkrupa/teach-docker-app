@@ -1,0 +1,23 @@
+.header-name {
+  font-size: 40px;
+  font-weight: bold;
+  width: 100%;
+}
+
+.settings-page {
+  overflow: auto;
+  overflow-y: auto;
+  width: 100%;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  height: calc(100vh - 30px);
+  color: black;
+  padding: 5%;
+  padding-top: 2%;
+  /* text-align: center; */
+  padding-top: 8%;
+  text-align: center;
+  //background-image: url('../../../assets/7104.jpg'); /* Path to the image */
+  //background-size: cover; /* Scale the image to cover the entire div */
+  //background-position: center; /* Center the image */
+  //background-repeat: no-repeat; /* Prevent tiling of the image */
+}

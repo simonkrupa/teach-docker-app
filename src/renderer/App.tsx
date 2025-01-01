@@ -15,12 +15,15 @@ import SeventhDiagram from './diagrams/SeventhDiagram';
 import Settings from './pages/Settings';
 import BridgeOverview from './pages/bridge/BridgeOverview';
 import BridgeTask from './pages/bridge/BridgeTask';
+import Welcome from './pages/Welcome';
 
 export default function App() {
   const [isNavbarCollapsed, setNavbarCollapsed] = useState(false);
   const location = useLocation();
-  const isSettingsPage =
-    location.pathname === '/settings' || location.pathname === '/';
+  const isWelcomeOrSettingsPage =
+    location.pathname === '/welcome' ||
+    location.pathname === '/' ||
+    location.pathname === '/settings';
 
   const toggleNavbar = () => {
     setNavbarCollapsed(!isNavbarCollapsed);
@@ -31,7 +34,7 @@ export default function App() {
       <div className="full-window">
         <FrameBar isCollapsed={isNavbarCollapsed} toggleNavbar={toggleNavbar} />
         <Layout>
-          {!isSettingsPage && (
+          {!isWelcomeOrSettingsPage && (
             <NavBar
               isCollapsed={isNavbarCollapsed}
               toggleNavbar={toggleNavbar}
@@ -39,9 +42,10 @@ export default function App() {
           )}
           <Routes>
             {/* base pages */}
+            <Route path="/welcome" element={<Welcome />} />
             <Route path="/home" element={<Home />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/" element={<Settings />} />
+            <Route path="/" element={<Welcome />} />
             {/* bridge */}
             <Route path="/bridge/first-diagram" element={<FirstDiagram />} />
             <Route path="/bridge/overview" element={<BridgeOverview />} />

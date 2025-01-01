@@ -128,7 +128,7 @@ export default function NavBar({ isCollapsed, toggleNavbar }) {
       className="scrollable-sidebar"
     >
       <Menu
-        defaultSelectedKeys={['/settings']}
+        defaultSelectedKeys={['/welcome']}
         theme="dark"
         style={{ overflow: 'auto', height: '100%' }}
         onClick={({ key }) => {

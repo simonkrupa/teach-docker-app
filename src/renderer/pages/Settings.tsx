@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, Space, Alert } from 'antd';
 import './Pages.css';
-import DockerLogo from '../../../assets/Docker.png';
+import './Settings.css';
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -142,92 +142,72 @@ export default function Settings() {
 
   return (
     <div className="settings-page">
-      <div className="header-settings">
-        <div className="first-row">
-          <div className="headers-settings">
-            <div className="first-col-header">
-              <h1 className="header-name">Learn Docker Networking</h1>
-              <h2>Settings Page</h2>
-              <h2>Please provide IP Addresses for VMs with Docker</h2>
-            </div>
-            <img
-              className="docker-settings-logo"
-              src={DockerLogo}
-              alt="docker logo"
-            />
-          </div>
-        </div>
-        <div className="content-settings">
-          <div className="primary-ip-container">
-            <h3>Primary Virutal Machine's IP address</h3>
-            <div>
-              <Space.Compact>
-                <Input
-                  className="input-component"
-                  value={primaryIpValue}
-                  onChange={handlePrimaryIpChange}
-                />
-                <Button
-                  className="generic-button"
-                  type="primary"
-                  onClick={handlePrimaryIpTest}
-                >
-                  Test
-                </Button>
-              </Space.Compact>
-              {alertInfoPrimary.visible && (
-                <Alert
-                  className="alert"
-                  message={alertInfoPrimary.message}
-                  type={alertInfoPrimary.type}
-                  showIcon
-                  closable
-                  onClose={() =>
-                    setAlertInfoPrimary({ ...alertInfoPrimary, visible: false })
-                  }
-                />
-              )}
-            </div>
-          </div>
+      <h1 className="header-name">Settings</h1>
 
-          <div className="secondary-ip-container">
-            <h3>
-              Secondary Virtual Machine's IP address (used for Overlay network
-              task)
-            </h3>
-            <div>
-              <Space.Compact>
-                <Input
-                  className="input-component"
-                  value={secondaryIpValue}
-                  onChange={handleSecondaryIpChange}
-                />
-                <Button
-                  className="generic-button"
-                  type="primary"
-                  onClick={handleSecondaryIpTest}
-                >
-                  Test
-                </Button>
-              </Space.Compact>
-              {alertInfoSecondary.visible && (
-                <Alert
-                  className="alert"
-                  message={alertInfoSecondary.message}
-                  type={alertInfoSecondary.type}
-                  showIcon
-                  closable
-                  onClose={() =>
-                    setAlertInfoSecondary({
-                      ...alertInfoSecondary,
-                      visible: false,
-                    })
-                  }
-                />
-              )}
-            </div>
-          </div>
-        </div>
+      <h2>Please provide IP Addresses for VMs with Docker</h2>
+      <h3>Primary Virutal Machine's IP address</h3>
+      <div>
+        <Space.Compact>
+          <Input
+            className="input-component"
+            value={primaryIpValue}
+            onChange={handlePrimaryIpChange}
+          />
+          <Button
+            className="generic-button"
+            type="primary"
+            onClick={handlePrimaryIpTest}
+          >
+            Test
+          </Button>
+        </Space.Compact>
+        {alertInfoPrimary.visible && (
+          <Alert
+            className="alert"
+            message={alertInfoPrimary.message}
+            type={alertInfoPrimary.type}
+            showIcon
+            closable
+            onClose={() =>
+              setAlertInfoPrimary({ ...alertInfoPrimary, visible: false })
+            }
+          />
+        )}
+      </div>
+
+      <h3>
+        Secondary Virtual Machine's IP address (used for Overlay network task)
+      </h3>
+      <div>
+        <Space.Compact>
+          <Input
+            className="input-component"
+            value={secondaryIpValue}
+            onChange={handleSecondaryIpChange}
+          />
+          <Button
+            className="generic-button"
+            type="primary"
+            onClick={handleSecondaryIpTest}
+          >
+            Test
+          </Button>
+        </Space.Compact>
+        {alertInfoSecondary.visible && (
+          <Alert
+            className="alert"
+            message={alertInfoSecondary.message}
+            type={alertInfoSecondary.type}
+            showIcon
+            closable
+            onClose={() =>
+              setAlertInfoSecondary({
+                ...alertInfoSecondary,
+                visible: false,
+              })
+            }
+          />
+        )}
       </div>
       <Button
         onClick={handleStartApp}
@@ -237,9 +217,10 @@ export default function Settings() {
           height: '50px',
           width: '100px',
           fontSize: '20px',
+          marginTop: '5%',
         }}
       >
-        Start
+        Apply
       </Button>
     </div>
   );
