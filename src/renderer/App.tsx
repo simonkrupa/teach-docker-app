@@ -16,6 +16,18 @@ import Settings from './pages/Settings';
 import BridgeOverview from './pages/bridge/BridgeOverview';
 import BridgeTask from './pages/bridge/BridgeTask';
 import Welcome from './pages/Welcome';
+import DefaultBridgeOverview from './pages/default-bridge/DefaultBridgeOverview';
+import DefaultBridgeTask from './pages/default-bridge/DefaultBridgeTask';
+import HostOverview from './pages/host/HostOverview';
+import HostTask from './pages/host/HostTask';
+import NoneOverview from './pages/none/NoneOverview';
+import NoneTask from './pages/none/NoneTask';
+import OverlayOverview from './pages/overlay/OverlayOverview';
+import OverlayTask from './pages/overlay/OverlayTask';
+import MacvlanOverview from './pages/macvlan/MacvlanOverview';
+import MacvlanTask from './pages/macvlan/MacvlanTask';
+import IpvlanOverview from './pages/ipvlan/IpvlanOverview';
+import IpvlanTask from './pages/ipvlan/IpvlanTask';
 
 export default function App() {
   const [isNavbarCollapsed, setNavbarCollapsed] = useState(false);
@@ -55,31 +67,37 @@ export default function App() {
               path="/default-bridge/second-diagram"
               element={<SecondDiagram />}
             />
-            <Route path="/default-bridge/overview" element={<div />} />
-            <Route path="/default-bridge/task" element={<div />} />
+            <Route
+              path="/default-bridge/overview"
+              element={<DefaultBridgeOverview />}
+            />
+            <Route
+              path="/default-bridge/task"
+              element={<DefaultBridgeTask />}
+            />
             {/* host */}
             <Route path="/host/third-diagram" element={<ThirdDiagram />} />
-            <Route path="/host/overview" element={<div />} />
-            <Route path="/host/task" element={<div />} />
+            <Route path="/host/overview" element={<HostOverview />} />
+            <Route path="/host/task" element={<HostTask />} />
             {/* none */}
             <Route path="/none/fourth-diagram" element={<FourthDiagram />} />
-            <Route path="/none/overview" element={<div />} />
-            <Route path="/none/task" element={<div />} />
+            <Route path="/none/overview" element={<NoneOverview />} />
+            <Route path="/none/task" element={<NoneTask />} />
             {/* overlay */}
             <Route path="/overlay/fifth-diagram" element={<FifthDiagram />} />
-            <Route path="/overlay/overview" element={<div />} />
-            <Route path="/overlay/task" element={<div />} />
+            <Route path="/overlay/overview" element={<OverlayOverview />} />
+            <Route path="/overlay/task" element={<OverlayTask />} />
             {/* macvlan */}
             <Route path="/macvlan/sixth-diagram" element={<SixthDiagram />} />
-            <Route path="/macvlan/overview" element={<div />} />
-            <Route path="/macvlan/task" element={<div />} />
+            <Route path="/macvlan/overview" element={<MacvlanOverview />} />
+            <Route path="/macvlan/task" element={<MacvlanTask />} />
             {/* ipvlan */}
             <Route
               path="/ipvlan/seventh-diagram"
               element={<SeventhDiagram />}
             />
-            <Route path="/ipvlan/overview" element={<div />} />
-            <Route path="/ipvlan/task" element={<div />} />
+            <Route path="/ipvlan/overview" element={<IpvlanOverview />} />
+            <Route path="/ipvlan/task" element={<IpvlanTask />} />
           </Routes>
         </Layout>
       </div>

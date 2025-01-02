@@ -16,6 +16,7 @@
       "ip": "172.17.0.2",
       "state": "running",
       "network": "bridge",
+      "mac":"02:42:ac:11:00:02",
       "port": "",
       "hostPort": ""
     }

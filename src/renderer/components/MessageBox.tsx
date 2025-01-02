@@ -1,15 +1,19 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import './MessageBox.css';
-// import { useNavigate } from 'react-router-dom';
-
 import {
   AiFillCheckCircle,
   AiOutlineArrowRight,
   AiFillCloseCircle,
 } from 'react-icons/ai';
+import navigationMap from '../util/navigationMap';
 
 export default function MessageBox({ type, message }) {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const nextLocation = `${navigationMap.get(
+    location.pathname.split('/')[1],
+  )}/overview`;
 
   return (
     <div className={`message-box ${type}`}>
@@ -31,9 +35,9 @@ export default function MessageBox({ type, message }) {
           <Button
             type="default"
             shape="circle"
-            // onClick={() => {
-            //   navigate(navigation);
-            // }}
+            onClick={() => {
+              navigate(nextLocation);
+            }}
             style={{
               // border: '1px solid black',
               zIndex: 100,

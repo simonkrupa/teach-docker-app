@@ -2,15 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 
-export default function BridgeOverview() {
+export default function DefaultBridgeOverview() {
   const navigate = useNavigate();
 
   const handleProceedNavigation = () => {
-    navigate('/bridge/task');
+    navigate('/default-bridge/task');
   };
   return (
     <div className="all-pages">
-      <h1>Bridge overview</h1>
+      <h1>Default bridge overview</h1>
       <Button
         onClick={handleProceedNavigation}
         className="generic-button"

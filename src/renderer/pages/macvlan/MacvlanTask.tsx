@@ -2,15 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 
-export default function BridgeOverview() {
+export default function MacvlanTask() {
   const navigate = useNavigate();
 
   const handleProceedNavigation = () => {
-    navigate('/bridge/task');
+    navigate('/macvlan/sixth-diagram');
   };
   return (
     <div className="all-pages">
-      <h1>Bridge overview</h1>
+      <h1>Maclvan task</h1>
       <Button
         onClick={handleProceedNavigation}
         className="generic-button"

@@ -10,6 +10,8 @@ export default function Settings() {
   const secondaryIpEventListenerRef = useRef<() => void | null>(null);
   const [primaryIpValue, setPrimaryIpValue] = useState('');
   const [secondaryIpValue, setSecondaryIpValue] = useState('');
+  const [loadingPrimaryTest, setLoadingPrimaryTest] = useState(false);
+  const [loadingSecondaryTest, setLoadingSecondaryTest] = useState(false);
   const [primaryIpValid, setPrimaryIpValid] = useState(false);
   const [secondaryIpValid, setSecondaryIpValid] = useState(false);
   const [alertInfoPrimary, setAlertInfoPrimary] = useState({
@@ -45,13 +47,37 @@ export default function Settings() {
     setSecondaryIpValue(e.target.value);
   };
 
+  useEffect(() => {
+    if (alertInfoPrimary.visible) {
+      setLoadingPrimaryTest(false);
+    }
+  }, [alertInfoPrimary]);
+
+  useEffect(() => {
+    if (alertInfoSecondary.visible) {
+      setLoadingSecondaryTest(false);
+    }
+  }, [alertInfoSecondary]);
+
   const handlePrimaryIpTest = () => {
+    setLoadingPrimaryTest(true);
+    setAlertInfoPrimary({ visible: false, type: '', message: '' });
+    if (primaryIpValue === '') {
+      setAlertInfoPrimary({
+        visible: true,
+        type: 'error',
+        message: 'Primary IP address can not be empty.',
+      });
+      // setLoadingPrimaryTest(false);
+      return;
+    }
     if (primaryIpValue === secondaryIpValue) {
       setAlertInfoPrimary({
         visible: true,
         type: 'error',
         message: 'IPs can not be same for both VMs.',
       });
+      // setLoadingPrimaryTest(false);
       return;
     }
     console.log('Primary IP:', primaryIpValue);
@@ -61,6 +87,16 @@ export default function Settings() {
   };
 
   const handleSecondaryIpTest = () => {
+    setLoadingSecondaryTest(true);
+    setAlertInfoSecondary({ visible: false, type: '', message: '' });
+    if (secondaryIpValue === '') {
+      setAlertInfoSecondary({
+        visible: true,
+        type: 'error',
+        message: 'Secondary IP address can not be empty.',
+      });
+      return;
+    }
     if (primaryIpValue === secondaryIpValue) {
       setAlertInfoSecondary({
         visible: true,
@@ -113,11 +149,11 @@ export default function Settings() {
       }
     };
 
-    primaryIpEventListenerRef.current = window.electron.ipcRenderer.once(
+    primaryIpEventListenerRef.current = window.electron.ipcRenderer.on(
       'validate-primary-ip',
       validatePrimaryHandler,
     );
-    secondaryIpEventListenerRef.current = window.electron.ipcRenderer.once(
+    secondaryIpEventListenerRef.current = window.electron.ipcRenderer.on(
       'validate-secondary-ip',
       validateSecondaryHandler,
     );
@@ -157,6 +193,8 @@ export default function Settings() {
             className="generic-button"
             type="primary"
             onClick={handlePrimaryIpTest}
+            loading={loadingPrimaryTest}
+            style={{ width: '100px' }}
           >
             Test
           </Button>
@@ -171,6 +209,14 @@ export default function Settings() {
             onClose={() =>
               setAlertInfoPrimary({ ...alertInfoPrimary, visible: false })
             }
+          />
+        )}
+        {!alertInfoPrimary.visible && (
+          <Alert
+            className="alert"
+            message={'placeholder'}
+            showIcon
+            style={{ visibility: 'hidden' }}
           />
         )}
       </div>
@@ -189,6 +235,8 @@ export default function Settings() {
             className="generic-button"
             type="primary"
             onClick={handleSecondaryIpTest}
+            loading={loadingSecondaryTest}
+            style={{ width: '100px' }}
           >
             Test
           </Button>
@@ -206,6 +254,14 @@ export default function Settings() {
                 visible: false,
               })
             }
+          />
+        )}
+        {!alertInfoSecondary.visible && (
+          <Alert
+            className="alert"
+            message={'placeholder'}
+            showIcon
+            style={{ visibility: 'hidden' }}
           />
         )}
       </div>

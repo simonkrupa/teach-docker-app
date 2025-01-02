@@ -17,7 +17,8 @@
       "state": "running",
       "network": "host",
       "port": "",
-      "hostPort": ""
+      "hostPort": "",
+      "mac": ""
     }
   }
 ]
