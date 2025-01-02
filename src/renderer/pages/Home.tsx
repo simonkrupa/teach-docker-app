@@ -1,7 +1,14 @@
+import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import './Pages.css';
 
 export default function Home() {
+  const navigate = useNavigate();
+
+  const handleProceedNavigation = () => {
+    navigate('/bridge/overview');
+  };
+
   return (
     <div className="all-pages">
       <h1>Docker teaching app</h1>
@@ -12,108 +19,12 @@ export default function Home() {
         Bottom of the window provides terminal where you can complete all the
         tasks. You may also use external tools.
       </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
-      <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
-      </p>
 
-      <Button className="generic-button" type="primary">
+      <Button
+        onClick={handleProceedNavigation}
+        className="generic-button"
+        type="primary"
+      >
         Start
       </Button>
     </div>

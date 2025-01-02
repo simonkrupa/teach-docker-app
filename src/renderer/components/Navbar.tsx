@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom';
-import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { Menu, Layout } from 'antd';
 import type { MenuProps } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
@@ -117,6 +117,36 @@ const items: MenuItem[] = [
 
 export default function NavBar({ isCollapsed, toggleNavbar }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [openKeys, setOpenKeys] = useState([]);
+
+  const parentMenuKeys = [
+    '/bridge',
+    '/default-bridge',
+    '/host',
+    '/none',
+    '/macvlan',
+    '/ipvlan',
+    '/overlay',
+  ];
+
+  const handleOpenChange = (keys) => {
+    console.log('Currently open keys:', keys); // Log all open keys
+    setOpenKeys([...keys]);
+  };
+
+  useEffect(() => {
+    const path = `/${location.pathname.split('/').at(1)}`;
+    if (parentMenuKeys.includes(path)) {
+      if (!openKeys.includes(path)) {
+        openKeys.push(path);
+        handleOpenChange(openKeys);
+      }
+    }
+  }, [location]);
+
+  useEffect(() => {}, []);
+
   return (
     <Sider
       width={200}
@@ -128,7 +158,6 @@ export default function NavBar({ isCollapsed, toggleNavbar }) {
       className="scrollable-sidebar"
     >
       <Menu
-        defaultSelectedKeys={['/welcome']}
         theme="dark"
         style={{ overflow: 'auto', height: '100%' }}
         onClick={({ key }) => {
@@ -138,6 +167,9 @@ export default function NavBar({ isCollapsed, toggleNavbar }) {
         inlineCollapsed={isCollapsed}
         items={items}
         className="scrollable-sidebar"
+        selectedKeys={[location.pathname]}
+        openKeys={openKeys}
+        onOpenChange={handleOpenChange}
       />
     </Sider>
   );
