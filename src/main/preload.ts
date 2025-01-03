@@ -21,7 +21,9 @@ export type Channels =
   | 'validate-primary-ip'
   | 'validate-secondary-ip'
   | 'lan-data'
-  | 'set-docker-vms';
+  | 'set-docker-vms'
+  | 'get-user-progress'
+  | 'set-user-progress';
 
 const electronHandler = {
   ipcRenderer: {

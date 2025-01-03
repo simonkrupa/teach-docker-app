@@ -1,3 +1,4 @@
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
@@ -6,6 +7,38 @@ import DockerLogo from '../../../assets/Docker.png';
 
 export default function Welcome() {
   const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const userProgressRef = useRef<() => void | null>(null);
+
+  const handleUsernameSubmit = () => {
+    console.log('Username submitted');
+    if (username !== '') {
+      window.electron.ipcRenderer.sendMessage('get-user-progress', [username]);
+    } else {
+      alert('Please provide username');
+    }
+  };
+
+  const validateUsernameSubmit = (event, data) => {
+    if (event === true) {
+      console.log(event);
+      navigate('/settings');
+    } else {
+      alert('Username does not exist');
+    }
+  };
+
+  useEffect(() => {
+    userProgressRef.current = window.electron.ipcRenderer.on(
+      'get-user-progress',
+      validateUsernameSubmit,
+    );
+    return () => {
+      if (userProgressRef.current) {
+        userProgressRef.current();
+      }
+    };
+  }, []);
 
   return (
     <div className="welcome-page">
@@ -28,11 +61,13 @@ export default function Welcome() {
           className="input-welcome"
           placeholder="Username"
           prefix={<UserOutlined />}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
 
         <br />
         <Button
-          onClick={() => navigate('/settings')}
+          onClick={handleUsernameSubmit}
           className="button-welcome"
           type="primary"
         >

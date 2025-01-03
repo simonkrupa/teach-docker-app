@@ -16,6 +16,7 @@ function getItem(
   children?: MenuItem[],
   type?: 'group',
   className?: string,
+  disabled?: boolean,
 ): MenuItem {
   return {
     key,
@@ -24,6 +25,7 @@ function getItem(
     label,
     type,
     className,
+    disabled,
   } as MenuItem;
 }
 

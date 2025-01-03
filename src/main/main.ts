@@ -16,6 +16,11 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import DockerEventListener from './listeners/dockerEventListener';
+const {
+  readUserProgress,
+  writeUserProgress,
+  getExistingUserOrCreate,
+} = require('./utils/userProgress');
 
 const Docker = require('dockerode');
 
@@ -43,6 +48,17 @@ let mainWindow: BrowserWindow | null = null;
 let dockerEventListener: DockerEventListener | null = null;
 let dockerEventListenerOverlay: DockerEventListener | null = null;
 let hostIpAddress: string | null = null;
+
+ipcMain.on('get-user-progress', (event, arg) => {
+  const result = getExistingUserOrCreate(arg[0]);
+  console.log('User progress:', result);
+  event.reply('get-user-progress', result);
+});
+
+ipcMain.on('set-user-progress', (event, arg) => {
+  const result = writeUserProgress(arg[0]);
+  event.reply('set-user-progress', result);
+});
 
 function setDockerEventListener(mainWindow: BrowserWindow, ipAddress: string) {
   dockerEventListener = new DockerEventListener(mainWindow, ipAddress);
