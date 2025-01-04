@@ -3,14 +3,19 @@ import * as path from 'path';
 
 const filePath = path.join(
   __dirname,
-  '../../main/data/userProgress/usernamesStore.json',
+  '../../../../userProgress/usernamesStore.json',
 );
 
-function readUserProgress(username: string): string | undefined {
+function getExistingUserOrCreate(username: string): string | undefined {
   try {
     console.log('Reading user progress', username, filePath);
     const data = fs.readFileSync(filePath, 'utf8');
     const jsonData = JSON.parse(data);
+    if (jsonData[username] === undefined) {
+      jsonData[username] = '1';
+      fs.writeFileSync(filePath, JSON.stringify(jsonData));
+      console.log('User created', username);
+    }
     return jsonData[username];
   } catch (err) {
     console.error(err);
@@ -18,32 +23,16 @@ function readUserProgress(username: string): string | undefined {
   }
 }
 
-function getExistingUserOrCreate(username: string): boolean {
+function increaseUserProgress(username: string): boolean {
   try {
-    console.log('Reading user progress', username, filePath);
+    console.log('Increasing user progress', username, filePath);
     const data = fs.readFileSync(filePath, 'utf8');
     const jsonData = JSON.parse(data);
-    if (jsonData[username] === undefined) {
-      jsonData[username] = '0';
-      fs.writeFileSync(filePath, JSON.stringify(jsonData));
-      console.log('User created', username);
-    }
-    return true;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
-}
-
-function writeUserProgress(username: string): boolean {
-  try {
-    console.log('Writing user progress', username, filePath);
-    const data = fs.readFileSync(filePath, 'utf8');
-    const jsonData = JSON.parse(data);
-    if (jsonData[username] === undefined) {
-      jsonData[username] = '0';
-    } else {
+    if (jsonData[username] !== undefined) {
       jsonData[username] = String(Number(jsonData[username]) + 1);
+    } else {
+      console.error('User does not exist', username);
+      return false;
     }
     fs.writeFileSync(filePath, JSON.stringify(jsonData));
     return true;
@@ -54,7 +43,6 @@ function writeUserProgress(username: string): boolean {
 }
 
 module.exports = {
-  readUserProgress,
-  writeUserProgress,
   getExistingUserOrCreate,
+  increaseUserProgress,
 };

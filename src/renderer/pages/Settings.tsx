@@ -221,9 +221,7 @@ export default function Settings() {
         )}
       </div>
 
-      <h3>
-        Secondary Virtual Machine's IP address (used for Overlay network task)
-      </h3>
+      <h3>Secondary Virtual Machine's IP address</h3>
       <div>
         <Space.Compact>
           <Input

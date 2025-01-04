@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Menu, Layout } from 'antd';
 import type { MenuProps } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
+import { useProgress } from '../UserContext';
 import './Navbar.css';
 
 const { Sider } = Layout;
@@ -17,6 +18,7 @@ function getItem(
   type?: 'group',
   className?: string,
   disabled?: boolean,
+  id?: Number,
 ): MenuItem {
   return {
     key,
@@ -26,11 +28,21 @@ function getItem(
     type,
     className,
     disabled,
+    id,
   } as MenuItem;
 }
 
 const items: MenuItem[] = [
-  getItem('Home', '/home', <HomeOutlined />, undefined, undefined, 'home-item'),
+  getItem(
+    'Home',
+    '/home',
+    <HomeOutlined />,
+    undefined,
+    undefined,
+    'home-item',
+    false,
+    0,
+  ),
   getItem(
     '1. Bridge',
     '/bridge',
@@ -42,6 +54,8 @@ const items: MenuItem[] = [
     ],
     undefined,
     'bridge-item',
+    true,
+    1,
   ),
   getItem(
     '2. Default Bridge',
@@ -54,6 +68,8 @@ const items: MenuItem[] = [
     ],
     undefined,
     'default-bridge-item',
+    true,
+    2,
   ),
   getItem(
     '3. Host',
@@ -66,6 +82,8 @@ const items: MenuItem[] = [
     ],
     undefined,
     'host-item',
+    true,
+    3,
   ),
   getItem(
     '4. None',
@@ -78,6 +96,8 @@ const items: MenuItem[] = [
     ],
     undefined,
     'none-item',
+    true,
+    4,
   ),
   getItem(
     '5. Macvlan',
@@ -90,6 +110,8 @@ const items: MenuItem[] = [
     ],
     undefined,
     'macvlan-item',
+    true,
+    5,
   ),
   getItem(
     '6. Ipvlan',
@@ -102,6 +124,8 @@ const items: MenuItem[] = [
     ],
     undefined,
     'ipvlan-item',
+    true,
+    6,
   ),
   getItem(
     '7. Overlay',
@@ -114,6 +138,8 @@ const items: MenuItem[] = [
     ],
     undefined,
     'overlay-item',
+    true,
+    7,
   ),
 ];
 
@@ -121,6 +147,21 @@ export default function NavBar({ isCollapsed, toggleNavbar }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [openKeys, setOpenKeys] = useState([]);
+  const { progress } = useProgress();
+  const [itemsState, setItemsState] = useState(items);
+
+  useEffect(() => {
+    if (progress !== undefined) {
+      const returnedItems = itemsState.map((item) => {
+        if (item?.id < progress && item?.id !== 0) {
+          return { ...item, disabled: false };
+        }
+        return item;
+      });
+
+      setItemsState(returnedItems);
+    }
+  }, [progress]);
 
   const parentMenuKeys = [
     '/bridge',
@@ -133,7 +174,6 @@ export default function NavBar({ isCollapsed, toggleNavbar }) {
   ];
 
   const handleOpenChange = (keys) => {
-    console.log('Currently open keys:', keys); // Log all open keys
     setOpenKeys([...keys]);
   };
 
@@ -146,8 +186,6 @@ export default function NavBar({ isCollapsed, toggleNavbar }) {
       }
     }
   }, [location]);
-
-  useEffect(() => {}, []);
 
   return (
     <Sider
@@ -167,7 +205,7 @@ export default function NavBar({ isCollapsed, toggleNavbar }) {
         }}
         mode="inline"
         inlineCollapsed={isCollapsed}
-        items={items}
+        items={itemsState}
         className="scrollable-sidebar"
         selectedKeys={[location.pathname]}
         openKeys={openKeys}

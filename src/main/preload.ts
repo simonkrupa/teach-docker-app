@@ -23,7 +23,7 @@ export type Channels =
   | 'lan-data'
   | 'set-docker-vms'
   | 'get-user-progress'
-  | 'set-user-progress';
+  | 'write-user-progress';
 
 const electronHandler = {
   ipcRenderer: {

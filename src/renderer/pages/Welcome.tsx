@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import { useProgress } from '../UserContext';
 import './Welcome.css';
 import DockerLogo from '../../../assets/Docker.png';
 
@@ -9,9 +10,9 @@ export default function Welcome() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const userProgressRef = useRef<() => void | null>(null);
+  const { setUserData } = useProgress();
 
   const handleUsernameSubmit = () => {
-    console.log('Username submitted');
     if (username !== '') {
       window.electron.ipcRenderer.sendMessage('get-user-progress', [username]);
     } else {
@@ -20,8 +21,8 @@ export default function Welcome() {
   };
 
   const validateUsernameSubmit = (event, data) => {
-    if (event === true) {
-      console.log(event);
+    if (event !== undefined) {
+      setUserData(event[0], event[1]);
       navigate('/settings');
     } else {
       alert('Username does not exist');

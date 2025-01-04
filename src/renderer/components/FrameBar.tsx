@@ -1,16 +1,18 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import {
-  LeftOutlined,
-  RightOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SettingOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
 import './FrameBar.css';
+import { useProgress } from '../UserContext';
 
 export default function FrameBar({ isCollapsed, toggleNavbar }) {
   const navigate = useNavigate();
+  const { setUserData, username } = useProgress();
 
   const handleExitClick = () => {
     window.electron.ipcRenderer.sendMessage('app-exit', ['ping']);
@@ -19,6 +21,15 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
   const handleMinimizeClick = () => {
     window.electron.ipcRenderer.sendMessage('app-minimize', ['ping']);
   };
+
+  const handleLogoutAction = () => {
+    setUserData('', '');
+    navigate('/welcome');
+  };
+
+  useEffect(() => {
+    console.log('FrameBar username:', username);
+  }, [username]);
 
   return (
     <div className="frameBar drag">
@@ -30,12 +41,6 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
         >
           {isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </Button>
-        <Button className="collapseBtn no-drag" type="primary">
-          <LeftOutlined />
-        </Button>
-        <Button className="collapseBtn no-drag" type="primary">
-          <RightOutlined />
-        </Button>
         <Button
           onClick={() => navigate('/settings')}
           className="collapseBtn no-drag"
@@ -43,7 +48,16 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
         >
           <SettingOutlined />
         </Button>
+        <Button
+          onClick={handleLogoutAction}
+          className="collapseBtn no-drag"
+          type="primary"
+        >
+          <LogoutOutlined />
+        </Button>
       </div>
+      <div className="framebar-username">{username}</div>
+
       <div className="appName">Learn Docker</div>
       <Button
         onClick={handleMinimizeClick}

@@ -16,13 +16,12 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import DockerEventListener from './listeners/dockerEventListener';
-const {
-  readUserProgress,
-  writeUserProgress,
-  getExistingUserOrCreate,
-} = require('./utils/userProgress');
 
 const Docker = require('dockerode');
+const {
+  getExistingUserOrCreate,
+  increaseUserProgress,
+} = require('./utils/userProgress');
 
 // templates for each diagram page
 const diagram1 = require('./data/diagram1.json');
@@ -50,14 +49,19 @@ let dockerEventListenerOverlay: DockerEventListener | null = null;
 let hostIpAddress: string | null = null;
 
 ipcMain.on('get-user-progress', (event, arg) => {
-  const result = getExistingUserOrCreate(arg[0]);
-  console.log('User progress:', result);
-  event.reply('get-user-progress', result);
+  const username = arg[0];
+  const progress = getExistingUserOrCreate(username);
+  if (progress === undefined) {
+    console.log('User does not exist:', username);
+    event.reply('get-user-progress', undefined);
+  }
+  console.log('User progress:', [username, progress]);
+  event.reply('get-user-progress', [username, progress]);
 });
 
-ipcMain.on('set-user-progress', (event, arg) => {
-  const result = writeUserProgress(arg[0]);
-  event.reply('set-user-progress', result);
+ipcMain.on('write-user-progress', (event, arg) => {
+  console.log('Writing user progress:', arg[0]);
+  increaseUserProgress(arg[0]);
 });
 
 function setDockerEventListener(mainWindow: BrowserWindow, ipAddress: string) {
