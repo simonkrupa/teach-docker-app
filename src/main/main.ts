@@ -157,7 +157,7 @@ const createWindow = async () => {
     show: false,
     width: 1720,
     height: 880,
-    icon: getAssetPath('icon.png'),
+    icon: getAssetPath('block.png'),
     frame: false,
     paintWhenInitiallyHidden: true,
     webPreferences: {
