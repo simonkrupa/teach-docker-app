@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Input } from 'antd';
+import { Button, Input, Alert } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useProgress } from '../UserContext';
 import './Welcome.css';
@@ -11,12 +11,21 @@ export default function Welcome() {
   const [username, setUsername] = useState('');
   const userProgressRef = useRef<() => void | null>(null);
   const { setUserData } = useProgress();
+  const [alertInfo, setAlertInfo] = useState({
+    visible: false,
+    type: '',
+    message: '',
+  });
 
   const handleUsernameSubmit = () => {
     if (username !== '') {
       window.electron.ipcRenderer.sendMessage('get-user-progress', [username]);
     } else {
-      alert('Please provide username');
+      setAlertInfo({
+        visible: true,
+        type: 'error',
+        message: 'Please provide username',
+      });
     }
   };
 
@@ -25,7 +34,11 @@ export default function Welcome() {
       setUserData(event[0], event[1]);
       navigate('/settings');
     } else {
-      alert('Username does not exist');
+      setAlertInfo({
+        visible: true,
+        type: 'error',
+        message: 'Username does not exist',
+      });
     }
   };
 
@@ -74,6 +87,18 @@ export default function Welcome() {
         >
           Start
         </Button>
+        <br />
+        {alertInfo.visible && (
+          <Alert
+            message={alertInfo.message}
+            type={alertInfo.type}
+            showIcon
+            closable
+            onClose={() =>
+              setAlertInfo({ visible: false, type: '', message: '' })
+            }
+          />
+        )}
       </div>
       <div className="second-col-welcome">
         <img className="docker-logo" src={DockerLogo} alt="docker logo" />
