@@ -320,7 +320,7 @@ const createWindow = async () => {
       containerToListenOverlay,
       uniqueNetworks,
     );
-    dockerEventListener?.listenToEvents(containerToListen);
+    dockerEventListener?.listenToEventsSecondary(containerToListen);
     dockerEventListener?.getCurrentStateOfContainers(
       containerToListen,
       uniqueNetworks,

@@ -92,7 +92,7 @@ class DockerEventListener {
       .getNetwork(uniqueNetworks.values().next().value)
       .inspect((err, networkData) => {
         if (err) {
-          return console.error('Error:', err);
+          return console.error('Error 2:', err);
         }
         const result = mapNetworkData(networkData);
         this.mainWindow.webContents.send(
@@ -103,7 +103,7 @@ class DockerEventListener {
 
     this.docker.listContainers({ all: true }, (err, containers) => {
       if (err) {
-        return console.error('Error:', err);
+        return console.error('Error 3:', err);
       }
       containers.forEach((containerInfo) => {
         if (containersToListen.has(containerInfo.Names[0].substring(1))) {
@@ -167,9 +167,81 @@ class DockerEventListener {
   listenToEvents(containersToListen): void {
     this.docker.getEvents((err, stream) => {
       if (err) {
+        this.mainWindow.webContents.send('error', undefined);
         return console.error('Error:', err);
       }
+      console.log('Listening to events');
+      this.eventStream = stream;
 
+      stream.on('data', (chunk) => {
+        const event = JSON.parse(chunk.toString('utf8'));
+        if (
+          event.Type === 'container' &&
+          containersToListen.has(event.Actor.Attributes.name)
+        ) {
+          switch (event.Action) {
+            case 'destroy': {
+              this.destoryContainer(event);
+              break;
+            }
+            default:
+              this.getContainerData(
+                event.Actor.ID,
+                containersToListen.get(event.Actor.Attributes.name),
+              );
+              break;
+          }
+        } else if (
+          event.Type === 'network' &&
+          this.hasValue(containersToListen, event.Actor.Attributes.name)
+        ) {
+          switch (event.Action) {
+            case 'create': {
+              this.createNetwork(event);
+              break;
+            }
+            case 'destroy': {
+              this.destroyNetwork(event);
+              break;
+            }
+            case 'connect':
+            case 'disconnect': {
+              this.connectionNetworkEvent(event, containersToListen);
+              break;
+            }
+            default:
+              break;
+          }
+        } else if (event.Type === 'node') {
+          switch (event.Action) {
+            case 'update': {
+              this.getVMNodeData(event.Actor.ID);
+              break;
+            }
+            default:
+              break;
+          }
+        }
+      });
+
+      stream.on('error', (error) => {
+        console.log('Stream error:', error);
+      });
+
+      stream.on('end', () => {
+        console.log('Stream ended');
+        this.eventStream = null;
+      });
+      return 0;
+    });
+  }
+
+  listenToEventsSecondary(containersToListen): void {
+    this.docker.getEvents((err, stream) => {
+      if (err) {
+        return console.error('Error:', err);
+      }
+      console.log('Listening to events');
       this.eventStream = stream;
 
       stream.on('data', (chunk) => {

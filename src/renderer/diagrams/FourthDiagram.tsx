@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactFlow, useNodesState, Controls } from 'reactflow';
+import { useNavigate } from 'react-router-dom';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
 import { Button } from 'antd';
@@ -52,6 +53,8 @@ export default function FourthDiagram() {
   const containerEventListenerRef = useRef<() => void | null>(null);
   const hostEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
+  const errorEventListenerRef = useRef<() => void | null>(null);
+  const navigate = useNavigate();
 
   const onEdit = useCallback((newData) => {
     setNodes((prevNodes) => {
@@ -123,6 +126,11 @@ export default function FourthDiagram() {
     }
   };
 
+  const handleIncomingError = () => {
+    alert('error');
+    navigate('/settings');
+  };
+
   useEffect(() => {
     console.log('FourthDiagram mounted');
     handleStartListening();
@@ -138,6 +146,11 @@ export default function FourthDiagram() {
       handleIncomingHostData,
     );
 
+    errorEventListenerRef.current = window.electron.ipcRenderer.on(
+      'error',
+      handleIncomingError,
+    );
+
     return () => {
       console.log('Component unmounted');
       handleStopListening();
@@ -149,6 +162,10 @@ export default function FourthDiagram() {
 
       if (hostEventListenerRef.current) {
         hostEventListenerRef.current();
+      }
+
+      if (errorEventListenerRef.current) {
+        errorEventListenerRef.current();
       }
     };
   }, []);

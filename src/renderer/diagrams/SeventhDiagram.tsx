@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactFlow, useNodesState, Controls } from 'reactflow';
+import { useNavigate } from 'react-router-dom';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
 import { Button } from 'antd';
@@ -136,9 +137,11 @@ export default function SeventhDiagram() {
   const networkEventListenerRef = useRef<() => void | null>(null);
   const hostEventListenerRef = useRef<() => void | null>(null);
   const lanEventListenerRef = useRef<() => void | null>(null);
+  const errorEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
   const [startEdge, setStartEdge] = useState({ node: null, newData: null });
   const [deleteEdge, setDeleteEdge] = useState({ node: null, newData: null });
+  const navigate = useNavigate();
 
   const startEdges = useCallback((node, newData) => {
     setEdges((prevEdges) => {
@@ -315,6 +318,11 @@ export default function SeventhDiagram() {
     }
   };
 
+  const handleIncomingError = () => {
+    alert('error');
+    navigate('/settings');
+  };
+
   useEffect(() => {
     console.log('SeventhDiagram mounted');
     handleStartListening();
@@ -340,6 +348,11 @@ export default function SeventhDiagram() {
       handleIncomingLanData,
     );
 
+    errorEventListenerRef.current = window.electron.ipcRenderer.on(
+      'error',
+      handleIncomingError,
+    );
+
     return () => {
       console.log('Component unmounted');
       handleStopListening();
@@ -359,6 +372,10 @@ export default function SeventhDiagram() {
 
       if (lanEventListenerRef.current) {
         lanEventListenerRef.current();
+      }
+
+      if (errorEventListenerRef.current) {
+        errorEventListenerRef.current();
       }
     };
   }, []);

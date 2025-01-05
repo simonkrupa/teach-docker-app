@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactFlow, useNodesState, Controls } from 'reactflow';
+import { useNavigate } from 'react-router-dom';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
 import { Button } from 'antd';
@@ -67,9 +68,11 @@ export default function ThirdDiagram() {
   const containerEventListenerRef = useRef<() => void | null>(null);
   const networkEventListenerRef = useRef<() => void | null>(null);
   const hostEventListenerRef = useRef<() => void | null>(null);
+  const errorEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
   const [startEdge, setStartEdge] = useState(null);
   const [deleteEdge, setDeleteEdge] = useState(null);
+  const navigate = useNavigate();
 
   const startEdges = useCallback((nodeId) => {
     setEdges((prevEdges) => {
@@ -203,6 +206,11 @@ export default function ThirdDiagram() {
     }
   };
 
+  const handleIncomingError = () => {
+    alert('error');
+    navigate('/settings');
+  };
+
   useEffect(() => {
     console.log('ThirdDiagram mounted');
     handleStartListening();
@@ -223,6 +231,11 @@ export default function ThirdDiagram() {
       handleIncomingHostData,
     );
 
+    errorEventListenerRef.current = window.electron.ipcRenderer.on(
+      'error',
+      handleIncomingError,
+    );
+
     return () => {
       console.log('Component unmounted');
       handleStopListening();
@@ -238,6 +251,10 @@ export default function ThirdDiagram() {
 
       if (hostEventListenerRef.current) {
         hostEventListenerRef.current();
+      }
+
+      if (errorEventListenerRef.current) {
+        errorEventListenerRef.current();
       }
     };
   }, []);

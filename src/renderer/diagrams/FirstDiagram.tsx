@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactFlow, useNodesState, Controls } from 'reactflow';
+import { useNavigate } from 'react-router-dom';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
 import { Button } from 'antd';
@@ -121,9 +122,11 @@ export default function FirstDiagram() {
   const containerEventListenerRef = useRef<() => void | null>(null);
   const networkEventListenerRef = useRef<() => void | null>(null);
   const hostEventListenerRef = useRef<() => void | null>(null);
+  const errorEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
   const [startEdge, setStartEdge] = useState(null);
   const [deleteEdge, setDeleteEdge] = useState(null);
+  const navigate = useNavigate();
 
   // Your existing ResizeObserver code
   const resizeObserver = new ResizeObserver(
@@ -269,6 +272,11 @@ export default function FirstDiagram() {
     }
   };
 
+  const handleIncomingError = () => {
+    alert('error');
+    navigate('/settings');
+  };
+
   useEffect(() => {
     console.log('FirstDiagram mounted');
     handleStartListening();
@@ -289,6 +297,11 @@ export default function FirstDiagram() {
       handleIncomingHostData,
     );
 
+    errorEventListenerRef.current = window.electron.ipcRenderer.on(
+      'error',
+      handleIncomingError,
+    );
+
     return () => {
       console.log('Component unmounted');
       handleStopListening();
@@ -304,6 +317,10 @@ export default function FirstDiagram() {
 
       if (hostEventListenerRef.current) {
         hostEventListenerRef.current();
+      }
+
+      if (errorEventListenerRef.current) {
+        errorEventListenerRef.current();
       }
     };
   }, []);

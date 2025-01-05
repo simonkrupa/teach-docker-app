@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactFlow, useNodesState, Controls } from 'reactflow';
+import { useNavigate } from 'react-router-dom';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
 import { Button } from 'antd';
@@ -127,9 +128,11 @@ export default function FifthDiagram() {
   const networkEventListenerRef = useRef<() => void | null>(null);
   const hostEventListenerRef = useRef<() => void | null>(null);
   const nodeEventListenerRef = useRef<() => void | null>(null);
+  const errorEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
   const [startEdge, setStartEdge] = useState(null);
   const [deleteEdge, setDeleteEdge] = useState(null);
+  const navigate = useNavigate();
 
   const startEdges = useCallback((nodeId) => {
     setEdges((prevEdges) => {
@@ -291,6 +294,11 @@ export default function FifthDiagram() {
     }
   };
 
+  const handleIncomingError = () => {
+    alert('error');
+    navigate('/settings');
+  };
+
   useEffect(() => {
     console.log('FifthDiagram mounted');
     handleStartListening();
@@ -309,6 +317,11 @@ export default function FifthDiagram() {
     nodeEventListenerRef.current = window.electron.ipcRenderer.on(
       'node-vm-data',
       handleIncomingNodeData,
+    );
+
+    errorEventListenerRef.current = window.electron.ipcRenderer.on(
+      'error',
+      handleIncomingError,
     );
 
     return () => {
@@ -330,6 +343,10 @@ export default function FifthDiagram() {
 
       if (nodeEventListenerRef.current) {
         nodeEventListenerRef.current();
+      }
+
+      if (errorEventListenerRef.current) {
+        errorEventListenerRef.current();
       }
     };
   }, []);
