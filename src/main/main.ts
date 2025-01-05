@@ -16,6 +16,7 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import DockerEventListener from './listeners/dockerEventListener';
+import platformNetworkInterfacesMap from './utils/platformUtils';
 
 const Docker = require('dockerode');
 const {
@@ -55,19 +56,16 @@ ipcMain.on('get-user-progress', (event, arg) => {
     console.log('User does not exist:', username);
     event.reply('get-user-progress', undefined);
   }
-  console.log('User progress:', [username, progress]);
   event.reply('get-user-progress', [username, progress]);
 });
 
 ipcMain.on('write-user-progress', (event, arg) => {
-  console.log('Writing user progress:', arg[0]);
   increaseUserProgress(arg[0]);
 });
 
 function setDockerEventListener(mainWindow: BrowserWindow, ipAddress: string) {
   dockerEventListener = new DockerEventListener(mainWindow, ipAddress);
   hostIpAddress = ipAddress;
-  console.log('Host IP Address:', hostIpAddress);
   return dockerEventListener;
 }
 
@@ -90,23 +88,33 @@ function getNetworkInterfaces() {
           .map((address) => ({ key, ...address })), // Include the key with each address
     );
 
-  //TODO temp change
-  const tempInterfaces = Object.values(filteredInterfaces).filter(
-    (item) => item.key === 'Wi-Fi',
-  );
-  return tempInterfaces.length > 0 ? tempInterfaces[0] : null;
+  const platform = os.platform();
+  const keyBasedOnPlatform = platformNetworkInterfacesMap.get(platform);
+  if (keyBasedOnPlatform) {
+    const tempInterfaces = Object.values(filteredInterfaces).filter((item) =>
+      item.key.toLowerCase().startsWith(keyBasedOnPlatform),
+    );
+    if (tempInterfaces.length === 0 && platform === 'win32') {
+      Object.values(filteredInterfaces).find((item) => {
+        if (item.key.toLowerCase().startsWith('eth')) {
+          tempInterfaces.push(item);
+        }
+      });
+    }
+    return tempInterfaces.length > 0 ? tempInterfaces[0] : null;
+  }
+  return null;
 }
 
 function sendHostIpAddress(hostIpAddress: string) {
   mainWindow?.webContents.send('host-ip-address', hostIpAddress);
 }
 
-function sendLan(hostIpAddress: string) {
-  // console.log(JSON.stringify(getNetworkInterfaces()));
-  mainWindow?.webContents.send(
-    'lan-data',
-    JSON.stringify(getNetworkInterfaces()),
-  );
+function sendLan() {
+  const lanData = getNetworkInterfaces();
+  if (lanData) {
+    mainWindow?.webContents.send('lan-data', JSON.stringify(lanData));
+  }
 }
 
 ipcMain.on('ipc-example', async (event, arg) => {
@@ -342,7 +350,7 @@ const createWindow = async () => {
       uniqueNetworks,
     );
     sendHostIpAddress(hostIpAddress);
-    sendLan(hostIpAddress);
+    sendLan();
   });
   ipcMain.on('start-listening-7', () => {
     console.log('Starting listening to events for diagram 7');
@@ -358,7 +366,7 @@ const createWindow = async () => {
       uniqueNetworks,
     );
     sendHostIpAddress(hostIpAddress);
-    sendLan(hostIpAddress);
+    sendLan();
   });
 };
 

@@ -204,7 +204,6 @@ export default function NavBar({ isCollapsed, toggleNavbar }) {
           navigate(key);
         }}
         mode="inline"
-        inlineCollapsed={isCollapsed}
         items={itemsState}
         className="scrollable-sidebar"
         selectedKeys={[location.pathname]}

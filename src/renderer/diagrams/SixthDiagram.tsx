@@ -34,6 +34,7 @@ const initialNodes = [
       label: 'host',
       ip: 'undefined',
     },
+    draggable: false,
   },
   {
     id: '1',
