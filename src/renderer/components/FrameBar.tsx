@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from 'antd';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Button, Tooltip } from 'antd';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -13,6 +13,16 @@ import { useProgress } from '../UserContext';
 export default function FrameBar({ isCollapsed, toggleNavbar }) {
   const navigate = useNavigate();
   const { setUserData, username } = useProgress();
+  const location = useLocation();
+  const [showLogout, setShowLogout] = useState(false);
+
+  useEffect(() => {
+    if (location.pathname === '/welcome' || location.pathname === '/') {
+      setShowLogout(false);
+    } else {
+      setShowLogout(true);
+    }
+  }, [location]);
 
   const handleExitClick = () => {
     window.electron.ipcRenderer.sendMessage('app-exit', ['ping']);
@@ -41,20 +51,26 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
         >
           {isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </Button>
-        <Button
-          onClick={() => navigate('/settings')}
-          className="collapseBtn no-drag"
-          type="primary"
-        >
-          <SettingOutlined />
-        </Button>
-        <Button
-          onClick={handleLogoutAction}
-          className="collapseBtn no-drag"
-          type="primary"
-        >
-          <LogoutOutlined />
-        </Button>
+        <Tooltip placement="top" title="Settings">
+          <Button
+            onClick={() => navigate('/settings')}
+            className="collapseBtn no-drag"
+            type="primary"
+          >
+            <SettingOutlined />
+          </Button>
+        </Tooltip>
+        {showLogout && (
+          <Tooltip placement="top" title="Log out">
+            <Button
+              onClick={handleLogoutAction}
+              className="collapseBtn no-drag"
+              type="primary"
+            >
+              <LogoutOutlined />
+            </Button>
+          </Tooltip>
+        )}
       </div>
       <div className="framebar-username">{username}</div>
 
@@ -64,9 +80,10 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
         className="controlBtn no-drag"
         type="primary"
         shape="circle"
-        style={{ backgroundColor: 'lightblue' }}
-      />
-
+        style={{ backgroundColor: 'lightblue', color: 'black' }}
+      >
+        -
+      </Button>
       <Button
         onClick={handleExitClick}
         danger
