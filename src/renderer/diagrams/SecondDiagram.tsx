@@ -36,6 +36,7 @@ const initialNodes = [
     id: '1',
     position: { x: 250, y: 120 },
     type: 'containerNode',
+    desiredNetwork: 'bridge',
     data: {
       label: '/my-nginx3',
       ip: '172.22.168.91',
@@ -127,7 +128,10 @@ export default function SecondDiagram() {
           item.data.label === newData.label &&
           item.type === 'containerNode'
         ) {
-          if (newData.status === 'running') {
+          if (
+            newData.status === 'running' &&
+            newData.network === item.desiredNetwork
+          ) {
             setStartEdge(item.id);
           } else {
             setDeleteEdge(item.id);
@@ -165,7 +169,6 @@ export default function SecondDiagram() {
 
   const handleIncomingData = useCallback(
     (data) => {
-      console.log('Container data:', data);
       setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
       onEdit(jsonData);

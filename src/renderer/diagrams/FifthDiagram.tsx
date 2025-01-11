@@ -25,6 +25,7 @@ const initialNodes = [
     id: '1',
     position: { x: 100, y: 80 },
     type: 'containerNode',
+    desiredNetwork: 'my-overlay',
     data: {
       label: '/my-nginx6',
       ip: undefined,
@@ -40,6 +41,7 @@ const initialNodes = [
     id: '3',
     position: { x: 500, y: 80 },
     type: 'containerNode',
+    desiredNetwork: 'my-overlay',
     data: {
       label: '/my-nginx7',
       ip: undefined,
@@ -165,7 +167,10 @@ export default function FifthDiagram() {
           item.data.label === newData.label &&
           item.type === 'containerNode'
         ) {
-          if (newData.status === 'running') {
+          if (
+            newData.status === 'running' &&
+            newData.network === item.desiredNetwork
+          ) {
             setStartEdge(item.id);
           } else {
             setDeleteEdge(item.id);

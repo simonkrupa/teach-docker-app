@@ -24,6 +24,7 @@ const initialNodes = [
     id: '1',
     position: { x: 250, y: 200 },
     type: 'containerNode',
+    desiredNetwork: 'host',
     data: {
       label: '/my-nginx4',
       ip: '172.22.168.91',
@@ -105,7 +106,10 @@ export default function ThirdDiagram() {
           item.data.label === newData.label &&
           item.type === 'containerNode'
         ) {
-          if (newData.status === 'running') {
+          if (
+            newData.status === 'running' &&
+            newData.network === item.desiredNetwork
+          ) {
             setStartEdge(item.id);
           } else {
             setDeleteEdge(item.id);
