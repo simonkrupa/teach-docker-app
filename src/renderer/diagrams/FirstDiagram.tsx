@@ -190,6 +190,11 @@ export default function FirstDiagram() {
           };
         }
         if (item.data.label === newData.name && item.type === 'networkNode') {
+          if (newData.driver === undefined) {
+            setDeleteEdge(item.id);
+          } else {
+            setStartEdge(item.id);
+          }
           return {
             ...item,
             data: {
