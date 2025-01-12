@@ -46,7 +46,7 @@ const initialNodes = [
       hostPort: '',
       mac: '',
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '2',
@@ -61,7 +61,7 @@ const initialNodes = [
       driver: undefined,
       gateway: undefined,
     },
-    // draggable: false,
+    draggable: false,
   },
 ];
 

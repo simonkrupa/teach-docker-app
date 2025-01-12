@@ -70,27 +70,33 @@ function mapNetworkData(networkData: any) {
       name: networkData.Name,
       driver: 'host',
     };
-  } else if (networkData.Name === 'none') {
+  }
+  if (networkData.Name === 'none') {
     return {
       name: networkData.Name,
       driver: 'none',
     };
-  } else if (networkData.Driver === 'overlay') {
+  }
+  if (networkData.Driver === 'overlay') {
     return {
       name: networkData.Name,
       driver: networkData.Driver,
-      subnet: networkData.IPAM.Config[0].Subnet,
-      gateway: networkData.IPAM.Config[0].Gateway,
+      subnet: networkData.IPAM?.Config?.[0]?.Subnet || '',
+      gateway: networkData.IPAM?.Config?.[0]?.Gateway || '',
       peers: networkData.Peers,
     };
-  } else {
+  }
+  if (networkData.Driver === '' && networkData.IPAM.Config === null) {
     return {
       name: networkData.Name,
-      subnet: networkData.IPAM.Config[0].Subnet,
-      driver: networkData.Driver,
-      gateway: networkData.IPAM.Config[0].Gateway,
     };
   }
+  return {
+    name: networkData.Name,
+    subnet: networkData.IPAM.Config?.[0]?.Subnet || '',
+    driver: networkData.Driver,
+    gateway: networkData.IPAM.Config?.[0]?.Gateway || '',
+  };
 }
 
 module.exports = { mapContainerData, mapNetworkData, mapVMHostData };

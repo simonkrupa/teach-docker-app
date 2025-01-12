@@ -88,19 +88,20 @@ class DockerEventListener {
   getCurrentStateOfContainers(containersToListen, uniqueNetworks) {
     const containersMap = new Map<string, string>();
 
-    this.docker
-      .getNetwork(uniqueNetworks.values().next().value)
-      .inspect((err, networkData) => {
-        if (err) {
-          return console.error('Error 2:', err);
-        }
-        const result = mapNetworkData(networkData);
-        this.mainWindow.webContents.send(
-          'network-data',
-          JSON.stringify(result),
-        );
-      });
-
+    if (uniqueNetworks.size > 0) {
+      this.docker
+        .getNetwork(uniqueNetworks.values().next().value)
+        .inspect((err, networkData) => {
+          if (err) {
+            return console.error('Error 2:', err);
+          }
+          const result = mapNetworkData(networkData);
+          this.mainWindow.webContents.send(
+            'network-data',
+            JSON.stringify(result),
+          );
+        });
+    }
     this.docker.listContainers({ all: true }, (err, containers) => {
       if (err) {
         return console.error('Error 3:', err);
@@ -128,14 +129,38 @@ class DockerEventListener {
     return false;
   }
 
-  createNetwork(event) {
-    this.docker.getNetwork(event.Actor.ID).inspect((err, networkData) => {
-      if (err) {
-        return console.error('Error:', err);
+  wait(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async createNetwork(event) {
+    try {
+      const getNetworkData = async (networkId: string) => {
+        return new Promise((resolve, reject) => {
+          this.docker.getNetwork(networkId).inspect((err, networkData) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(networkData);
+            }
+          });
+        });
+      };
+
+      let networkDataFromEvent: any = await getNetworkData(event.Actor.ID);
+
+      // If not proper data returned on the first try
+      if (networkDataFromEvent.Driver === '') {
+        console.log('Retrying network data after 2 seconds...');
+        await this.wait(1000);
+        networkDataFromEvent = await getNetworkData(event.Actor.ID);
       }
-      const result = mapNetworkData(networkData);
+
+      const result = mapNetworkData(networkDataFromEvent);
       this.mainWindow.webContents.send('network-data', JSON.stringify(result));
-    });
+    } catch (err) {
+      console.error('Error retrieving network data:', err);
+    }
   }
 
   destoryContainer(event) {
@@ -201,6 +226,11 @@ class DockerEventListener {
               break;
             }
             case 'destroy': {
+              this.destroyNetwork(event);
+              break;
+            }
+            // for swarm removing network
+            case 'remove': {
               this.destroyNetwork(event);
               break;
             }

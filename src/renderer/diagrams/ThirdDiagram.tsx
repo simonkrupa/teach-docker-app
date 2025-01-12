@@ -34,7 +34,7 @@ const initialNodes = [
       hostPort: '',
       mac: '',
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '0',
@@ -47,7 +47,7 @@ const initialNodes = [
       label: 'Host',
       ip: 'undefined',
     },
-    // draggable: false,
+    draggable: false,
   },
 ];
 
@@ -111,6 +111,7 @@ export default function ThirdDiagram() {
             newData.network === item.desiredNetwork
           ) {
             setStartEdge(item.id);
+            newData.ip = nodes[1].data.ip;
           } else {
             setDeleteEdge(item.id);
           }

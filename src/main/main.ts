@@ -323,12 +323,15 @@ const createWindow = async () => {
       containerToListenOverlay.set(container.data.label, container.network);
       uniqueNetworks.add(container.network);
     });
-    dockerEventListenerOverlay?.listenToEvents(containerToListenOverlay);
+    dockerEventListenerOverlay?.listenToEventsSecondary(
+      containerToListenOverlay,
+    );
+    const emptySet = new Set<string>();
     dockerEventListenerOverlay?.getCurrentStateOfContainers(
       containerToListenOverlay,
-      uniqueNetworks,
+      emptySet,
     );
-    dockerEventListener?.listenToEventsSecondary(containerToListen);
+    dockerEventListener?.listenToEvents(containerToListen);
     dockerEventListener?.getCurrentStateOfContainers(
       containerToListen,
       uniqueNetworks,
