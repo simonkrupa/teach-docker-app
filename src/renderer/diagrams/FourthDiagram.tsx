@@ -46,6 +46,7 @@ const initialNodes = [
     data: {
       label: 'Host',
       ip: 'undefined',
+      hEth: '',
     },
     draggable: false,
   },
@@ -104,7 +105,8 @@ export default function FourthDiagram() {
             ...item,
             data: {
               ...item.data,
-              ip: data,
+              ip: data.ip,
+              hEth: data.eth,
             },
           };
         }

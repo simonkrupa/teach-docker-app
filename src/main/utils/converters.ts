@@ -34,6 +34,10 @@ function parseIpLinkOutput(output) {
   return interfaces;
 }
 
+function parseHostNetworkInterface(input: string) {
+  return input.split(' ').pop();
+}
+
 function getVethIdFromName(name: string): number | null {
   const match = name.match(/(\D+)(\d+)$/);
   if (match) {
@@ -44,4 +48,4 @@ function getVethIdFromName(name: string): number | null {
   return null;
 }
 
-export { parseIpLinkOutput, getVethIdFromName };
+export { parseIpLinkOutput, getVethIdFromName, parseHostNetworkInterface };

@@ -108,9 +108,17 @@ function mapVethData(vethName: string, containerName: string) {
   };
 }
 
+function mapHostData(hostIp: string, hostEth: string) {
+  return {
+    ip: hostIp,
+    eth: hostEth,
+  };
+}
+
 module.exports = {
   mapContainerData,
   mapNetworkData,
   mapVMHostData,
   mapVethData,
+  mapHostData,
 };

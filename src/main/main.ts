@@ -124,8 +124,13 @@ function getNetworkInterfaces() {
   return null;
 }
 
+function getHostNetworkInterface(requestedIpAddr: string) {
+  dockerEventListener?.getHostNetworkInterface(requestedIpAddr);
+}
+
 function sendHostIpAddress(hostIpAddress: string) {
-  mainWindow?.webContents.send('host-ip-address', hostIpAddress);
+  getHostNetworkInterface(hostIpAddress);
+  mainWindow?.webContents.send('host-ip-address', { ip: hostIpAddress });
 }
 
 function sendLan() {

@@ -1,6 +1,10 @@
 import { BrowserWindow } from 'electron';
 import SshConnector from './sshConnector';
-import { parseIpLinkOutput, getVethIdFromName } from '../utils/converters';
+import {
+  parseIpLinkOutput,
+  getVethIdFromName,
+  parseHostNetworkInterface,
+} from '../utils/converters';
 
 const Docker = require('dockerode');
 const {
@@ -8,6 +12,7 @@ const {
   mapNetworkData,
   mapVMHostData,
   mapVethData,
+  mapHostData,
 } = require('../mappers/mappers');
 
 const VETH_NETWORKS = ['bridge', 'my-bridge'];
@@ -89,6 +94,21 @@ class DockerEventListener {
       return;
     }
     await this.sshConnector.connect();
+  }
+
+  async getHostNetworkInterface(requestedIpAddr: string) {
+    if (!this.sshConnector.isConnected) {
+      await this.connectSsh();
+    }
+    const command = `ip addr | grep ${requestedIpAddr}`;
+    const hostInterface = await this.sshConnector.executeSshCommand(command);
+    const result = parseHostNetworkInterface(hostInterface);
+    if (result) {
+      this.mainWindow.webContents.send(
+        'host-ip-address',
+        mapHostData(requestedIpAddr, result),
+      );
+    }
   }
 
   async getContainerEth(containerData: any, desiredNetwork: string) {

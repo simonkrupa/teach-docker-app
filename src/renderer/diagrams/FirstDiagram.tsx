@@ -32,6 +32,7 @@ const initialNodes = [
     data: {
       label: 'host',
       ip: 'undefined',
+      hEth: '',
     },
     draggable: false,
   },
@@ -336,7 +337,8 @@ export default function FirstDiagram() {
             ...item,
             data: {
               ...item.data,
-              ip: data,
+              ip: data.ip,
+              hEth: data.eth,
             },
           };
         }

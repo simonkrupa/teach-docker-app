@@ -31,7 +31,9 @@ const initialNodes = [
     data: {
       label: 'host',
       ip: 'undefined',
+      hEth: '',
     },
+    draggable: false,
   },
   {
     id: '1',
@@ -260,7 +262,8 @@ export default function SecondDiagram() {
             ...item,
             data: {
               ...item.data,
-              ip: data,
+              ip: data.ip,
+              hEth: data.eth,
             },
           };
         }
