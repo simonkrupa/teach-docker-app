@@ -15,7 +15,7 @@ const nodesValidator = (currentNodes, correctNodes) => {
     const correctNode = correctNodes.find((node) => node.id === currentNode.id);
 
     if (!correctNode) {
-      return false; // Node with this id doesn't exist in correct nodes
+      return false;
     }
 
     const excludeKeys = [
@@ -29,13 +29,12 @@ const nodesValidator = (currentNodes, correctNodes) => {
 
     for (const key in correctNode) {
       if (excludeKeys.includes(key)) {
-        // eslint-disable-next-line no-continue
         continue;
       }
       if (!_.isEqual(currentNode[key], correctNode[key])) {
         console.log('correct', correctNode[key]);
         console.log('current', currentNode[key]);
-        return false; // Attribute doesn't match
+        return false;
       }
     }
   }

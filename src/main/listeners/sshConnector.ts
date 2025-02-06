@@ -53,8 +53,6 @@ class SshConnector {
       const fullCommand = `echo ${this.config.password} | sudo -S ${command}`;
 
       this.client.exec(fullCommand, (err, stream) => {
-        // if (err) return reject(err); //if (err) throw err;
-
         let stdout = '';
         let stderr = '';
         let isPasswordPrompt = false;

@@ -299,7 +299,6 @@ export default function SecondDiagram() {
     console.log('SecondDiagram mounted');
     handleStartListening();
 
-    // Add the event listener and store the cleanup function
     containerEventListenerRef.current = window.electron.ipcRenderer.on(
       'container-data',
       handleIncomingData,
@@ -329,7 +328,6 @@ export default function SecondDiagram() {
       console.log('Component unmounted');
       handleStopListening();
 
-      // Call the cleanup function if it exists
       if (containerEventListenerRef.current) {
         containerEventListenerRef.current();
       }
@@ -377,7 +375,6 @@ export default function SecondDiagram() {
           />
         )}
         <Button
-          // style={{ zIndex: 100 }}
           className="validateButton"
           type="primary"
           onClick={handleValidateAnswer}

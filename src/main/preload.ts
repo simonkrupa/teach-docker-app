@@ -3,7 +3,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export type Channels =
-  | 'ipc-example'
   | 'app-exit'
   | 'app-minimize'
   | 'container-data'

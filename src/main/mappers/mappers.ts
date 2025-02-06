@@ -38,7 +38,6 @@ function mapContainerData(containerData: any, value: string) {
     } else {
       ipData = containerData.NetworkSettings.IPAddress;
       macAddr = containerData.NetworkSettings.MacAddress;
-      //TODO
       networkUsed = '';
     }
   }

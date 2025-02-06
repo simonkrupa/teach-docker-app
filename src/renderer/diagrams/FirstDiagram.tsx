@@ -367,7 +367,6 @@ export default function FirstDiagram() {
     console.log('FirstDiagram mounted');
     handleStartListening();
 
-    // Add the event listener and store the cleanup function
     containerEventListenerRef.current = window.electron.ipcRenderer.on(
       'container-data',
       handleIncomingData,
@@ -397,7 +396,6 @@ export default function FirstDiagram() {
       console.log('Component unmounted');
       handleStopListening();
 
-      // Call the cleanup function if it exists
       if (containerEventListenerRef.current) {
         containerEventListenerRef.current();
       }
@@ -430,8 +428,6 @@ export default function FirstDiagram() {
         edges={edges}
         onEdgeUpdate={onEdgesChange}
         fitView
-        // panOnDrag={false}
-        // zoomOnScroll={false}
       >
         <Controls showInteractive={false} />
         {messageBoxState === 'success' && (

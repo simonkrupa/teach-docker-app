@@ -34,7 +34,6 @@ class DockerEventListener {
     ipAddress: string,
     sshConnector: SshConnector,
   ) {
-    // this.docker = new Docker();
     this.docker = new Docker({
       host: ipAddress,
       port: 2375,
@@ -160,13 +159,6 @@ class DockerEventListener {
         }
         const vethData = mapVethData(containerVeth.name, containerData.label);
         this.mainWindow.webContents.send('veth-data', JSON.stringify(vethData));
-        // } else {
-        //   console.log('Container is not running', containerData.label);
-        //   this.mainWindow.webContents.send(
-        //     'veth-data',
-        //     JSON.stringify(mapVethData(undefined, containerData.label)),
-        //   );
-        // }
       }
     } catch (err) {
       console.error('Error getting eth:', err);
@@ -226,12 +218,10 @@ class DockerEventListener {
             containerInfo.Id,
             containersToListen.get(containerInfo.Names[0].substring(1)),
           );
-          // containerIds.push(containerInfo.Id);
         }
       });
       this.sendCurrentContainers(containersMap);
     });
-    // this.getNetworkData(containersToListen.values().next().value);
   }
 
   hasValue(map, value) {
@@ -516,7 +506,6 @@ class DockerEventListener {
           JSON.stringify(mapVMHostData(nodeInfo)),
         );
       });
-      // this.sendCurrentContainers(containersMap);
     });
   }
 

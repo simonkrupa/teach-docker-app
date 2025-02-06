@@ -360,7 +360,6 @@ export default function SixthDiagram() {
     console.log('SixthDiagram mounted');
     handleStartListening();
 
-    // Add the event listener and store the cleanup function
     containerEventListenerRef.current = window.electron.ipcRenderer.on(
       'container-data',
       handleIncomingData,
@@ -390,7 +389,6 @@ export default function SixthDiagram() {
       console.log('Component unmounted');
       handleStopListening();
 
-      // Call the cleanup function if it exists
       if (containerEventListenerRef.current) {
         containerEventListenerRef.current();
       }

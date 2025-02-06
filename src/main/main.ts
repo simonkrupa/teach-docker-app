@@ -98,12 +98,11 @@ function setDockerEventListenerOverlay(
 function getNetworkInterfaces() {
   const interfaces = os.networkInterfaces();
   const filteredInterfaces = Object.keys(interfaces)
-    .filter((key) => !key.toLowerCase().startsWith('lo')) // Filter out interfaces starting with 'lo'
-    .flatMap(
-      (key) =>
-        interfaces[key]
-          .filter((address) => address.family === 'IPv4') // Filter only IPv4 addresses
-          .map((address) => ({ key, ...address })), // Include the key with each address
+    .filter((key) => !key.toLowerCase().startsWith('lo'))
+    .flatMap((key) =>
+      interfaces[key]
+        .filter((address) => address.family === 'IPv4')
+        .map((address) => ({ key, ...address })),
     );
 
   const platform = os.platform();
@@ -139,12 +138,6 @@ function sendLan() {
     mainWindow?.webContents.send('lan-data', JSON.stringify(lanData));
   }
 }
-
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -220,7 +213,6 @@ const createWindow = async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
     return { action: 'deny' };
