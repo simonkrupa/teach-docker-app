@@ -144,11 +144,7 @@ const initialEdges = [
     source: '2',
     sourceHandle: 'host',
     target: '5',
-    label: 'nic',
     animated: true,
-    data: {
-      contId: '1',
-    },
     reconnectable: false,
   },
   {
@@ -165,11 +161,7 @@ const initialEdges = [
     source: '0',
     sourceHandle: 'target-lan',
     target: '5',
-    label: 'nic',
     animated: true,
-    data: {
-      contId: '4',
-    },
     reconnectable: false,
   },
 ];
@@ -182,56 +174,28 @@ export default function SixthDiagram() {
   const lanEventListenerRef = useRef<() => void | null>(null);
   const errorEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
-  const [startEdge, setStartEdge] = useState({ node: null, newData: null });
-  const [deleteEdge, setDeleteEdge] = useState({ node: null, newData: null });
+  const [startEdge, setStartEdge] = useState(null);
+  const [deleteEdge, setDeleteEdge] = useState(null);
   const navigate = useNavigate();
 
-  const startEdges = useCallback((node, newData) => {
+  const startEdges = useCallback((nodeId) => {
     setEdges((prevEdges) => {
       return prevEdges.map((edge) => {
-        if (edge.source === node.id) {
-          setStartEdge({ node: null, newData: null });
+        if (edge.source === nodeId) {
+          setStartEdge(null);
           return { ...edge, hidden: false };
-        }
-        if (
-          edge.id === 'e2-5' &&
-          newData.status === 'running' &&
-          edge.data?.contId === node.id
-        ) {
-          return { ...edge, label: newData.ip };
-        }
-        if (
-          edge.id === 'e0-5' &&
-          newData.status === 'running' &&
-          edge.data?.contId === node.id
-        ) {
-          return { ...edge, label: newData.ip };
         }
         return edge;
       });
     });
   }, []);
 
-  const deleteEdges = useCallback((node, newData) => {
+  const deleteEdges = useCallback((nodeId) => {
     setEdges((prevEdges) => {
       return prevEdges.map((edge) => {
-        if (edge.source === node.id) {
+        if (edge.source === nodeId) {
           setDeleteEdge(null, null);
           return { ...edge, hidden: true };
-        }
-        if (
-          edge.id === 'e2-5' &&
-          newData.status !== 'running' &&
-          edge.data?.contId === node.id
-        ) {
-          return { ...edge, label: 'nic' };
-        }
-        if (
-          edge.id === 'e0-5' &&
-          newData.status !== 'running' &&
-          edge.data?.contId === node.id
-        ) {
-          return { ...edge, label: 'nic' };
         }
         return edge;
       });
@@ -249,13 +213,14 @@ export default function SixthDiagram() {
             newData.status === 'running' &&
             newData.network === item.desiredNetwork
           ) {
-            setStartEdge({ node: item, newData: newData });
+            setStartEdge(item.id);
           } else {
-            setDeleteEdge({ node: item, newData: newData });
+            setDeleteEdge(item.id);
           }
-          if (item.desiredNetwork === 'host' && newData.status === 'running') {
-            newData.ip = item.data.ip;
-          }
+          //TODO host ip addr
+          // if (item.desiredNetwork === 'host' && newData.status === 'running') {
+          //   newData.ip = item.data.ip;
+          // }
 
           return {
             ...item,
@@ -300,17 +265,13 @@ export default function SixthDiagram() {
 
   useEffect(() => {
     if (deleteEdge !== null) {
-      if (deleteEdge?.node !== null) {
-        deleteEdges(deleteEdge.node, deleteEdge.newData);
-      }
+      deleteEdges(deleteEdge);
     }
   }, [deleteEdge, deleteEdges]);
 
   useEffect(() => {
     if (startEdge !== null) {
-      if (startEdge?.node !== null) {
-        startEdges(startEdge.node, startEdge.newData);
-      }
+      startEdges(startEdge);
     }
   }, [startEdge, startEdges]);
 
