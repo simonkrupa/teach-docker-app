@@ -14,7 +14,6 @@ const correctAnswers = require('../data/correctAnswers/thirdDiagram.json');
 
 const nodeTypes = {
   containerNode: ContainerNode,
-  // veth: Veth,
   networkNode: NetworkNode,
   hostNode: HostNode,
 };
@@ -33,6 +32,7 @@ const initialNodes = [
       port: '',
       hostPort: '',
       mac: '',
+      eth: '',
     },
     draggable: false,
   },
@@ -111,6 +111,7 @@ export default function ThirdDiagram() {
             newData.network === item.desiredNetwork
           ) {
             setStartEdge(item.id);
+            //TODO fix host ip
             newData.ip = nodes[1].data.ip;
           } else {
             setDeleteEdge(item.id);
@@ -127,6 +128,7 @@ export default function ThirdDiagram() {
               port: newData?.port || '',
               hostPort: newData?.hostPort || '',
               mac: newData.mac,
+              eth: newData?.eth,
             },
           };
         }

@@ -1,11 +1,17 @@
 import { BrowserWindow } from 'electron';
+import SshConnector from './sshConnector';
+import { parseIpLinkOutput, getVethIdFromName } from '../utils/converters';
 
 const Docker = require('dockerode');
 const {
   mapContainerData,
   mapNetworkData,
   mapVMHostData,
+  mapVethData,
 } = require('../mappers/mappers');
+
+const VETH_NETWORKS = ['bridge', 'my-bridge'];
+const NO_ETH_NETWORKS = ['none', 'host', 'my-overlay'];
 
 class DockerEventListener {
   docker: any;
@@ -16,7 +22,13 @@ class DockerEventListener {
 
   eventStream: NodeJS.ReadableStream | null;
 
-  constructor(mainWindow: BrowserWindow, ipAddress: string) {
+  sshConnector: SshConnector;
+
+  constructor(
+    mainWindow: BrowserWindow,
+    ipAddress: string,
+    sshConnector: SshConnector,
+  ) {
     // this.docker = new Docker();
     this.docker = new Docker({
       host: ipAddress,
@@ -25,6 +37,7 @@ class DockerEventListener {
     this.lastData = {};
     this.mainWindow = mainWindow;
     this.eventStream = null;
+    this.sshConnector = sshConnector;
   }
 
   connectionNetworkEvent(event, containersToListen) {
@@ -46,12 +59,13 @@ class DockerEventListener {
             'container-data',
             JSON.stringify(result),
           );
+          this.getContainerEth(result, event.Actor.Attributes.name);
         }
       });
   }
 
   getContainerData(containerId: string, network: string) {
-    this.docker.getContainer(containerId).inspect((err, container) => {
+    this.docker.getContainer(containerId).inspect(async (err, container) => {
       if (err) {
         return console.error('Error:', err);
       }
@@ -60,7 +74,7 @@ class DockerEventListener {
       if (JSON.stringify(result) === JSON.stringify(this.lastData)) {
         // console.log('No changes');
       } else {
-        // console.log('Changes detected: ', result);
+        this.getContainerEth(result, network);
         this.mainWindow.webContents.send(
           'container-data',
           JSON.stringify(result),
@@ -70,13 +84,93 @@ class DockerEventListener {
     });
   }
 
-  sendCurrentContainers(containersMap) {
-    containersMap.forEach((value, key) => {
+  async connectSsh() {
+    if (this.sshConnector.isConnected) {
+      return;
+    }
+    await this.sshConnector.connect();
+  }
+
+  async getContainerEth(containerData: any, desiredNetwork: string) {
+    try {
+      if (NO_ETH_NETWORKS.includes(containerData.network)) {
+        return;
+      }
+      if (!this.sshConnector.isConnected) {
+        await this.connectSsh();
+      }
+      const { mac, pid } = containerData;
+      const command = `nsenter -t ${pid} -n ip link`;
+      const interfaces = await this.sshConnector.executeSshCommand(command);
+      const parsedInterfaces = parseIpLinkOutput(interfaces);
+      const containerEth = parsedInterfaces.find((netInterface) => {
+        return netInterface.details.mac === mac;
+      });
+      if (!containerEth) {
+        console.error('Could not find eth interface');
+        this.mainWindow.webContents.send(
+          'veth-data',
+          JSON.stringify(mapVethData(undefined, containerData.label)),
+        );
+        return;
+      }
+      containerData.eth = containerEth.name;
+      this.mainWindow.webContents.send(
+        'container-data',
+        JSON.stringify(containerData),
+      );
+      if (VETH_NETWORKS.includes(containerData.network)) {
+        if (containerData.network !== desiredNetwork) {
+          return;
+        }
+        const vethCommand = `ip link show type veth`;
+        const veth = await this.sshConnector.executeSshCommand(vethCommand);
+        const parsedVeth = parseIpLinkOutput(veth);
+        const vethId = getVethIdFromName(containerEth.name);
+        const containerVeth = parsedVeth.find((vethInterface) => {
+          return vethInterface.id === vethId;
+        });
+        if (!containerVeth) {
+          console.error('Could not find veth interface');
+          this.mainWindow.webContents.send(
+            'veth-data',
+            JSON.stringify(mapVethData(undefined, containerData.label)),
+          );
+          return;
+        }
+        const vethData = mapVethData(containerVeth.name, containerData.label);
+        this.mainWindow.webContents.send('veth-data', JSON.stringify(vethData));
+        // } else {
+        //   console.log('Container is not running', containerData.label);
+        //   this.mainWindow.webContents.send(
+        //     'veth-data',
+        //     JSON.stringify(mapVethData(undefined, containerData.label)),
+        //   );
+        // }
+      }
+    } catch (err) {
+      console.error('Error getting eth:', err);
+    }
+  }
+
+  disconnectSsh() {
+    this.sshConnector.disconnect();
+  }
+
+  async sendCurrentContainers(containersMap) {
+    if (
+      this.hasUnallowedValues(containersMap, NO_ETH_NETWORKS) &&
+      !this.sshConnector.isConnected
+    ) {
+      await this.connectSsh();
+    }
+    containersMap.forEach((network, key) => {
       this.docker.getContainer(key).inspect((err, container) => {
         if (err) {
           return console.error('Error:', err);
         }
-        const containerData = mapContainerData(container, value);
+        const containerData = mapContainerData(container, network);
+        this.getContainerEth(containerData, network);
         this.mainWindow.webContents.send(
           'container-data',
           JSON.stringify(containerData),
@@ -129,6 +223,10 @@ class DockerEventListener {
     return false;
   }
 
+  hasUnallowedValues(map, allowedValues) {
+    return [...map.values()].some((value) => !allowedValues.includes(value));
+  }
+
   wait(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
@@ -163,7 +261,7 @@ class DockerEventListener {
     }
   }
 
-  destoryContainer(event) {
+  destoryContainer(event, network: string) {
     const destroyedContainer = {
       label: '/' + event.Actor.Attributes.name,
       status: undefined,
@@ -174,6 +272,15 @@ class DockerEventListener {
       'container-data',
       JSON.stringify(destroyedContainer),
     );
+
+    if (VETH_NETWORKS.includes(network)) {
+      this.mainWindow.webContents.send(
+        'veth-data',
+        JSON.stringify(
+          mapVethData(undefined, '/' + event.Actor.Attributes.name),
+        ),
+      );
+    }
   }
 
   destroyNetwork(event) {
@@ -189,7 +296,13 @@ class DockerEventListener {
     );
   }
 
-  listenToEvents(containersToListen): void {
+  async listenToEvents(containersToListen): Promise<void> {
+    // if (
+    //   this.hasUnallowedValues(containersToListen, NO_ETH_NETWORKS) &&
+    //   !this.sshConnector.isConnected
+    // ) {
+    //   await this.connectSsh();
+    // }
     this.docker.getEvents((err, stream) => {
       if (err) {
         this.mainWindow.webContents.send('error', undefined);
@@ -206,7 +319,10 @@ class DockerEventListener {
         ) {
           switch (event.Action) {
             case 'destroy': {
-              this.destoryContainer(event);
+              this.destoryContainer(
+                event,
+                containersToListen.get(event.Actor.Attributes.name),
+              );
               break;
             }
             default:
@@ -266,7 +382,13 @@ class DockerEventListener {
     });
   }
 
-  listenToEventsSecondary(containersToListen): void {
+  async listenToEventsSecondary(containersToListen): Promise<void> {
+    // if (
+    //   this.hasUnallowedValues(containersToListen, NO_ETH_NETWORKS) &&
+    //   !this.sshConnector.isConnected
+    // ) {
+    //   await this.connectSsh();
+    // }
     this.docker.getEvents((err, stream) => {
       if (err) {
         return console.error('Error:', err);
@@ -282,7 +404,10 @@ class DockerEventListener {
         ) {
           switch (event.Action) {
             case 'destroy': {
-              this.destoryContainer(event);
+              this.destoryContainer(
+                event,
+                containersToListen.get(event.Actor.Attributes.name),
+              );
               break;
             }
             default:

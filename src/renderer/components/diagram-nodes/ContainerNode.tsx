@@ -73,7 +73,7 @@ const ContainerNode = memo(function ContainerNode(props: ContainerNodeProps) {
             {componentToRender}
           </div>
           <div className="ip-address">
-            <div>eth0:</div>
+            <div>{props.data.eth}</div>
             <div>
               {props.data.ip} {props.data.mac}
             </div>

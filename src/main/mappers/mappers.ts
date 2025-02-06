@@ -50,6 +50,8 @@ function mapContainerData(containerData: any, value: string) {
     port: portMapping?.key,
     hostPort: portMapping?.hostPort,
     mac: macAddr,
+    pid: containerData.State.Pid,
+    eth: 'eth',
   };
 }
 
@@ -99,4 +101,16 @@ function mapNetworkData(networkData: any) {
   };
 }
 
-module.exports = { mapContainerData, mapNetworkData, mapVMHostData };
+function mapVethData(vethName: string, containerName: string) {
+  return {
+    label: vethName,
+    desiredContainer: containerName,
+  };
+}
+
+module.exports = {
+  mapContainerData,
+  mapNetworkData,
+  mapVMHostData,
+  mapVethData,
+};

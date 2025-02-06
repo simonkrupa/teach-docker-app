@@ -32,7 +32,9 @@ const initialNodes = [
       port: '',
       hostPort: '',
       mac: '',
+      eth: '',
     },
+    draggable: false,
   },
   {
     id: '0',
@@ -45,6 +47,7 @@ const initialNodes = [
       label: 'Host',
       ip: 'undefined',
     },
+    draggable: false,
   },
 ];
 
@@ -74,6 +77,7 @@ export default function FourthDiagram() {
               port: newData?.port || '',
               hostPort: newData?.hostPort || '',
               mac: newData?.mac,
+              eth: newData?.eth,
             },
           };
         }

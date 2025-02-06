@@ -24,7 +24,8 @@ export type Channels =
   | 'set-docker-vms'
   | 'get-user-progress'
   | 'write-user-progress'
-  | 'error';
+  | 'error'
+  | 'veth-data';
 
 const electronHandler = {
   ipcRenderer: {

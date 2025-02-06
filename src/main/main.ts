@@ -17,6 +17,7 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import DockerEventListener from './listeners/dockerEventListener';
 import platformNetworkInterfacesMap from './utils/platformUtils';
+import SshConnector from './listeners/sshConnector';
 
 const Docker = require('dockerode');
 const {
@@ -44,6 +45,14 @@ class AppUpdater {
   }
 }
 
+// TODO
+const config: SshConfig = {
+  host: '',
+  port: 22,
+  username: 'simon',
+  password: 'simon',
+};
+
 let mainWindow: BrowserWindow | null = null;
 let dockerEventListener: DockerEventListener | null = null;
 let dockerEventListenerOverlay: DockerEventListener | null = null;
@@ -64,7 +73,12 @@ ipcMain.on('write-user-progress', (event, arg) => {
 });
 
 function setDockerEventListener(mainWindow: BrowserWindow, ipAddress: string) {
-  dockerEventListener = new DockerEventListener(mainWindow, ipAddress);
+  config.host = ipAddress;
+  dockerEventListener = new DockerEventListener(
+    mainWindow,
+    ipAddress,
+    new SshConnector(config),
+  );
   hostIpAddress = ipAddress;
   return dockerEventListener;
 }
@@ -73,7 +87,11 @@ function setDockerEventListenerOverlay(
   mainWindow: BrowserWindow,
   ipAddress: string,
 ) {
-  dockerEventListenerOverlay = new DockerEventListener(mainWindow, ipAddress);
+  dockerEventListenerOverlay = new DockerEventListener(
+    mainWindow,
+    ipAddress,
+    new SshConnector({}),
+  );
   return dockerEventListenerOverlay;
 }
 
@@ -209,6 +227,8 @@ const createWindow = async () => {
   // Start listening to events
 
   ipcMain.on('stop-listening', () => {
+    // TODO stop listening to events on second listener overlay and ssh
+    dockerEventListener?.disconnectSsh();
     dockerEventListener?.stopListeningToEvents();
   });
 
@@ -276,8 +296,6 @@ const createWindow = async () => {
       containerToListen,
       uniqueNetworks,
     );
-    console.log('Host IP Address2:', hostIpAddress);
-
     sendHostIpAddress(hostIpAddress);
   });
   ipcMain.on('start-listening-3', () => {

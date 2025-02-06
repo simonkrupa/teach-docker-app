@@ -38,6 +38,7 @@ const initialNodes = [
       port: '',
       hostPort: '',
       mac: '',
+      eth: '',
     },
     draggable: false,
   },
@@ -57,6 +58,7 @@ const initialNodes = [
       port: '',
       hostPort: '',
       mac: '',
+      eth: '',
     },
     draggable: false,
   },
@@ -199,6 +201,7 @@ export default function SeventhDiagram() {
               port: newData?.port || '',
               hostPort: newData?.hostPort || '',
               mac: newData?.mac || '',
+              eth: newData?.eth || '',
             },
           };
         }

@@ -10,6 +10,7 @@ import NetworkNode from '../components/diagram-nodes/NetworkNode';
 import nodesValidator from '../components/validators/nodesValidator';
 import MessageBox from '../components/MessageBox';
 import HostNode from '../components/diagram-nodes/HostNode';
+import VethNode from '../components/diagram-nodes/VethNode';
 
 const correctAnswers = require('../data/correctAnswers/firstDiagram.json');
 
@@ -17,6 +18,7 @@ const nodeTypes = {
   containerNode: ContainerNode,
   hostNode: HostNode,
   networkNode: NetworkNode,
+  vethNode: VethNode,
 };
 
 const initialNodes = [
@@ -49,6 +51,7 @@ const initialNodes = [
       port: '',
       hostPort: '',
       mac: '',
+      eth: '',
     },
     draggable: false,
   },
@@ -68,6 +71,7 @@ const initialNodes = [
       port: '',
       hostPort: '',
       mac: '',
+      eth: '',
     },
     draggable: false,
   },
@@ -86,20 +90,62 @@ const initialNodes = [
     },
     draggable: false,
   },
+  {
+    id: 'v1',
+    position: {
+      x: 180,
+      y: 280,
+    },
+    type: 'vethNode',
+    desiredContainer: '/my-nginx',
+    data: {
+      label: undefined,
+    },
+    draggable: false,
+  },
+  {
+    id: 'v2',
+    position: {
+      x: 320,
+      y: 280,
+    },
+    type: 'vethNode',
+    desiredContainer: '/my-nginx2',
+    data: {
+      label: undefined,
+    },
+    draggable: false,
+  },
 ];
 
 const initialEdges = [
   {
-    id: '1-3',
+    id: '1-v1',
     source: '1',
+    target: 'v1',
+    animated: true,
+    hidden: true,
+    reconnectable: false,
+  },
+  {
+    id: 'v1-3',
+    source: 'v1',
     target: '3',
     animated: true,
     hidden: true,
     reconnectable: false,
   },
   {
-    id: '2-3',
+    id: '2-v2',
     source: '2',
+    target: 'v2',
+    animated: true,
+    hidden: true,
+    reconnectable: false,
+  },
+  {
+    id: 'v2-3',
+    source: 'v2',
     target: '3',
     animated: true,
     hidden: true,
@@ -120,6 +166,7 @@ export default function FirstDiagram() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useNodesState(initialEdges);
   const containerEventListenerRef = useRef<() => void | null>(null);
+  const vethEventListenerRef = useRef<() => void | null>(null);
   const networkEventListenerRef = useRef<() => void | null>(null);
   const hostEventListenerRef = useRef<() => void | null>(null);
   const errorEventListenerRef = useRef<() => void | null>(null);
@@ -142,6 +189,11 @@ export default function FirstDiagram() {
           setStartEdge(null);
           return { ...edge, hidden: false };
         }
+        const vethId = 'v' + nodeId;
+        if (edge.source === vethId) {
+          setStartEdge(null);
+          return { ...edge, hidden: false };
+        }
         return edge;
       });
     });
@@ -151,6 +203,11 @@ export default function FirstDiagram() {
     setEdges((prevEdges) => {
       return prevEdges.map((edge) => {
         if (edge.source === nodeId) {
+          setDeleteEdge(null);
+          return { ...edge, hidden: true };
+        }
+        const vethId = 'v' + nodeId;
+        if (edge.source === vethId) {
           setDeleteEdge(null);
           return { ...edge, hidden: true };
         }
@@ -186,6 +243,7 @@ export default function FirstDiagram() {
               port: newData?.port || '',
               hostPort: newData?.hostPort || '',
               mac: newData?.mac,
+              eth: newData?.eth,
             },
           };
         }
@@ -202,6 +260,18 @@ export default function FirstDiagram() {
               subnet: newData.subnet,
               driver: newData.driver,
               gateway: newData.gateway,
+            },
+          };
+        }
+        if (
+          item.type === 'vethNode' &&
+          item.desiredContainer === newData.desiredContainer
+        ) {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              label: newData.label,
             },
           };
         }
@@ -241,6 +311,15 @@ export default function FirstDiagram() {
   };
 
   const handleIncomingNetworkData = useCallback(
+    (data) => {
+      setMessageBoxState('hidden');
+      const jsonData = JSON.parse(data);
+      onEdit(jsonData);
+    },
+    [onEdit],
+  );
+
+  const handleIncomingVethData = useCallback(
     (data) => {
       setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
@@ -307,6 +386,11 @@ export default function FirstDiagram() {
       handleIncomingError,
     );
 
+    vethEventListenerRef.current = window.electron.ipcRenderer.on(
+      'veth-data',
+      handleIncomingVethData,
+    );
+
     return () => {
       console.log('Component unmounted');
       handleStopListening();
@@ -326,6 +410,10 @@ export default function FirstDiagram() {
 
       if (errorEventListenerRef.current) {
         errorEventListenerRef.current();
+      }
+
+      if (vethEventListenerRef.current) {
+        vethEventListenerRef.current();
       }
     };
   }, []);

@@ -52,6 +52,7 @@ const initialNodes = [
       port: '',
       hostPort: '',
       mac: '',
+      eth: '',
     },
     draggable: false,
   },
@@ -71,6 +72,7 @@ const initialNodes = [
       port: '',
       hostPort: '',
       mac: '',
+      eth: '',
     },
     draggable: false,
   },
@@ -86,6 +88,7 @@ const initialNodes = [
       network: '',
       port: '',
       hostPort: '',
+      eth: '',
     },
     draggable: false,
   },
@@ -252,7 +255,6 @@ export default function SixthDiagram() {
           }
           if (item.desiredNetwork === 'host' && newData.status === 'running') {
             newData.ip = item.data.ip;
-            console.log('Host IP:', newData);
           }
 
           return {
@@ -266,6 +268,7 @@ export default function SixthDiagram() {
               port: newData?.port || '',
               hostPort: newData?.hostPort || '',
               mac: newData?.mac || '',
+              eth: newData?.eth || '',
             },
           };
         }

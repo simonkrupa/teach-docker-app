@@ -9,14 +9,15 @@ import NetworkNode from '../components/diagram-nodes/NetworkNode';
 import HostNode from '../components/diagram-nodes/HostNode';
 import nodesValidator from '../components/validators/nodesValidator';
 import MessageBox from '../components/MessageBox';
+import VethNode from '../components/diagram-nodes/VethNode';
 
 const correctAnswers = require('../data/correctAnswers/secondDiagram.json');
 
 const nodeTypes = {
   containerNode: ContainerNode,
-  // veth: Veth,
   hostNode: HostNode,
   networkNode: NetworkNode,
+  vethNode: VethNode,
 };
 
 const initialNodes = [
@@ -45,6 +46,20 @@ const initialNodes = [
       port: '',
       hostPort: '',
       mac: '',
+      eth: '',
+    },
+    draggable: false,
+  },
+  {
+    id: 'v1',
+    position: {
+      x: 250,
+      y: 280,
+    },
+    type: 'vethNode',
+    desiredContainer: '/my-nginx3',
+    data: {
+      label: undefined,
     },
     draggable: false,
   },
@@ -67,8 +82,16 @@ const initialNodes = [
 
 const initialEdges = [
   {
-    id: '1-2',
+    id: '1-v1',
     source: '1',
+    target: 'v1',
+    animated: true,
+    hidden: true,
+    reconnectable: false,
+  },
+  {
+    id: 'v1-2',
+    source: 'v1',
     target: '2',
     animated: true,
     hidden: true,
@@ -92,6 +115,7 @@ export default function SecondDiagram() {
   const networkEventListenerRef = useRef<() => void | null>(null);
   const hostEventListenerRef = useRef<() => void | null>(null);
   const errorEventListenerRef = useRef<() => void | null>(null);
+  const vethEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
   const [startEdge, setStartEdge] = useState(null);
   const [deleteEdge, setDeleteEdge] = useState(null);
@@ -104,6 +128,11 @@ export default function SecondDiagram() {
           setStartEdge(null);
           return { ...edge, hidden: false };
         }
+        const vethId = 'v' + nodeId;
+        if (edge.source === vethId) {
+          setStartEdge(null);
+          return { ...edge, hidden: false };
+        }
         return edge;
       });
     });
@@ -113,6 +142,11 @@ export default function SecondDiagram() {
     setEdges((prevEdges) => {
       return prevEdges.map((edge) => {
         if (edge.source === nodeId) {
+          setDeleteEdge(null);
+          return { ...edge, hidden: true };
+        }
+        const vethId = 'v' + nodeId;
+        if (edge.source === vethId) {
           setDeleteEdge(null);
           return { ...edge, hidden: true };
         }
@@ -147,6 +181,7 @@ export default function SecondDiagram() {
               port: newData?.port || '',
               hostPort: newData?.hostPort || '',
               mac: newData?.mac,
+              eth: newData?.eth,
             },
           };
         }
@@ -158,6 +193,18 @@ export default function SecondDiagram() {
               subnet: newData.subnet,
               driver: newData.driver,
               gateway: newData.gateway,
+            },
+          };
+        }
+        if (
+          item.type === 'vethNode' &&
+          item.desiredContainer === newData.desiredContainer
+        ) {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              label: newData.label,
             },
           };
         }
@@ -223,6 +270,15 @@ export default function SecondDiagram() {
     });
   }, []);
 
+  const handleIncomingVethData = useCallback(
+    (data) => {
+      setMessageBoxState('hidden');
+      const jsonData = JSON.parse(data);
+      onEdit(jsonData);
+    },
+    [onEdit],
+  );
+
   const handleValidateAnswer = () => {
     if (nodesValidator(nodes, correctAnswers)) {
       setMessageBoxState('success');
@@ -261,6 +317,11 @@ export default function SecondDiagram() {
       handleIncomingError,
     );
 
+    vethEventListenerRef.current = window.electron.ipcRenderer.on(
+      'veth-data',
+      handleIncomingVethData,
+    );
+
     return () => {
       console.log('Component unmounted');
       handleStopListening();
@@ -280,6 +341,10 @@ export default function SecondDiagram() {
 
       if (errorEventListenerRef.current) {
         errorEventListenerRef.current();
+      }
+
+      if (vethEventListenerRef.current) {
+        vethEventListenerRef.current();
       }
     };
   }, []);
