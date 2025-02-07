@@ -1,10 +1,27 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const filePath = path.join(
-  __dirname,
-  '../../../../userProgress/usernamesStore.json',
-);
+let filePath = '';
+
+function createFileIfNotExists(appPath: string): void {
+  const dbFolderPath = path.join(appPath, 'userProgress');
+  const dbFilePath = path.join(dbFolderPath, 'usernamesStore.json');
+  console.log('Checking if file exists', appPath);
+  if (!fs.existsSync(dbFolderPath)) {
+    console.log('Creating folder', dbFolderPath);
+    fs.mkdirSync(dbFolderPath, { recursive: true });
+  }
+
+  if (!fs.existsSync(dbFilePath)) {
+    console.log('Creating file', dbFilePath);
+    fs.writeFileSync(dbFilePath, '{}');
+    filePath = dbFilePath;
+  } else {
+    filePath = dbFilePath;
+  }
+
+  console.log('File ', filePath);
+}
 
 function getExistingUserOrCreate(username: string): string | undefined {
   try {
@@ -42,4 +59,4 @@ function increaseUserProgress(username: string): boolean {
   }
 }
 
-export { getExistingUserOrCreate, increaseUserProgress };
+export { getExistingUserOrCreate, increaseUserProgress, createFileIfNotExists };

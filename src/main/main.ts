@@ -24,6 +24,7 @@ import SshConnector from './listeners/sshConnector';
 import {
   getExistingUserOrCreate,
   increaseUserProgress,
+  createFileIfNotExists,
 } from './utils/userProgress';
 
 // templates for each diagram page
@@ -169,6 +170,7 @@ const createWindow = async () => {
   // if (isDebug) {
   //   await installExtensions();
   // }
+  createFileIfNotExists(app.getPath('userData'));
 
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')
