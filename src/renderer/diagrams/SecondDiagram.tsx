@@ -11,7 +11,7 @@ import nodesValidator from '../components/validators/nodesValidator';
 import MessageBox from '../components/MessageBox';
 import VethNode from '../components/diagram-nodes/VethNode';
 
-const correctAnswers = require('../data/correctAnswers/secondDiagram.json');
+import correctAnswers from '../data/correctAnswers/secondDiagram.json';
 
 const nodeTypes = {
   containerNode: ContainerNode,

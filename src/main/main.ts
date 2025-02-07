@@ -13,27 +13,28 @@ import os from 'os';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import Docker from 'dockerode';
+
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import DockerEventListener from './listeners/dockerEventListener';
 import platformNetworkInterfacesMap from './utils/platformUtils';
 import SshConnector from './listeners/sshConnector';
 
-const Docker = require('dockerode');
-const {
+import {
   getExistingUserOrCreate,
   increaseUserProgress,
-} = require('./utils/userProgress');
+} from './utils/userProgress';
 
 // templates for each diagram page
-const diagram1 = require('./data/diagram1.json');
-const diagram2 = require('./data/diagram2.json');
-const diagram3 = require('./data/diagram3.json');
-const diagram4 = require('./data/diagram4.json');
-const diagram5 = require('./data/diagram5.json');
-const diagram5n1 = require('./data/diagram5n1.json');
-const diagram6 = require('./data/diagram6.json');
-const diagram7 = require('./data/diagram7.json');
+import diagram1 from './data/diagram1.json';
+import diagram2 from './data/diagram2.json';
+import diagram3 from './data/diagram3.json';
+import diagram4 from './data/diagram4.json';
+import diagram5 from './data/diagram5.json';
+import diagram5n1 from './data/diagram5n1.json';
+import diagram6 from './data/diagram6.json';
+import diagram7 from './data/diagram7.json';
 
 const osShell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
@@ -151,23 +152,23 @@ if (isDebug) {
   require('electron-debug')();
 }
 
-const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
+// const installExtensions = async () => {
+//   const installer = require('electron-devtools-installer');
+//   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+//   const extensions = ['REACT_DEVELOPER_TOOLS'];
 
-  return installer
-    .default(
-      extensions.map((name) => installer[name]),
-      forceDownload,
-    )
-    .catch(console.log);
-};
+//   return installer
+//     .default(
+//       extensions.map((name) => installer[name]),
+//       forceDownload,
+//     )
+//     .catch(console.log);
+// };
 
 const createWindow = async () => {
-  if (isDebug) {
-    await installExtensions();
-  }
+  // if (isDebug) {
+  //   await installExtensions();
+  // }
 
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')

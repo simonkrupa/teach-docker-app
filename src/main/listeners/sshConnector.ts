@@ -41,6 +41,7 @@ class SshConnector {
     if (this.isConnected) {
       this.client.end();
       this.isConnected = false;
+      console.log('SSH connection closed.');
     }
   }
 

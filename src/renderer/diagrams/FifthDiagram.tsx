@@ -11,7 +11,7 @@ import MessageBox from '../components/MessageBox';
 import HostNode from '../components/diagram-nodes/HostNode';
 import HostNodeEnhanced from '../components/diagram-nodes/HostNodeEnhanced';
 
-const correctAnswers = require('../data/correctAnswers/fifthDiagram.json');
+import correctAnswers from '../data/correctAnswers/fifthDiagram.json';
 
 const nodeTypes = {
   containerNode: ContainerNode,

@@ -12,7 +12,7 @@ import MessageBox from '../components/MessageBox';
 import HostNode from '../components/diagram-nodes/HostNode';
 import LanNode from '../components/diagram-nodes/LanNode';
 
-const correctAnswers = require('../data/correctAnswers/sixthDiagram.json');
+import correctAnswers from '../data/correctAnswers/sixthDiagram.json';
 
 const nodeTypes = {
   containerNode: ContainerNode,

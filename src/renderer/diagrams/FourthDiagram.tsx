@@ -10,7 +10,7 @@ import nodesValidator from '../components/validators/nodesValidator';
 import MessageBox from '../components/MessageBox';
 import HostNode from '../components/diagram-nodes/HostNode';
 
-const correctAnswers = require('../data/correctAnswers/fourthDiagram.json');
+import correctAnswers from '../data/correctAnswers/fourthDiagram.json';
 
 const nodeTypes = {
   containerNode: ContainerNode,

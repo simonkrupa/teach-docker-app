@@ -6,14 +6,14 @@ import {
   parseHostNetworkInterface,
 } from '../utils/converters';
 
-const Docker = require('dockerode');
-const {
+import Docker from 'dockerode';
+import {
   mapContainerData,
   mapNetworkData,
   mapVMHostData,
   mapVethData,
   mapHostData,
-} = require('../mappers/mappers');
+} from '../mappers/mappers';
 
 const VETH_NETWORKS = ['bridge', 'my-bridge'];
 const NO_ETH_NETWORKS = ['none', 'host', 'my-overlay'];
@@ -476,6 +476,7 @@ class DockerEventListener {
     if (this.eventStream) {
       this.eventStream.destroy(); // Destroy the stream to end listening
       this.eventStream = null;
+      console.log('Stopped listening to events');
     }
   }
 

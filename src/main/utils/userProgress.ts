@@ -42,7 +42,4 @@ function increaseUserProgress(username: string): boolean {
   }
 }
 
-module.exports = {
-  getExistingUserOrCreate,
-  increaseUserProgress,
-};
+export { getExistingUserOrCreate, increaseUserProgress };
