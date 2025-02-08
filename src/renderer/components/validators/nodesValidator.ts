@@ -1,44 +1,40 @@
 import _ from 'lodash';
 
+const excludeKeys = [
+  'position',
+  'draggable',
+  'hostPort',
+  'mac',
+  'port',
+  'eth',
+  'hEth',
+  'desiredNetwork',
+  'height',
+  'width',
+];
+
+const excludeObjects = ['vethNode', 'hostNode'];
+
 const nodesValidator = (currentNodes, correctNodes) => {
-  if (currentNodes.length !== correctNodes.length) {
-    return false;
-  }
+  const flattenedArray = currentNodes.flatMap((obj) => {
+    return [{ ...obj, ...obj.data }];
+  });
 
-  for (let i = 0; i < currentNodes.length; i++) {
-    //skip host
-    if (currentNodes[i].id === '0') {
-      continue;
-    }
-    const currentNode = currentNodes[i];
-    const correctNode = correctNodes.find((node) => node.id === currentNode.id);
+  // Remove the 'data' property after merging
+  const currentNodesFlatten = flattenedArray
+    .filter((obj) => !excludeObjects.includes(obj.type))
+    .map((obj) => {
+      const { data, ...filteredObj } = obj;
+      return Object.fromEntries(
+        Object.entries(filteredObj).filter(
+          ([key]) => !excludeKeys.includes(key),
+        ),
+      );
+    });
 
-    if (!correctNode) {
-      return false;
-    }
-
-    const excludeKeys = [
-      'position',
-      'draggable',
-      'network',
-      'hostPort',
-      'mac',
-      'port',
-    ];
-
-    for (const key in correctNode) {
-      if (excludeKeys.includes(key)) {
-        continue;
-      }
-      if (!_.isEqual(currentNode[key], correctNode[key])) {
-        console.log('correct', correctNode[key]);
-        console.log('current', currentNode[key]);
-        return false;
-      }
-    }
-  }
-
-  return true; // All nodes match
+  console.log('currentNodesFlatten', currentNodesFlatten);
+  console.log('correctNodes', correctNodes);
+  return _.isEqual(currentNodesFlatten, correctNodes);
 };
 
 export default nodesValidator;
