@@ -55,9 +55,18 @@ const config: SshConfig = {
   password: 'simon',
 };
 
+const configOverlay: SshConfig = {
+  host: '',
+  port: 22,
+  username: 'simon',
+  password: 'simon',
+};
+
 let mainWindow: BrowserWindow | null = null;
 let dockerEventListener: DockerEventListener | null = null;
 let dockerEventListenerOverlay: DockerEventListener | null = null;
+let sshConnector: SshConnector | null = null;
+let sshConnectorOverlay: SshConnector | null = null;
 let hostIpAddress: string | null = null;
 
 ipcMain.on('get-user-progress', (event, arg) => {
@@ -75,11 +84,14 @@ ipcMain.on('write-user-progress', (event, arg) => {
 });
 
 function setDockerEventListener(mainWindow: BrowserWindow, ipAddress: string) {
-  config.host = ipAddress;
+  if (sshConnector === null) {
+    throw new Error('SSH connector is not initialized.');
+  }
+  // config.host = ipAddress;
   dockerEventListener = new DockerEventListener(
     mainWindow,
     ipAddress,
-    new SshConnector(config),
+    sshConnector,
   );
   hostIpAddress = ipAddress;
   return dockerEventListener;
@@ -92,7 +104,9 @@ function setDockerEventListenerOverlay(
   dockerEventListenerOverlay = new DockerEventListener(
     mainWindow,
     ipAddress,
-    new SshConnector({}),
+    // new SshConnector({}),
+    //TODO add secondary ssh connection
+    null,
   );
   return dockerEventListenerOverlay;
 }
@@ -227,10 +241,23 @@ const createWindow = async () => {
   // Start listening to events
 
   ipcMain.on('stop-listening', () => {
-    // TODO stop listening to events on second listener overlay and ssh
-    dockerEventListener?.disconnectSsh();
     dockerEventListener?.stopListeningToEvents();
+    dockerEventListenerOverlay?.stopListeningToEvents();
   });
+
+  async function validateSshConnection(ipAddress) {
+    config.host = ipAddress;
+    sshConnector = new SshConnector(config);
+    await sshConnector.waitForConnection();
+    return sshConnector.isConnectedStatus();
+  }
+
+  async function validateSshConnectionOverlay(ipAddress) {
+    configOverlay.host = ipAddress;
+    sshConnectorOverlay = new SshConnector(configOverlay);
+    await sshConnectorOverlay.waitForConnection();
+    return sshConnectorOverlay.isConnectedStatus();
+  }
 
   async function validateDockerAPI(ipAddress) {
     // Initialize Dockerode with the provided IP address
@@ -252,14 +279,27 @@ const createWindow = async () => {
   }
 
   ipcMain.on('validate-primary-ip', async (event, arg) => {
-    console.log('Validating primary IP address:', arg[0]);
     const isValid = await validateDockerAPI(arg[0]);
-    event.reply('validate-primary-ip', [isValid]);
+    if (isValid) {
+      const isSshAccessible = await validateSshConnection(arg[0]);
+      if (isSshAccessible) {
+        event.reply('validate-primary-ip', [true]);
+        return;
+      }
+    }
+    event.reply('validate-primary-ip', [false]);
   });
 
   ipcMain.on('validate-secondary-ip', async (event, arg) => {
     const isValid = await validateDockerAPI(arg[0]);
-    event.reply('validate-secondary-ip', [isValid]);
+    if (isValid) {
+      const isSshAccessible = await validateSshConnectionOverlay(arg[0]);
+      if (isSshAccessible) {
+        event.reply('validate-secondary-ip', [true]);
+        return;
+      }
+    }
+    event.reply('validate-secondary-ip', [false]);
   });
 
   ipcMain.on('set-docker-vms', async (event, arg) => {

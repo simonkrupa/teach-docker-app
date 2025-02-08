@@ -88,24 +88,20 @@ class DockerEventListener {
     });
   }
 
-  async connectSsh() {
-    if (this.sshConnector.isConnected) {
-      return;
-    }
-    await this.sshConnector.connect();
-  }
-
   async getHostNetworkInterface(requestedIpAddr: string) {
-    if (!this.sshConnector.isConnected) {
-      await this.connectSsh();
-    }
-    const command = `ip addr | grep ${requestedIpAddr}`;
-    const hostInterface = await this.sshConnector.executeSshCommand(command);
-    const result = parseHostNetworkInterface(hostInterface);
-    if (result) {
+    try {
+      const command = `ip addr | grep ${requestedIpAddr}`;
+      const hostInterface = await this.sshConnector.executeSshCommand(command);
+      const result = parseHostNetworkInterface(hostInterface);
       this.mainWindow.webContents.send(
         'host-ip-address',
         mapHostData(requestedIpAddr, result),
+      );
+    } catch (err) {
+      console.error('Error getting host network interface:', err);
+      this.mainWindow.webContents.send(
+        'host-ip-address',
+        mapHostData(requestedIpAddr, ''),
       );
     }
   }
@@ -114,9 +110,6 @@ class DockerEventListener {
     try {
       if (NO_ETH_NETWORKS.includes(containerData.network)) {
         return;
-      }
-      if (!this.sshConnector.isConnected) {
-        await this.connectSsh();
       }
       const { mac, pid } = containerData;
       const command = `nsenter -t ${pid} -n ip link`;
@@ -170,12 +163,6 @@ class DockerEventListener {
   }
 
   async sendCurrentContainers(containersMap) {
-    if (
-      this.hasUnallowedValues(containersMap, NO_ETH_NETWORKS) &&
-      !this.sshConnector.isConnected
-    ) {
-      await this.connectSsh();
-    }
     containersMap.forEach((network, key) => {
       this.docker.getContainer(key).inspect((err, container) => {
         if (err) {

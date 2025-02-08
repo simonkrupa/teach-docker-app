@@ -8,49 +8,46 @@ class SshConnector {
 
   isConnected: boolean;
 
-  isExecuting: boolean;
-
   constructor(config: SshConfig) {
     this.config = config;
     this.client = new Client();
     this.isConnected = false;
-    this.isExecuting = false;
+
+    this.client.on('ready', () => {
+      console.log('SSH connection established.');
+      this.isConnected = true;
+    });
+
+    this.client.on('error', (err) => {
+      console.error('SSH connection error:', err);
+      this.isConnected = false;
+    });
+
+    this.client.on('end', () => {
+      console.log('SSH connection closed.');
+      this.isConnected = false;
+    });
+    this.connect();
   }
 
   connect() {
-    if (this.isConnected) {
-      return;
-    }
-    return new Promise((resolve, reject) => {
-      this.client
-        .on('ready', () => {
-          console.log('SSH connection established.');
-          this.isConnected = true;
-          resolve();
-        })
-        .on('error', (err) => {
-          console.error('SSH Connection Error:', err);
-          this.isConnected = false;
-          reject(err);
-        })
-        .connect(this.config);
-    });
+    if (this.isConnected) return;
+    this.client.connect(this.config);
   }
 
   disconnect() {
     if (this.isConnected) {
       this.client.end();
       this.isConnected = false;
-      console.log('SSH connection closed.');
     }
-  }
-
-  isConnectionOpen(): boolean {
-    return this.isConnected;
   }
 
   executeCommand(command: string) {
     return new Promise((resolve, reject) => {
+      if (!this.isConnected) {
+        this.connect();
+      }
+
       const fullCommand = `echo ${this.config.password} | sudo -S ${command}`;
 
       this.client.exec(fullCommand, (err, stream) => {
@@ -84,6 +81,20 @@ class SshConnector {
   async executeSshCommand(command) {
     const output = await this.executeCommand(command);
     return output;
+  }
+
+  async waitForConnection(timeout = 5000) {
+    const startTime = Date.now();
+    while (!this.isConnected) {
+      if (Date.now() - startTime > timeout) {
+        break;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500)); // Wait 500ms
+    }
+  }
+
+  isConnectedStatus() {
+    return this.isConnected;
   }
 }
 export default SshConnector;
