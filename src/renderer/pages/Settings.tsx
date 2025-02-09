@@ -295,7 +295,7 @@ export default function Settings() {
             type="primary"
             onClick={handleSecondaryIpTest}
             loading={loadingSecondaryTest}
-            style={{ width: '100%', marginTop: '2em' }}
+            style={{ width: '100%', marginTop: '2em', marginBottom: '1em' }}
           >
             Test connection
           </Button>
