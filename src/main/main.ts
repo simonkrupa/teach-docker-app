@@ -51,15 +51,15 @@ class AppUpdater {
 const config: SshConfig = {
   host: '',
   port: 22,
-  username: 'simon',
-  password: 'simon',
+  username: '',
+  password: '',
 };
 
 const configOverlay: SshConfig = {
   host: '',
   port: 22,
-  username: 'simon',
-  password: 'simon',
+  username: '',
+  password: '',
 };
 
 let mainWindow: BrowserWindow | null = null;
@@ -286,6 +286,7 @@ const createWindow = async () => {
 
   ipcMain.on('validate-primary-ip', async (event, arg) => {
     const isValid = await validateDockerAPI(arg[0]);
+    [config.username, config.password] = [arg[1], arg[2]];
     if (isValid) {
       const isSshAccessible = await validateSshConnection(arg[0]);
       if (isSshAccessible) {
@@ -298,6 +299,7 @@ const createWindow = async () => {
 
   ipcMain.on('validate-secondary-ip', async (event, arg) => {
     const isValid = await validateDockerAPI(arg[0]);
+    [configOverlay.username, configOverlay.password] = [arg[1], arg[2]];
     if (isValid) {
       const isSshAccessible = await validateSshConnectionOverlay(arg[0]);
       if (isSshAccessible) {

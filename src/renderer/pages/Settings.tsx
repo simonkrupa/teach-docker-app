@@ -24,6 +24,10 @@ export default function Settings() {
     type: '',
     message: '',
   });
+  const [primaryUserNameValue, setPrimaryUserNameValue] = useState('');
+  const [primaryPasswordValue, setPrimaryPasswordValue] = useState('');
+  const [secondaryUserNameValue, setSecondaryUserNameValue] = useState('');
+  const [secondaryPasswordValue, setSecondaryPasswordValue] = useState('');
 
   const handleStartApp = () => {
     //TODO temp
@@ -35,6 +39,22 @@ export default function Settings() {
       secondaryIpValue,
     ]);
     navigate('/home');
+  };
+
+  const handlePrimaryUserNameChange = (e) => {
+    setPrimaryUserNameValue(e.target.value);
+  };
+
+  const handlePrimaryPasswordChange = (e) => {
+    setPrimaryPasswordValue(e.target.value);
+  };
+
+  const handleSecondaryUserNameChange = (e) => {
+    setSecondaryUserNameValue(e.target.value);
+  };
+
+  const handleSecondaryPasswordChange = (e) => {
+    setSecondaryPasswordValue(e.target.value);
   };
 
   const handlePrimaryIpChange = (e) => {
@@ -80,9 +100,10 @@ export default function Settings() {
       // setLoadingPrimaryTest(false);
       return;
     }
-    console.log('Primary IP:', primaryIpValue);
     window.electron.ipcRenderer.sendMessage('validate-primary-ip', [
       primaryIpValue,
+      primaryUserNameValue,
+      primaryPasswordValue,
     ]);
   };
 
@@ -107,6 +128,8 @@ export default function Settings() {
     }
     window.electron.ipcRenderer.sendMessage('validate-secondary-ip', [
       secondaryIpValue,
+      secondaryUserNameValue,
+      secondaryPasswordValue,
     ]);
   };
 
@@ -117,14 +140,14 @@ export default function Settings() {
         setAlertInfoPrimary({
           visible: true,
           type: 'success',
-          message: 'Primary IP address is reachable!',
+          message: 'The Virtual Machine is reachable!',
         });
         setPrimaryIpValid(true);
       } else {
         setAlertInfoPrimary({
           visible: true,
           type: 'error',
-          message: 'Failed to reach the primary IP address.',
+          message: 'Failed to reach the Virtual Machine.',
         });
         setPrimaryIpValid(false);
       }
@@ -136,14 +159,14 @@ export default function Settings() {
         setAlertInfoSecondary({
           visible: true,
           type: 'success',
-          message: 'Secondary IP address is reachable!',
+          message: 'The Virtual Machine is reachable!',
         });
         setSecondaryIpValid(true);
       } else {
         setAlertInfoSecondary({
           visible: true,
           type: 'error',
-          message: 'Failed to reach the secondary IP address.',
+          message: 'Failed to reach the Virtual Machine.',
         });
         setSecondaryIpValid(false);
       }
@@ -182,7 +205,8 @@ export default function Settings() {
         Settings
       </h1>
       <h2 style={{ marginBottom: '3%' }}>
-        Please provide IP Addresses for VMs with Docker
+        Please provide IP Addresses and credentials for Virtual Machines with
+        Docker
       </h2>
       <div style={{ display: 'flex' }}>
         <div className="primary-vm">
@@ -196,9 +220,19 @@ export default function Settings() {
           />
           <div className="vm-credentials">
             <h4 className="h4-credentials">VM's username</h4>
-            <Input className="input-component" variant="filled" />
+            <Input
+              className="input-component"
+              variant="filled"
+              value={primaryUserNameValue}
+              onChange={handlePrimaryUserNameChange}
+            />
             <h4 className="h4-credentials">VM's password</h4>
-            <Input.Password className="input-component" variant="filled" />
+            <Input.Password
+              className="input-component"
+              variant="filled"
+              value={primaryPasswordValue}
+              onChange={handlePrimaryPasswordChange}
+            />
           </div>
           <Button
             className="generic-button"
@@ -242,9 +276,19 @@ export default function Settings() {
           />
           <div className="vm-credentials">
             <h4 className="h4-credentials">VM's username</h4>
-            <Input className="input-component" variant="filled" />
+            <Input
+              className="input-component"
+              variant="filled"
+              value={secondaryUserNameValue}
+              onChange={handleSecondaryUserNameChange}
+            />
             <h4 className="h4-credentials">VM's password</h4>
-            <Input.Password className="input-component" variant="filled" />
+            <Input.Password
+              className="input-component"
+              variant="filled"
+              value={secondaryPasswordValue}
+              onChange={handleSecondaryPasswordChange}
+            />
           </div>
           <Button
             className="generic-button"
