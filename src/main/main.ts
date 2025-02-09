@@ -247,6 +247,9 @@ const createWindow = async () => {
 
   async function validateSshConnection(ipAddress) {
     config.host = ipAddress;
+    if (sshConnector !== null) {
+      sshConnector.disconnect();
+    }
     sshConnector = new SshConnector(config);
     await sshConnector.waitForConnection();
     return sshConnector.isConnectedStatus();
@@ -254,6 +257,9 @@ const createWindow = async () => {
 
   async function validateSshConnectionOverlay(ipAddress) {
     configOverlay.host = ipAddress;
+    if (sshConnector !== null) {
+      sshConnector.disconnect();
+    }
     sshConnectorOverlay = new SshConnector(configOverlay);
     await sshConnectorOverlay.waitForConnection();
     return sshConnectorOverlay.isConnectedStatus();

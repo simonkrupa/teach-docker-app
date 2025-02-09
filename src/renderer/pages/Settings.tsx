@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Input, Space, Alert } from 'antd';
+import { Button, Input, Alert } from 'antd';
 import './Pages.css';
 import './Settings.css';
 
@@ -178,102 +178,109 @@ export default function Settings() {
 
   return (
     <div className="settings-page">
-      <h1 className="header-name">Settings</h1>
+      <h1 className="header-name" style={{ marginBottom: '0' }}>
+        Settings
+      </h1>
+      <h2 style={{ marginBottom: '3%' }}>
+        Please provide IP Addresses for VMs with Docker
+      </h2>
+      <div style={{ display: 'flex' }}>
+        <div className="primary-vm">
+          <h3>Primary Virutal Machine's IP address</h3>
 
-      <h2>Please provide IP Addresses for VMs with Docker</h2>
-      <h3>Primary Virutal Machine's IP address</h3>
-      <div>
-        <Space.Compact>
           <Input
             className="input-component"
             value={primaryIpValue}
             onChange={handlePrimaryIpChange}
+            variant="filled"
           />
+          <div className="vm-credentials">
+            <h4 className="h4-credentials">VM's username</h4>
+            <Input className="input-component" variant="filled" />
+            <h4 className="h4-credentials">VM's password</h4>
+            <Input.Password className="input-component" variant="filled" />
+          </div>
           <Button
             className="generic-button"
             type="primary"
             onClick={handlePrimaryIpTest}
             loading={loadingPrimaryTest}
-            style={{ width: '100px' }}
+            style={{ width: '100%', marginTop: '2em', marginBottom: '1em' }}
           >
-            Test
+            Test connection
           </Button>
-        </Space.Compact>
-        {alertInfoPrimary.visible && (
-          <Alert
-            className="alert"
-            message={alertInfoPrimary.message}
-            type={alertInfoPrimary.type}
-            showIcon
-            closable
-            onClose={() =>
-              setAlertInfoPrimary({ ...alertInfoPrimary, visible: false })
-            }
-          />
-        )}
-        {!alertInfoPrimary.visible && (
-          <Alert
-            className="alert"
-            message={'placeholder'}
-            showIcon
-            style={{ visibility: 'hidden' }}
-          />
-        )}
-      </div>
+          {alertInfoPrimary.visible && (
+            <Alert
+              className="alert"
+              message={alertInfoPrimary.message}
+              type={alertInfoPrimary.type}
+              showIcon
+              closable
+              onClose={() =>
+                setAlertInfoPrimary({ ...alertInfoPrimary, visible: false })
+              }
+            />
+          )}
+          {!alertInfoPrimary.visible && (
+            <Alert
+              className="alert"
+              message={'placeholder'}
+              showIcon
+              style={{ visibility: 'hidden' }}
+            />
+          )}
+        </div>
 
-      <h3>Secondary Virtual Machine's IP address</h3>
-      <div>
-        <Space.Compact>
+        <div className="primary-vm">
+          <h3>Secondary Virtual Machine's IP address</h3>
+
           <Input
             className="input-component"
             value={secondaryIpValue}
             onChange={handleSecondaryIpChange}
+            variant="filled"
           />
+          <div className="vm-credentials">
+            <h4 className="h4-credentials">VM's username</h4>
+            <Input className="input-component" variant="filled" />
+            <h4 className="h4-credentials">VM's password</h4>
+            <Input.Password className="input-component" variant="filled" />
+          </div>
           <Button
             className="generic-button"
             type="primary"
             onClick={handleSecondaryIpTest}
             loading={loadingSecondaryTest}
-            style={{ width: '100px' }}
+            style={{ width: '100%', marginTop: '2em' }}
           >
-            Test
+            Test connection
           </Button>
-        </Space.Compact>
-        {alertInfoSecondary.visible && (
-          <Alert
-            className="alert"
-            message={alertInfoSecondary.message}
-            type={alertInfoSecondary.type}
-            showIcon
-            closable
-            onClose={() =>
-              setAlertInfoSecondary({
-                ...alertInfoSecondary,
-                visible: false,
-              })
-            }
-          />
-        )}
-        {!alertInfoSecondary.visible && (
-          <Alert
-            className="alert"
-            message={'placeholder'}
-            showIcon
-            style={{ visibility: 'hidden' }}
-          />
-        )}
+          {alertInfoSecondary.visible && (
+            <Alert
+              className="alert"
+              message={alertInfoSecondary.message}
+              type={alertInfoSecondary.type}
+              showIcon
+              closable
+              onClose={() =>
+                setAlertInfoSecondary({
+                  ...alertInfoSecondary,
+                  visible: false,
+                })
+              }
+            />
+          )}
+          {!alertInfoSecondary.visible && (
+            <Alert
+              className="alert"
+              message={'placeholder'}
+              showIcon
+              style={{ visibility: 'hidden' }}
+            />
+          )}
+        </div>
       </div>
-      <Button
-        onClick={handleStartApp}
-        className="generic-button"
-        type="primary"
-        style={{
-          height: '50px',
-          width: '100px',
-          fontSize: '20px',
-          marginTop: '5%',
-        }}
-      >
+      <Button onClick={handleStartApp} className="submit-button" type="primary">
         Apply
       </Button>
     </div>
