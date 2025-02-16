@@ -246,6 +246,10 @@ const createWindow = async () => {
     dockerEventListenerOverlay?.stopListeningToEvents();
   });
 
+  function declareHostsIpAddresses(ip1: string, ip2: string) {
+    mainWindow?.webContents.send('set-nodes-ip', { ip1, ip2 });
+  }
+
   async function validateSshConnection(ipAddress) {
     config.host = ipAddress;
     if (sshConnector !== null) {
@@ -381,6 +385,7 @@ const createWindow = async () => {
     console.log('Starting listening to events for diagram 5 ');
     const containerToListen = new Map<string, string>();
     const uniqueNetworks = new Set<string>();
+    declareHostsIpAddresses(config.host, configOverlay.host);
     diagram5.containers.forEach((container) => {
       containerToListen.set(container.data.label, container.network);
       uniqueNetworks.add(container.network);

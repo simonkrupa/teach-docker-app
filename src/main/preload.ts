@@ -24,7 +24,8 @@ export type Channels =
   | 'get-user-progress'
   | 'write-user-progress'
   | 'error'
-  | 'veth-data';
+  | 'veth-data'
+  | 'set-nodes-ip';
 
 const electronHandler = {
   ipcRenderer: {

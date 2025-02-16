@@ -103,7 +103,7 @@ const initialNodes = [
     data: {
       role: '',
       status: '',
-      ip: '192.168.56.106',
+      ip: '192.168.56.106qwewq',
       id: '',
       label: '',
       availability: undefined,
@@ -121,8 +121,7 @@ const initialNodes = [
     data: {
       role: '',
       status: '',
-      //TODO
-      ip: '192.168.56.108',
+      ip: '192.168.56.108ewqeqw',
       id: '',
       label: '',
       availability: undefined,
@@ -266,6 +265,7 @@ export default function FifthDiagram() {
   const vethEventListenerRef = useRef<() => void | null>(null);
   const nodeEventListenerRef = useRef<() => void | null>(null);
   const errorEventListenerRef = useRef<() => void | null>(null);
+  const nodesIpEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
   const [startEdge, setStartEdge] = useState(null);
   const [deleteEdge, setDeleteEdge] = useState(null);
@@ -497,6 +497,33 @@ export default function FifthDiagram() {
     navigate('/settings');
   };
 
+  const handleNodesIp = (data) => {
+    setNodes((prevNodes) => {
+      const updatedNodes = prevNodes.map((item) => {
+        if (item.id === '-2') {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              ip: data.ip1,
+            },
+          };
+        }
+        if (item.id === '-1') {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              ip: data.ip2,
+            },
+          };
+        }
+        return item;
+      });
+      return updatedNodes;
+    });
+  };
+
   useEffect(() => {
     console.log('FifthDiagram mounted');
     handleStartListening();
@@ -523,6 +550,10 @@ export default function FifthDiagram() {
     vethEventListenerRef.current = window.electron.ipcRenderer.on(
       'veth-data',
       handleIncomingVethData,
+    );
+    nodesIpEventListenerRef.current = window.electron.ipcRenderer.on(
+      'set-nodes-ip',
+      handleNodesIp,
     );
 
     return () => {
@@ -551,6 +582,10 @@ export default function FifthDiagram() {
 
       if (vethEventListenerRef.current) {
         vethEventListenerRef.current();
+      }
+
+      if (nodesIpEventListenerRef.current) {
+        nodesIpEventListenerRef.current();
       }
     };
   }, []);
