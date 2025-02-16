@@ -4,12 +4,18 @@ import './NetworkNode.css';
 
 const NetworkNode = memo(function NetworkNode(props) {
   const [networkNodeComponent, setNetworkNodeComponent] = useState(false);
+  const [label, setLabel] = useState('');
 
   useEffect(() => {
     if (props.data.driver === undefined) {
       setNetworkNodeComponent(false);
     } else {
       setNetworkNodeComponent(true);
+    }
+    if (props.data.label.includes('docker_gwbridge')) {
+      setLabel(props.data.label.slice(0, -1));
+    } else {
+      setLabel(props.data.label);
     }
   }, [props]);
 
@@ -27,7 +33,7 @@ const NetworkNode = memo(function NetworkNode(props) {
           <Handle type="target" id="right" position={Position.Right} />
           <div className="grid-container">
             <div className="grid-item">
-              <b>{props.data.label}</b>
+              <b>{label}</b>
             </div>
             <div className="grid-item">
               Driver: <b>{props.data.driver}</b>

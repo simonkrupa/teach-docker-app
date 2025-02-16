@@ -101,12 +101,13 @@ function setDockerEventListenerOverlay(
   mainWindow: BrowserWindow,
   ipAddress: string,
 ) {
+  if (sshConnectorOverlay === null) {
+    throw new Error('SSH connector is not initialized.');
+  }
   dockerEventListenerOverlay = new DockerEventListener(
     mainWindow,
     ipAddress,
-    // new SshConnector({}),
-    //TODO add secondary ssh connection
-    null,
+    sshConnectorOverlay,
   );
   return dockerEventListenerOverlay;
 }
@@ -257,8 +258,8 @@ const createWindow = async () => {
 
   async function validateSshConnectionOverlay(ipAddress) {
     configOverlay.host = ipAddress;
-    if (sshConnector !== null) {
-      sshConnector.disconnect();
+    if (sshConnectorOverlay !== null) {
+      sshConnectorOverlay.disconnect();
     }
     sshConnectorOverlay = new SshConnector(configOverlay);
     await sshConnectorOverlay.waitForConnection();
@@ -393,10 +394,12 @@ const createWindow = async () => {
       containerToListenOverlay,
     );
     const emptySet = new Set<string>();
+    emptySet.add('docker_gwbridge2');
     dockerEventListenerOverlay?.getCurrentStateOfContainers(
       containerToListenOverlay,
       emptySet,
     );
+    uniqueNetworks.add('docker_gwbridge1');
     dockerEventListener?.listenToEvents(containerToListen);
     dockerEventListener?.getCurrentStateOfContainers(
       containerToListen,

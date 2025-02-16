@@ -42,6 +42,7 @@ function mapContainerData(containerData: any, value: string) {
     }
   }
   return {
+    id: containerData.Id,
     label: containerData.Name,
     status: containerData.State.Status,
     ip: ipData,
@@ -65,7 +66,7 @@ function mapVMHostData(nodeInfo: any) {
   };
 }
 
-function mapNetworkData(networkData: any) {
+function mapNetworkData(networkData: any, networkNameForOverlay: string) {
   if (networkData.Name === 'host') {
     return {
       name: networkData.Name,
@@ -92,11 +93,27 @@ function mapNetworkData(networkData: any) {
       name: networkData.Name,
     };
   }
+  if (networkData.Name === 'docker_gwbridge') {
+    networkData.Name = networkNameForOverlay;
+  }
   return {
     name: networkData.Name,
     subnet: networkData.IPAM.Config?.[0]?.Subnet || '',
     driver: networkData.Driver,
     gateway: networkData.IPAM.Config?.[0]?.Gateway || '',
+  };
+}
+
+function mapDockerGWBridgeData(networkData: any, containerId: string) {
+  if (networkData.Containers[containerId]) {
+    return {
+      ip: networkData.Containers[containerId].IPv4Address,
+      mac: networkData.Containers[containerId].MacAddress,
+    };
+  }
+  return {
+    ip: undefined,
+    mac: undefined,
   };
 }
 
@@ -120,4 +137,5 @@ module.exports = {
   mapVMHostData,
   mapVethData,
   mapHostData,
+  mapDockerGWBridgeData,
 };

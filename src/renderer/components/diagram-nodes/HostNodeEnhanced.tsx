@@ -1,4 +1,5 @@
 import { memo, useEffect, useState } from 'react';
+import { Handle, Position } from 'reactflow';
 import './HostNodeEnhanced.css';
 
 export function ReadyState() {
@@ -110,6 +111,11 @@ const HostNodeEnhanced = memo(function HostNodeEnhanced(props: any) {
               </div>
             </div>
           </div>
+          {/* <div className="host-network-interface">
+            <Handle type="target" position={Position.Top} />
+            {props.data.hEth}
+          </div> */}
+          <Handle type="target" position={Position.Bottom} />
         </div>
       ) : (
         <div />

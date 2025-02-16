@@ -13,10 +13,11 @@ import {
   mapVMHostData,
   mapVethData,
   mapHostData,
+  mapDockerGWBridgeData,
 } from '../mappers/mappers';
 
 const VETH_NETWORKS = ['bridge', 'my-bridge'];
-const NO_ETH_NETWORKS = ['none', 'host', 'my-overlay'];
+const NO_ETH_NETWORKS = ['none', 'host'];
 
 class DockerEventListener {
   docker: any;
@@ -106,6 +107,64 @@ class DockerEventListener {
     }
   }
 
+  async getDockerGWBridgeInfo(
+    containerId: string,
+    parsedInterfaces,
+    containerName: string,
+  ) {
+    try {
+      this.docker
+        .getNetwork('docker_gwbridge')
+        .inspect(async (err, networkData) => {
+          if (err) {
+            return console.error('Error:', err);
+          }
+          const result = mapDockerGWBridgeData(networkData, containerId);
+          const containerEth2 = parsedInterfaces.find((netInterface) => {
+            return netInterface.details.mac === result.mac;
+          });
+          if (!containerEth2) {
+            console.error('Could not find eth interface');
+            return null;
+          }
+          this.mainWindow.webContents.send(
+            'container-data',
+            JSON.stringify({
+              label: containerName,
+              eth2: containerEth2.name,
+              ip2: result.ip,
+              mac2: result.mac,
+              status: 'running',
+              network: 'docker_gwbridge1',
+            }),
+          );
+          // send data to container with ip and mac for new eth
+          // this.mainWindow.webContents.send(
+          //   'network-data',
+          //   JSON.stringify(result),
+          // );
+          const vethCommand = `ip link show type veth`;
+          const veth = await this.sshConnector.executeSshCommand(vethCommand);
+          const parsedVeth = parseIpLinkOutput(veth);
+          const vethId = getVethIdFromName(containerEth2.name);
+          const containerVeth = parsedVeth.find((vethInterface) => {
+            return vethInterface.id === vethId;
+          });
+          if (!containerVeth) {
+            console.error('Could not find veth interface');
+          }
+          const vethData = mapVethData(containerVeth.name, containerName);
+          this.mainWindow.webContents.send(
+            'veth-data',
+            JSON.stringify(vethData),
+          );
+          return { eth2: containerEth2.name, ip2: result.ip, mac2: result.mac };
+        });
+    } catch (err) {
+      console.error('Error getting docker_gwbridge:', err);
+    }
+  }
+
   async getContainerEth(containerData: any, desiredNetwork: string) {
     try {
       if (NO_ETH_NETWORKS.includes(containerData.network)) {
@@ -115,6 +174,12 @@ class DockerEventListener {
       const command = `nsenter -t ${pid} -n ip link`;
       const interfaces = await this.sshConnector.executeSshCommand(command);
       const parsedInterfaces = parseIpLinkOutput(interfaces);
+      this.getDockerGWBridgeInfo(
+        containerData.id,
+        parsedInterfaces,
+        containerData.label,
+      );
+
       const containerEth = parsedInterfaces.find((netInterface) => {
         return netInterface.details.mac === mac;
       });
@@ -182,18 +247,22 @@ class DockerEventListener {
     const containersMap = new Map<string, string>();
 
     if (uniqueNetworks.size > 0) {
-      this.docker
-        .getNetwork(uniqueNetworks.values().next().value)
-        .inspect((err, networkData) => {
+      uniqueNetworks.forEach((net) => {
+        let netId = net;
+        if (net === 'docker_gwbridge1' || net === 'docker_gwbridge2') {
+          netId = net.slice(0, -1);
+        }
+        this.docker.getNetwork(netId).inspect((err, networkData) => {
           if (err) {
-            return console.error('Error 2:', err);
+            return console.error('Error NET:', err);
           }
-          const result = mapNetworkData(networkData);
+          const result = mapNetworkData(networkData, net);
           this.mainWindow.webContents.send(
             'network-data',
             JSON.stringify(result),
           );
         });
+      });
     }
     this.docker.listContainers({ all: true }, (err, containers) => {
       if (err) {
@@ -251,7 +320,7 @@ class DockerEventListener {
         networkDataFromEvent = await getNetworkData(event.Actor.ID);
       }
 
-      const result = mapNetworkData(networkDataFromEvent);
+      const result = mapNetworkData(networkDataFromEvent, event.Actor.ID);
       this.mainWindow.webContents.send('network-data', JSON.stringify(result));
     } catch (err) {
       console.error('Error retrieving network data:', err);

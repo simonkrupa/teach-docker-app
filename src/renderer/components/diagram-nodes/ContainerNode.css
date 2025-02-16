@@ -8,6 +8,16 @@
   z-index: 2;
 }
 
+.text-updater-node-enhanced {
+  height: 130px;
+  border: 1px solid black;
+  width: 140px;
+  border-radius: 5px;
+  background: white;
+  position: relative;
+  z-index: 2;
+}
+
 .docker-image-logo {
   width: 30px;
   height: 30px;
@@ -89,6 +99,29 @@
   bottom: 0;
   left: 50%;
   transform: translate(-50%, 0);
+  font-weight: bold;
+}
+
+.ip-address1 {
+  font-size: 50%;
+  width: 70px;
+  text-align: center;
+  background: #387adf;
+  position: absolute;
+  padding: 3px 5px;
+  bottom: 0;
+  font-weight: bold;
+  left: 50%;
+}
+
+.ip-address2 {
+  font-size: 50%;
+  width: 70px;
+  text-align: center;
+  background: rgb(92, 223, 56);
+  position: absolute;
+  padding: 3px 5px;
+  bottom: 0;
   font-weight: bold;
 }
 
