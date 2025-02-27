@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, net } from 'electron';
 import SshConnector from './sshConnector';
 import {
   parseIpLinkOutput,
@@ -14,10 +14,12 @@ import {
   mapVethData,
   mapHostData,
   mapDockerGWBridgeData,
+  mapVxlanId,
 } from '../mappers/mappers';
 
 const VETH_NETWORKS = ['bridge', 'my-bridge'];
 const NO_ETH_NETWORKS = ['none', 'host'];
+const OVERLAY_VETH = ['my-overlay'];
 
 class DockerEventListener {
   docker: any;
@@ -174,12 +176,13 @@ class DockerEventListener {
       const command = `nsenter -t ${pid} -n ip link`;
       const interfaces = await this.sshConnector.executeSshCommand(command);
       const parsedInterfaces = parseIpLinkOutput(interfaces);
-      this.getDockerGWBridgeInfo(
-        containerData.id,
-        parsedInterfaces,
-        containerData.label,
-      );
-
+      if (OVERLAY_VETH.includes(containerData.network)) {
+        this.getDockerGWBridgeInfo(
+          containerData.id,
+          parsedInterfaces,
+          containerData.label,
+        );
+      }
       const containerEth = parsedInterfaces.find((netInterface) => {
         return netInterface.details.mac === mac;
       });
@@ -189,6 +192,20 @@ class DockerEventListener {
           'veth-data',
           JSON.stringify(mapVethData(undefined, containerData.label)),
         );
+        if (OVERLAY_VETH.includes(containerData.network)) {
+          const newObj = {
+            containerName: containerData.label,
+            namespace: '1-' + containerData.netId,
+            veth: '',
+            bridge: '',
+            vxlan: '',
+            nodeType: 'overlayNetworkNode',
+          };
+          this.mainWindow.webContents.send(
+            'overlay-network-prop',
+            JSON.stringify(newObj),
+          );
+        }
         return;
       }
       containerData.eth = containerEth.name;
@@ -217,6 +234,68 @@ class DockerEventListener {
         }
         const vethData = mapVethData(containerVeth.name, containerData.label);
         this.mainWindow.webContents.send('veth-data', JSON.stringify(vethData));
+      } else if (OVERLAY_VETH.includes(containerData.network)) {
+        if (containerData.network !== desiredNetwork) {
+          return;
+        }
+        // const vxlanId = await this.docker
+        //   .getNetwork(containerData.network)
+        //   .inspect((err, networkData) => {
+        //     if (err) {
+        //       console.error('Error:', err);
+        //       return null;
+        //     }
+        //     return mapVxlanId(networkData).vxlanId;
+        //   });
+        // console.log('vxlan', vxlanId);
+
+        // if (vxlanId === null) {
+        //   return;
+        // }
+        const newObj = {
+          containerName: containerData.label,
+          namespace: '1-' + containerData.netId,
+          veth: '',
+          bridge: '',
+          vxlan: '',
+          nodeType: 'overlayNetworkNode',
+        };
+        const otherEths = parsedInterfaces.find((netInterface) => {
+          if (netInterface.details.mac === mac) {
+            return { id: netInterface.id, name: netInterface.name };
+          }
+        });
+        if (otherEths.length === 0) {
+          this.mainWindow.webContents.send(
+            'overlay-network-prop',
+            JSON.stringify(newObj),
+          );
+          return;
+        }
+        const networkNamespaceCmd = `nsenter --net=/var/run/docker/netns/1-${containerData.netId} ip link`;
+        const networkInterfaces =
+          await this.sshConnector.executeSshCommand(networkNamespaceCmd);
+        const parsedINterfaces = parseIpLinkOutput(networkInterfaces);
+        //TODO verify by vxlan id
+        const filteredVeths = parsedINterfaces.map((vethInterface) => {
+          return { id: vethInterface.id, name: vethInterface.name };
+        });
+        filteredVeths.filter((veth) => {
+          if (veth.name.includes('vxlan')) {
+            newObj.vxlan = veth.name;
+          }
+          if (veth.name === 'br0') {
+            newObj.bridge = veth.name;
+          }
+          const tempId = veth.name.toString().split('if')[1];
+          if (tempId && tempId.toString() === otherEths.id.toString()) {
+            newObj.veth = veth.name;
+          }
+        });
+        this.mainWindow.webContents.send(
+          'overlay-network-prop',
+          JSON.stringify(newObj),
+        );
       }
     } catch (err) {
       console.error('Error getting eth:', err);

@@ -16,6 +16,7 @@ import HostNodeEnhanced from '../components/diagram-nodes/HostNodeEnhanced';
 import correctAnswers from '../data/correctAnswers/fifthDiagram.json';
 import ContainerNodeEnhanced from '../components/diagram-nodes/ContainerNodeEnhanced';
 import VethNode from '../components/diagram-nodes/VethNode';
+import OverlayNetworkNode from '../components/diagram-nodes/OverlayNetworkNode';
 
 const nodeTypes = {
   containerNode: ContainerNode,
@@ -24,9 +25,31 @@ const nodeTypes = {
   hostNodeEnhanced: HostNodeEnhanced,
   containerNodeEnhanced: ContainerNodeEnhanced,
   vethNode: VethNode,
+  overlayNetworkNode: OverlayNetworkNode,
 };
 
 const initialNodes = [
+  {
+    id: '12',
+    position: {
+      x: 50,
+      y: 500,
+    },
+    type: 'overlayNetworkNode',
+    data: {
+      label: '',
+      namespace: '',
+      veth1: '',
+      veth2: '',
+      br1: '',
+      br2: '',
+      vxlan1: '',
+      vxlan2: '',
+    },
+    draggable: false,
+    reconnectable: false,
+    hidden: true,
+  },
   {
     id: 'v1',
     position: {
@@ -153,6 +176,7 @@ const initialNodes = [
       gateway: undefined,
       peers: undefined,
     },
+    draggable: false,
   },
   {
     id: '5',
@@ -165,6 +189,7 @@ const initialNodes = [
       gateway: undefined,
       peers: undefined,
     },
+    draggable: false,
   },
 ];
 
@@ -219,23 +244,6 @@ const initialEdges = [
     reconnectable: false,
     type: 'straight',
   },
-  // {
-  //   id: '1-w1',
-  //   source: '1',
-  //   target: 'w1',
-  //   sourceHandle: 'handle1s',
-  //   animated: true,
-  //   hidden: true,
-  //   reconnectable: false,
-  // },
-  // {
-  //   id: 'w1-2',
-  //   source: 'w1',
-  //   target: '2',
-  //   animated: true,
-  //   hidden: true,
-  //   reconnectable: false,
-  // },
   {
     id: '1-2',
     source: '1',
@@ -254,6 +262,82 @@ const initialEdges = [
     hidden: true,
     reconnectable: false,
   },
+  {
+    id: '2detail',
+    source: '2',
+    target: '12',
+    type: 'smoothstep',
+    reconnectable: false,
+    label: 'Overlay in detail',
+    labelStyle: { fill: 'black', fontWeight: 'bold', fontSize: '10px' },
+  },
+  {
+    id: '12-veth1',
+    source: '12',
+    sourceHandle: '12-1',
+    targetHandle: 'veth1-target',
+    target: '12',
+    animated: true,
+    type: 'straight',
+    // hidden: true,
+  },
+  {
+    id: '12-veth2',
+    source: '12',
+    sourceHandle: '12-2',
+    targetHandle: 'veth2-target',
+    target: '12',
+    animated: true,
+    type: 'straight',
+    // hidden: true,
+  },
+  {
+    id: '12-br1',
+    source: '12',
+    sourceHandle: 'veth1-source',
+    targetHandle: 'br1-target',
+    target: '12',
+    animated: true,
+    // hidden: true,
+  },
+  {
+    id: '12-br2',
+    source: '12',
+    sourceHandle: 'veth2-source',
+    targetHandle: 'br2-target',
+    target: '12',
+    animated: true,
+    // hidden: true,
+  },
+  {
+    id: '12-vxlan1',
+    source: '12',
+    sourceHandle: 'br1-source',
+    targetHandle: 'vxlan1-target',
+    target: '12',
+    animated: true,
+    // hidden: true,
+  },
+  {
+    id: '12-vxlan2',
+    source: '12',
+    sourceHandle: 'br2-source',
+    targetHandle: 'vxlan2-target',
+    target: '12',
+    animated: true,
+    // hidden: true,
+  },
+  {
+    id: '12-udp',
+    source: '12',
+    targetHandle: 'vxlan1-udp-target',
+    sourceHandle: 'vxlan2-source',
+    target: '12',
+    markerEnd: { type: 'arrow', color: 'black' },
+    markerStart: { type: 'arrow', color: 'black' },
+    style: { stroke: 'black' },
+    // hidden: true,
+  },
 ];
 
 export default function FifthDiagram() {
@@ -266,10 +350,15 @@ export default function FifthDiagram() {
   const nodeEventListenerRef = useRef<() => void | null>(null);
   const errorEventListenerRef = useRef<() => void | null>(null);
   const nodesIpEventListenerRef = useRef<() => void | null>(null);
+  const overlayNetworkPropEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
   const [startEdge, setStartEdge] = useState(null);
   const [deleteEdge, setDeleteEdge] = useState(null);
   const navigate = useNavigate();
+  const [isOverlayRunning, setIsOverlayRunning] = useState({
+    node1: false,
+    node2: false,
+  });
 
   // Your existing ResizeObserver code
   const resizeObserver = new ResizeObserver(
@@ -322,9 +411,96 @@ export default function FifthDiagram() {
     });
   }, []);
 
+  useEffect(() => {
+    if (isOverlayRunning.node1 && isOverlayRunning.node2) {
+      setNodes((prevNodes) => {
+        return prevNodes.map((node) => {
+          if (node.type === 'overlayNetworkNode') {
+            return {
+              ...node,
+              hidden: false,
+            };
+          }
+          return node;
+        });
+      });
+    } else {
+      setNodes((prevNodes) => {
+        return prevNodes.map((node) => {
+          if (node.type === 'overlayNetworkNode') {
+            return {
+              ...node,
+              hidden: true,
+            };
+          }
+          return node;
+        });
+      });
+    }
+  }, [isOverlayRunning]);
+
   const onEdit = useCallback((newData) => {
     setNodes((prevNodes) => {
       const updatedNodes = prevNodes.map((item) => {
+        if (
+          item.type === 'overlayNetworkNode' &&
+          newData.nodeType === 'overlayNetworkNode'
+        ) {
+          if (newData.containerName === '/my-nginx6') {
+            if (newData.vxlan !== '') {
+              setIsOverlayRunning((prev) => {
+                return {
+                  ...prev,
+                  node1: true,
+                };
+              });
+            } else {
+              setIsOverlayRunning((prev) => {
+                return {
+                  ...prev,
+                  node1: false,
+                };
+              });
+            }
+            return {
+              ...item,
+              data: {
+                ...item.data,
+                namespace: newData.namespace,
+                veth1: newData.veth,
+                br1: newData.bridge,
+                vxlan1: newData.vxlan,
+              },
+            };
+          }
+          if (newData.containerName === '/my-nginx7') {
+            if (newData.vxlan !== '') {
+              setIsOverlayRunning((prev) => {
+                return {
+                  ...prev,
+                  node2: true,
+                };
+              });
+            } else {
+              setIsOverlayRunning((prev) => {
+                return {
+                  ...prev,
+                  node2: false,
+                };
+              });
+            }
+            return {
+              ...item,
+              data: {
+                ...item.data,
+                namespace: newData.namespace,
+                veth2: newData.veth,
+                br2: newData.bridge,
+                vxlan2: newData.vxlan,
+              },
+            };
+          }
+        }
         if (
           item.data.label === newData.label &&
           item.type === 'containerNodeEnhanced'
@@ -334,7 +510,6 @@ export default function FifthDiagram() {
               setStartEdge(item.id);
             }
             if (newData.network2 === item.desiredNetwork2) {
-              console.log('start edge', newData, item);
               setStartEdge(item.id);
             }
           } else {
@@ -555,6 +730,10 @@ export default function FifthDiagram() {
       'set-nodes-ip',
       handleNodesIp,
     );
+    overlayNetworkPropEventListenerRef.current = window.electron.ipcRenderer.on(
+      'overlay-network-prop',
+      handleIncomingData,
+    );
 
     return () => {
       console.log('Component unmounted');
@@ -586,6 +765,10 @@ export default function FifthDiagram() {
 
       if (nodesIpEventListenerRef.current) {
         nodesIpEventListenerRef.current();
+      }
+
+      if (overlayNetworkPropEventListenerRef.current) {
+        overlayNetworkPropEventListenerRef.current();
       }
     };
   }, []);

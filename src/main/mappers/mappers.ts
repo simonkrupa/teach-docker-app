@@ -17,6 +17,7 @@ function mapContainerData(containerData: any, value: string) {
   let networkUsed;
   let portMapping;
   let macAddr;
+  let netId = '';
   if (containerData.HostConfig.PortBindings) {
     portMapping = parsePortMapping(containerData.HostConfig.PortBindings);
   } else {
@@ -26,6 +27,10 @@ function mapContainerData(containerData: any, value: string) {
     ipData = containerData.NetworkSettings.Networks[value].IPAddress;
     macAddr = containerData.NetworkSettings.Networks[value].MacAddress;
     networkUsed = value;
+    netId = containerData.NetworkSettings.Networks[value].NetworkID.slice(
+      0,
+      10,
+    );
   } else {
     console.log('No network found');
     if (
@@ -52,6 +57,25 @@ function mapContainerData(containerData: any, value: string) {
     mac: macAddr,
     pid: containerData.State.Pid,
     eth: 'eth',
+    netId,
+  };
+}
+
+function mapVxlanId(networkData: any) {
+  if (!networkData.Options) {
+    return {
+      vxlanId: null,
+    };
+  }
+  if (!networkData.Options['com.docker.network.driver.overlay.vxlanid_list']) {
+    return {
+      vxlanId: null,
+    };
+  }
+  const vxlanId =
+    networkData.Options['com.docker.network.driver.overlay.vxlanid_list'];
+  return {
+    vxlanId,
   };
 }
 
@@ -138,4 +162,5 @@ module.exports = {
   mapVethData,
   mapHostData,
   mapDockerGWBridgeData,
+  mapVxlanId,
 };
