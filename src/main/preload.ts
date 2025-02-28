@@ -3,7 +3,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export type Channels =
-  | 'ipc-example'
   | 'app-exit'
   | 'app-minimize'
   | 'container-data'
@@ -21,6 +20,13 @@ export type Channels =
   | 'validate-primary-ip'
   | 'validate-secondary-ip'
   | 'lan-data'
+  | 'set-docker-vms'
+  | 'get-user-progress'
+  | 'write-user-progress'
+  | 'error'
+  | 'veth-data'
+  | 'set-nodes-ip'
+  | 'overlay-network-prop';
   | 'set-docker-vms'
   | 'window-resize'
   | 'terminal.keystroke'

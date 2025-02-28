@@ -1,15 +1,30 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import './MessageBox.css';
-// import { useNavigate } from 'react-router-dom';
-
 import {
   AiFillCheckCircle,
   AiOutlineArrowRight,
   AiFillCloseCircle,
 } from 'react-icons/ai';
+import { navigationMap, progressMap } from '../util/utilMaps';
+import { useProgress } from '../UserContext';
 
 export default function MessageBox({ type, message }) {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const nextLocation = navigationMap.get(location.pathname.split('/')[1]);
+  const nextLocationPath = `${nextLocation}/overview`;
+  const { setUserData, progress, username } = useProgress();
+
+  const handleNextLocation = () => {
+    if (nextLocation === progressMap.get(progress)) {
+      window.electron.ipcRenderer.sendMessage('write-user-progress', [
+        username,
+      ]);
+      setUserData(username, String(Number(progress) + 1));
+      navigate(nextLocationPath);
+    }
+  };
 
   return (
     <div className={`message-box ${type}`}>
@@ -31,11 +46,8 @@ export default function MessageBox({ type, message }) {
           <Button
             type="default"
             shape="circle"
-            // onClick={() => {
-            //   navigate(navigation);
-            // }}
+            onClick={handleNextLocation}
             style={{
-              // border: '1px solid black',
               zIndex: 100,
               paddingTop: '6px',
               width: '38px',

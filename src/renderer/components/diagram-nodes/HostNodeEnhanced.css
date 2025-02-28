@@ -1,5 +1,5 @@
 .host-container-enhanced {
-  height: 250px;
+  height: 400px;
   width: 250px;
   border: 1px solid black;
   border-radius: 5px;
@@ -78,4 +78,17 @@
   100% {
     opacity: 1;
   }
+}
+
+.host-network-interface {
+  position: absolute;
+  bottom: 0;
+  width: 100px;
+  height: 25px;
+  left: 75px;
+  border: 2px solid black;
+  background-color: #fdb43a;
+  border-radius: 5px 5px 0 0;
+  text-align: center;
+  font-size: 90%;
 }

@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactFlow, useNodesState, Controls } from 'reactflow';
+import { useNavigate } from 'react-router-dom';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
 import { Button } from 'antd';
+import { throttle } from 'lodash';
+import ResizeObserver from 'resize-observer-polyfill';
 import ContainerNode from '../components/diagram-nodes/ContainerNode';
 import NetworkNode from '../components/diagram-nodes/NetworkNode';
 import nodesValidator from '../components/validators/nodesValidator';
@@ -10,43 +13,106 @@ import MessageBox from '../components/MessageBox';
 import HostNode from '../components/diagram-nodes/HostNode';
 import HostNodeEnhanced from '../components/diagram-nodes/HostNodeEnhanced';
 
-const correctAnswers = require('../data/correctAnswers/fifthDiagram.json');
+import correctAnswers from '../data/correctAnswers/fifthDiagram.json';
+import ContainerNodeEnhanced from '../components/diagram-nodes/ContainerNodeEnhanced';
+import VethNode from '../components/diagram-nodes/VethNode';
+import OverlayNetworkNode from '../components/diagram-nodes/OverlayNetworkNode';
 
 const nodeTypes = {
   containerNode: ContainerNode,
   networkNode: NetworkNode,
   hostNode: HostNode,
   hostNodeEnhanced: HostNodeEnhanced,
+  containerNodeEnhanced: ContainerNodeEnhanced,
+  vethNode: VethNode,
+  overlayNetworkNode: OverlayNetworkNode,
 };
 
 const initialNodes = [
   {
+    id: '12',
+    position: {
+      x: 50,
+      y: 500,
+    },
+    type: 'overlayNetworkNode',
+    data: {
+      label: '',
+      namespace: '',
+      veth1: '',
+      veth2: '',
+      br1: '',
+      br2: '',
+      vxlan1: '',
+      vxlan2: '',
+    },
+    draggable: false,
+    reconnectable: false,
+    hidden: true,
+  },
+  {
+    id: 'v1',
+    position: {
+      x: 120,
+      y: 240,
+    },
+    type: 'vethNode',
+    desiredContainer: '/my-nginx6',
+    data: {
+      label: undefined,
+    },
+    draggable: false,
+  },
+  {
+    id: 'v3',
+    position: {
+      x: 480,
+      y: 240,
+    },
+    type: 'vethNode',
+    desiredContainer: '/my-nginx7',
+    data: {
+      label: undefined,
+    },
+    draggable: false,
+  },
+  {
     id: '1',
-    position: { x: 100, y: 80 },
-    type: 'containerNode',
+    position: { x: 100, y: 60 },
+    type: 'containerNodeEnhanced',
+    desiredNetwork: 'my-overlay',
+    desiredNetwork2: 'docker_gwbridge1',
     data: {
       label: '/my-nginx6',
       ip: undefined,
       state: undefined,
       network: '',
-      port: '',
-      hostPort: '',
       mac: '',
+      eth: '',
+      eth2: '',
+      ip2: '',
+      mac2: '',
+      network2: '',
     },
     draggable: false,
   },
   {
     id: '3',
-    position: { x: 550, y: 80 },
-    type: 'containerNode',
+    position: { x: 460, y: 60 },
+    type: 'containerNodeEnhanced',
+    desiredNetwork: 'my-overlay',
+    desiredNetwork2: 'docker_gwbridge2',
     data: {
       label: '/my-nginx7',
       ip: undefined,
       state: undefined,
       network: '',
-      port: '',
-      hostPort: '',
       mac: '',
+      eth: '',
+      eth2: '',
+      ip2: '',
+      mac2: '',
+      network2: '',
     },
     draggable: false,
   },
@@ -60,36 +126,64 @@ const initialNodes = [
     data: {
       role: '',
       status: '',
-      ip: '192.168.56.106',
+      ip: '192.168.56.106qwewq',
       id: '',
       label: '',
       availability: undefined,
+      hEth: '',
     },
     draggable: false,
   },
   {
     id: '-1',
     position: {
-      x: 450,
+      x: 400,
       y: 20,
     },
     type: 'hostNodeEnhanced',
     data: {
       role: '',
       status: '',
-      ip: '192.168.56.108',
+      ip: '192.168.56.108ewqeqw',
       id: '',
       label: '',
       availability: undefined,
+      hEth: '',
     },
     draggable: false,
   },
   {
     id: '2',
-    position: { x: 230, y: 200 },
+    position: { x: 270, y: 170 },
     type: 'networkNode',
     data: {
       label: 'my-overlay',
+      subnet: undefined,
+      driver: undefined,
+      gateway: undefined,
+      peers: undefined,
+    },
+    draggable: false,
+  },
+  {
+    id: '4',
+    position: { x: 95, y: 300 },
+    type: 'networkNode',
+    data: {
+      label: 'docker_gwbridge1',
+      subnet: undefined,
+      driver: undefined,
+      gateway: undefined,
+      peers: undefined,
+    },
+    draggable: false,
+  },
+  {
+    id: '5',
+    position: { x: 445, y: 300 },
+    type: 'networkNode',
+    data: {
+      label: 'docker_gwbridge2',
       subnet: undefined,
       driver: undefined,
       gateway: undefined,
@@ -101,7 +195,57 @@ const initialNodes = [
 
 const initialEdges = [
   {
-    id: 'e1-2',
+    id: '1-v1',
+    source: '1',
+    target: 'v1',
+    sourceHandle: 'handle2s',
+    animated: true,
+    hidden: true,
+    reconnectable: false,
+  },
+  {
+    id: 'v1-4',
+    source: 'v1',
+    target: '4',
+    animated: true,
+    hidden: true,
+    reconnectable: false,
+  },
+  {
+    id: '3-v3',
+    source: '3',
+    target: 'v3',
+    sourceHandle: 'handle2s',
+    animated: true,
+    hidden: true,
+    reconnectable: false,
+  },
+  {
+    id: 'v3-5',
+    source: 'v3',
+    target: '5',
+    animated: true,
+    hidden: true,
+    reconnectable: false,
+  },
+  {
+    id: '4--2',
+    source: '4',
+    target: '-2',
+    animated: true,
+    reconnectable: false,
+    type: 'straight',
+  },
+  {
+    id: '5--1',
+    source: '5',
+    target: '-1',
+    animated: true,
+    reconnectable: false,
+    type: 'straight',
+  },
+  {
+    id: '1-2',
     source: '1',
     target: '2',
     targetHandle: 'left',
@@ -110,13 +254,89 @@ const initialEdges = [
     reconnectable: false,
   },
   {
-    id: 'e3-2',
+    id: '3-2',
     source: '3',
     target: '2',
     targetHandle: 'right',
     animated: true,
     hidden: true,
     reconnectable: false,
+  },
+  {
+    id: '2detail',
+    source: '2',
+    target: '12',
+    type: 'smoothstep',
+    reconnectable: false,
+    label: 'Overlay in detail',
+    labelStyle: { fill: 'black', fontWeight: 'bold', fontSize: '10px' },
+  },
+  {
+    id: '12-veth1',
+    source: '12',
+    sourceHandle: '12-1',
+    targetHandle: 'veth1-target',
+    target: '12',
+    animated: true,
+    type: 'straight',
+    // hidden: true,
+  },
+  {
+    id: '12-veth2',
+    source: '12',
+    sourceHandle: '12-2',
+    targetHandle: 'veth2-target',
+    target: '12',
+    animated: true,
+    type: 'straight',
+    // hidden: true,
+  },
+  {
+    id: '12-br1',
+    source: '12',
+    sourceHandle: 'veth1-source',
+    targetHandle: 'br1-target',
+    target: '12',
+    animated: true,
+    // hidden: true,
+  },
+  {
+    id: '12-br2',
+    source: '12',
+    sourceHandle: 'veth2-source',
+    targetHandle: 'br2-target',
+    target: '12',
+    animated: true,
+    // hidden: true,
+  },
+  {
+    id: '12-vxlan1',
+    source: '12',
+    sourceHandle: 'br1-source',
+    targetHandle: 'vxlan1-target',
+    target: '12',
+    animated: true,
+    // hidden: true,
+  },
+  {
+    id: '12-vxlan2',
+    source: '12',
+    sourceHandle: 'br2-source',
+    targetHandle: 'vxlan2-target',
+    target: '12',
+    animated: true,
+    // hidden: true,
+  },
+  {
+    id: '12-udp',
+    source: '12',
+    targetHandle: 'vxlan1-udp-target',
+    sourceHandle: 'vxlan2-source',
+    target: '12',
+    markerEnd: { type: 'arrow', color: 'black' },
+    markerStart: { type: 'arrow', color: 'black' },
+    style: { stroke: 'black' },
+    // hidden: true,
   },
 ];
 
@@ -126,15 +346,41 @@ export default function FifthDiagram() {
   const containerEventListenerRef = useRef<() => void | null>(null);
   const networkEventListenerRef = useRef<() => void | null>(null);
   const hostEventListenerRef = useRef<() => void | null>(null);
+  const vethEventListenerRef = useRef<() => void | null>(null);
   const nodeEventListenerRef = useRef<() => void | null>(null);
+  const errorEventListenerRef = useRef<() => void | null>(null);
+  const nodesIpEventListenerRef = useRef<() => void | null>(null);
+  const overlayNetworkPropEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
   const [startEdge, setStartEdge] = useState(null);
   const [deleteEdge, setDeleteEdge] = useState(null);
+  const navigate = useNavigate();
+  const [isOverlayRunning, setIsOverlayRunning] = useState({
+    node1: false,
+    node2: false,
+  });
+
+  // Your existing ResizeObserver code
+  const resizeObserver = new ResizeObserver(
+    throttle((entries) => {
+      // Your resize handling logic
+    }, 100), // Adjust the throttle delay as needed
+  );
 
   const startEdges = useCallback((nodeId) => {
     setEdges((prevEdges) => {
       return prevEdges.map((edge) => {
         if (edge.source === nodeId) {
+          setStartEdge(null);
+          return { ...edge, hidden: false };
+        }
+        const vethId1 = 'v' + nodeId;
+        const vethId2 = 'w' + nodeId;
+        if (edge.source === vethId1) {
+          setStartEdge(null);
+          return { ...edge, hidden: false };
+        }
+        if (edge.source === vethId2) {
           setStartEdge(null);
           return { ...edge, hidden: false };
         }
@@ -150,24 +396,137 @@ export default function FifthDiagram() {
           setDeleteEdge(null);
           return { ...edge, hidden: true };
         }
+        const vethId1 = 'v' + nodeId;
+        const vethId2 = 'w' + nodeId;
+        if (edge.source === vethId1) {
+          setDeleteEdge(null);
+          return { ...edge, hidden: true };
+        }
+        if (edge.source === vethId2) {
+          setDeleteEdge(null);
+          return { ...edge, hidden: true };
+        }
         return edge;
       });
     });
   }, []);
 
+  useEffect(() => {
+    if (isOverlayRunning.node1 && isOverlayRunning.node2) {
+      setNodes((prevNodes) => {
+        return prevNodes.map((node) => {
+          if (node.type === 'overlayNetworkNode') {
+            return {
+              ...node,
+              hidden: false,
+            };
+          }
+          return node;
+        });
+      });
+    } else {
+      setNodes((prevNodes) => {
+        return prevNodes.map((node) => {
+          if (node.type === 'overlayNetworkNode') {
+            return {
+              ...node,
+              hidden: true,
+            };
+          }
+          return node;
+        });
+      });
+    }
+  }, [isOverlayRunning]);
+
   const onEdit = useCallback((newData) => {
     setNodes((prevNodes) => {
       const updatedNodes = prevNodes.map((item) => {
         if (
+          item.type === 'overlayNetworkNode' &&
+          newData.nodeType === 'overlayNetworkNode'
+        ) {
+          if (newData.containerName === '/my-nginx6') {
+            if (newData.vxlan !== '') {
+              setIsOverlayRunning((prev) => {
+                return {
+                  ...prev,
+                  node1: true,
+                };
+              });
+            } else {
+              setIsOverlayRunning((prev) => {
+                return {
+                  ...prev,
+                  node1: false,
+                };
+              });
+            }
+            return {
+              ...item,
+              data: {
+                ...item.data,
+                namespace: newData.namespace,
+                veth1: newData.veth,
+                br1: newData.bridge,
+                vxlan1: newData.vxlan,
+              },
+            };
+          }
+          if (newData.containerName === '/my-nginx7') {
+            if (newData.vxlan !== '') {
+              setIsOverlayRunning((prev) => {
+                return {
+                  ...prev,
+                  node2: true,
+                };
+              });
+            } else {
+              setIsOverlayRunning((prev) => {
+                return {
+                  ...prev,
+                  node2: false,
+                };
+              });
+            }
+            return {
+              ...item,
+              data: {
+                ...item.data,
+                namespace: newData.namespace,
+                veth2: newData.veth,
+                br2: newData.bridge,
+                vxlan2: newData.vxlan,
+              },
+            };
+          }
+        }
+        if (
           item.data.label === newData.label &&
-          item.type === 'containerNode'
+          item.type === 'containerNodeEnhanced'
         ) {
           if (newData.status === 'running') {
-            setStartEdge(item.id);
+            if (newData.network === item.desiredNetwork) {
+              setStartEdge(item.id);
+            }
+            if (newData.network2 === item.desiredNetwork2) {
+              setStartEdge(item.id);
+            }
           } else {
             setDeleteEdge(item.id);
           }
 
+          if (newData.eth2) {
+            return {
+              ...item,
+              data: {
+                ...item.data,
+                eth2: newData?.eth2,
+                ip2: newData?.ip2,
+                mac2: newData?.mac2,
+              },
+            };
+          }
           return {
             ...item,
             data: {
@@ -176,9 +535,8 @@ export default function FifthDiagram() {
               label: newData.label,
               state: newData.status,
               network: newData.network,
-              port: newData?.port || '',
-              hostPort: newData?.hostPort || '',
               mac: newData?.mac,
+              eth: newData?.eth,
             },
           };
         }
@@ -187,7 +545,7 @@ export default function FifthDiagram() {
             let flag = false;
             prevNodes.forEach((node) => {
               if (
-                node.type === 'containerNode' &&
+                node.type === 'containerNodeEnhanced' &&
                 node.data.state === 'running'
               ) {
                 flag = true;
@@ -223,6 +581,19 @@ export default function FifthDiagram() {
               id: newData.id,
               label: newData.hostname,
               availability: newData.availability,
+              hEth: newData.eth,
+            },
+          };
+        }
+        if (
+          item.type === 'vethNode' &&
+          item.desiredContainer === newData.desiredContainer
+        ) {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              label: newData.label,
             },
           };
         }
@@ -234,10 +605,8 @@ export default function FifthDiagram() {
 
   const handleIncomingData = useCallback(
     (data) => {
-      console.log('handleIncomingData');
       setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
-      console.log(jsonData);
       onEdit(jsonData);
     },
     [onEdit],
@@ -265,7 +634,6 @@ export default function FifthDiagram() {
 
   const handleIncomingNetworkData = useCallback(
     (data) => {
-      console.log('handleIncomingNetworkData');
       setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
       onEdit(jsonData);
@@ -275,7 +643,15 @@ export default function FifthDiagram() {
 
   const handleIncomingNodeData = useCallback(
     (data) => {
-      console.log('handleIncomingNodeData');
+      setMessageBoxState('hidden');
+      const jsonData = JSON.parse(data);
+      onEdit(jsonData);
+    },
+    [onEdit],
+  );
+
+  const handleIncomingVethData = useCallback(
+    (data) => {
       setMessageBoxState('hidden');
       const jsonData = JSON.parse(data);
       onEdit(jsonData);
@@ -291,11 +667,42 @@ export default function FifthDiagram() {
     }
   };
 
+  const handleIncomingError = () => {
+    alert('error');
+    navigate('/settings');
+  };
+
+  const handleNodesIp = (data) => {
+    setNodes((prevNodes) => {
+      const updatedNodes = prevNodes.map((item) => {
+        if (item.id === '-2') {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              ip: data.ip1,
+            },
+          };
+        }
+        if (item.id === '-1') {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              ip: data.ip2,
+            },
+          };
+        }
+        return item;
+      });
+      return updatedNodes;
+    });
+  };
+
   useEffect(() => {
     console.log('FifthDiagram mounted');
     handleStartListening();
 
-    // Add the event listener and store the cleanup function
     containerEventListenerRef.current = window.electron.ipcRenderer.on(
       'container-data',
       handleIncomingData,
@@ -311,11 +718,27 @@ export default function FifthDiagram() {
       handleIncomingNodeData,
     );
 
+    errorEventListenerRef.current = window.electron.ipcRenderer.on(
+      'error',
+      handleIncomingError,
+    );
+    vethEventListenerRef.current = window.electron.ipcRenderer.on(
+      'veth-data',
+      handleIncomingVethData,
+    );
+    nodesIpEventListenerRef.current = window.electron.ipcRenderer.on(
+      'set-nodes-ip',
+      handleNodesIp,
+    );
+    overlayNetworkPropEventListenerRef.current = window.electron.ipcRenderer.on(
+      'overlay-network-prop',
+      handleIncomingData,
+    );
+
     return () => {
       console.log('Component unmounted');
       handleStopListening();
 
-      // Call the cleanup function if it exists
       if (containerEventListenerRef.current) {
         containerEventListenerRef.current();
       }
@@ -330,6 +753,22 @@ export default function FifthDiagram() {
 
       if (nodeEventListenerRef.current) {
         nodeEventListenerRef.current();
+      }
+
+      if (errorEventListenerRef.current) {
+        errorEventListenerRef.current();
+      }
+
+      if (vethEventListenerRef.current) {
+        vethEventListenerRef.current();
+      }
+
+      if (nodesIpEventListenerRef.current) {
+        nodesIpEventListenerRef.current();
+      }
+
+      if (overlayNetworkPropEventListenerRef.current) {
+        overlayNetworkPropEventListenerRef.current();
       }
     };
   }, []);
@@ -359,7 +798,6 @@ export default function FifthDiagram() {
           />
         )}
         <Button
-          // style={{ zIndex: 100 }}
           className="validateButton"
           type="primary"
           onClick={handleValidateAnswer}

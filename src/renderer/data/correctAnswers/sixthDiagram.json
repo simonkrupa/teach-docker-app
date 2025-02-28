@@ -1,34 +1,19 @@
 [
   {
-    "id": "0",
-    "type": "hostNode",
-    "data": {
-      "label": "host",
-      "ip": "undefined"
-    }
-  },
-  {
-    "network": "my-macvlan",
     "id": "1",
     "type": "containerNode",
-    "data": {
-      "label": "/my-nginx8",
-      "ip": "192.168.100.2",
-      "state": "running",
-      "network": "my-macvlan",
-      "port": "",
-      "hostPort": ""
-    }
+    "label": "/my-nginx8",
+    "ip": "192.168.100.2",
+    "state": "running",
+    "network": "my-macvlan"
   },
   {
     "id": "3",
     "type": "networkNode",
-    "data": {
-      "label": "my-macvlan",
-      "driver": "bridge",
-      "subnet": "192.168.100.0/24",
-      "gateway": "192.168.100.1"
-    }
+    "label": "my-macvlan",
+    "driver": "bridge",
+    "subnet": "192.168.100.0/24",
+    "gateway": "192.168.100.1"
   }
 ]
 

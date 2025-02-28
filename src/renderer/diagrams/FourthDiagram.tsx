@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactFlow, useNodesState, Controls } from 'reactflow';
+import { useNavigate } from 'react-router-dom';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
 import { Button } from 'antd';
@@ -9,11 +10,10 @@ import nodesValidator from '../components/validators/nodesValidator';
 import MessageBox from '../components/MessageBox';
 import HostNode from '../components/diagram-nodes/HostNode';
 
-const correctAnswers = require('../data/correctAnswers/fourthDiagram.json');
+import correctAnswers from '../data/correctAnswers/fourthDiagram.json';
 
 const nodeTypes = {
   containerNode: ContainerNode,
-  // veth: Veth,
   networkNode: NetworkNode,
   hostNode: HostNode,
 };
@@ -21,7 +21,7 @@ const nodeTypes = {
 const initialNodes = [
   {
     id: '1',
-    position: { x: 75, y: 80 },
+    position: { x: 250, y: 200 },
     type: 'containerNode',
     data: {
       label: '/my-nginx5',
@@ -31,19 +31,23 @@ const initialNodes = [
       port: '',
       hostPort: '',
       mac: '',
+      eth: '',
     },
+    draggable: false,
   },
   {
     id: '0',
     position: {
-      x: 100,
-      y: 300,
+      x: 50,
+      y: 50,
     },
     type: 'hostNode',
     data: {
       label: 'Host',
       ip: 'undefined',
+      hEth: '',
     },
+    draggable: false,
   },
 ];
 
@@ -52,6 +56,8 @@ export default function FourthDiagram() {
   const containerEventListenerRef = useRef<() => void | null>(null);
   const hostEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
+  const errorEventListenerRef = useRef<() => void | null>(null);
+  const navigate = useNavigate();
 
   const onEdit = useCallback((newData) => {
     setNodes((prevNodes) => {
@@ -71,6 +77,7 @@ export default function FourthDiagram() {
               port: newData?.port || '',
               hostPort: newData?.hostPort || '',
               mac: newData?.mac,
+              eth: newData?.eth,
             },
           };
         }
@@ -97,7 +104,8 @@ export default function FourthDiagram() {
             ...item,
             data: {
               ...item.data,
-              ip: data,
+              ip: data.ip,
+              hEth: data.eth,
             },
           };
         }
@@ -123,11 +131,15 @@ export default function FourthDiagram() {
     }
   };
 
+  const handleIncomingError = () => {
+    alert('error');
+    navigate('/settings');
+  };
+
   useEffect(() => {
     console.log('FourthDiagram mounted');
     handleStartListening();
 
-    // Add the event listener and store the cleanup function
     containerEventListenerRef.current = window.electron.ipcRenderer.on(
       'container-data',
       handleIncomingData,
@@ -138,17 +150,25 @@ export default function FourthDiagram() {
       handleIncomingHostData,
     );
 
+    errorEventListenerRef.current = window.electron.ipcRenderer.on(
+      'error',
+      handleIncomingError,
+    );
+
     return () => {
       console.log('Component unmounted');
       handleStopListening();
 
-      // Call the cleanup function if it exists
       if (containerEventListenerRef.current) {
         containerEventListenerRef.current();
       }
 
       if (hostEventListenerRef.current) {
         hostEventListenerRef.current();
+      }
+
+      if (errorEventListenerRef.current) {
+        errorEventListenerRef.current();
       }
     };
   }, []);
@@ -176,7 +196,6 @@ export default function FourthDiagram() {
           />
         )}
         <Button
-          // style={{ zIndex: 100 }}
           className="validateButton"
           type="primary"
           onClick={handleValidateAnswer}

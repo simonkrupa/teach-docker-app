@@ -7,7 +7,21 @@ export type ContainerNodeProps = {
     port: string;
     hostPort: string;
     mac: string;
+    eth: string;
   };
+};
+
+export type VethNodeProps = {
+  data: {
+    label: string;
+  };
+};
+
+export type SshConfig = {
+  host: string;
+  port: number;
+  username: string;
+  password: string;
 };
 
 export interface TerminalProps {

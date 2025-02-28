@@ -47,8 +47,13 @@
 }
 
 .button-group {
-  width: 200px;
+  width: 160px;
   align-items: center;
   height: 30px;
   transition: none !important;
+}
+
+.framebar-username {
+  z-index: 100;
+  color: white;
 }

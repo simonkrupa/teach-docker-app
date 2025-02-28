@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactFlow, useNodesState, Controls } from 'reactflow';
+import { useNavigate } from 'react-router-dom';
 import 'reactflow/dist/style.css';
 import './Diagrams.css';
 import { Button } from 'antd';
@@ -11,7 +12,7 @@ import MessageBox from '../components/MessageBox';
 import HostNode from '../components/diagram-nodes/HostNode';
 import LanNode from '../components/diagram-nodes/LanNode';
 
-const correctAnswers = require('../data/correctAnswers/seventhDiagram.json');
+import correctAnswers from '../data/correctAnswers/seventhDiagram.json';
 
 const nodeTypes = {
   containerNode: ContainerNode,
@@ -24,8 +25,8 @@ const initialNodes = [
   {
     id: '1',
     position: {
-      x: 200,
-      y: 80,
+      x: 150,
+      y: 130,
     },
     type: 'containerNode',
     desiredNetwork: 'my-ipvlan',
@@ -37,14 +38,15 @@ const initialNodes = [
       port: '',
       hostPort: '',
       mac: '',
+      eth: '',
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '3',
     position: {
-      x: 320,
-      y: 80,
+      x: 360,
+      y: 130,
     },
     type: 'containerNode',
     desiredNetwork: 'my-ipvlan',
@@ -56,14 +58,15 @@ const initialNodes = [
       port: '',
       hostPort: '',
       mac: '',
+      eth: '',
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '2',
     position: {
-      x: 200,
-      y: 300,
+      x: 230,
+      y: 350,
     },
     type: 'networkNode',
     data: {
@@ -72,19 +75,35 @@ const initialNodes = [
       driver: undefined,
       gateway: undefined,
     },
-    // draggable: false,
+    draggable: false,
   },
   {
     id: '5',
     position: {
-      x: 120,
-      y: 500,
+      x: 180,
+      y: 600,
     },
     type: 'lanNode',
     data: {
       cidr: '',
       mac: '',
     },
+    draggable: false,
+  },
+  {
+    id: '0',
+    position: {
+      x: 50,
+      y: 50,
+    },
+    type: 'hostNode',
+    desiredNetwork: 'host',
+    data: {
+      label: 'host',
+      ip: 'undefined',
+      hEth: '',
+    },
+    draggable: false,
   },
 ];
 
@@ -119,10 +138,13 @@ export default function SeventhDiagram() {
   const [edges, setEdges, onEdgesChange] = useNodesState(initialEdges);
   const containerEventListenerRef = useRef<() => void | null>(null);
   const networkEventListenerRef = useRef<() => void | null>(null);
+  const hostEventListenerRef = useRef<() => void | null>(null);
   const lanEventListenerRef = useRef<() => void | null>(null);
+  const errorEventListenerRef = useRef<() => void | null>(null);
   const [messageBoxState, setMessageBoxState] = useState('hidden');
   const [startEdge, setStartEdge] = useState({ node: null, newData: null });
   const [deleteEdge, setDeleteEdge] = useState({ node: null, newData: null });
+  const navigate = useNavigate();
 
   const startEdges = useCallback((node, newData) => {
     setEdges((prevEdges) => {
@@ -180,6 +202,7 @@ export default function SeventhDiagram() {
               port: newData?.port || '',
               hostPort: newData?.hostPort || '',
               mac: newData?.mac || '',
+              eth: newData?.eth || '',
             },
           };
         }
@@ -262,6 +285,34 @@ export default function SeventhDiagram() {
     [onEdit],
   );
 
+  const handleIncomingHostData = useCallback((data) => {
+    setNodes((prevNodes) => {
+      const updatedNodes = prevNodes.map((item) => {
+        if (item.type === 'hostNode') {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              ip: data.ip,
+              hEth: data.eth,
+            },
+          };
+        }
+        if (item.type === 'containerNode' && item.desiredNetwork === 'host') {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              ip: data,
+            },
+          };
+        }
+        return item;
+      });
+      return updatedNodes;
+    });
+  }, []);
+
   const handleValidateAnswer = () => {
     if (nodesValidator(nodes, correctAnswers)) {
       setMessageBoxState('success');
@@ -272,11 +323,15 @@ export default function SeventhDiagram() {
     }
   };
 
+  const handleIncomingError = () => {
+    alert('error');
+    navigate('/settings');
+  };
+
   useEffect(() => {
     console.log('SeventhDiagram mounted');
     handleStartListening();
 
-    // Add the event listener and store the cleanup function
     containerEventListenerRef.current = window.electron.ipcRenderer.on(
       'container-data',
       handleIncomingData,
@@ -287,16 +342,25 @@ export default function SeventhDiagram() {
       handleIncomingNetworkData,
     );
 
+    hostEventListenerRef.current = window.electron.ipcRenderer.on(
+      'host-ip-address',
+      handleIncomingHostData,
+    );
+
     lanEventListenerRef.current = window.electron.ipcRenderer.on(
       'lan-data',
       handleIncomingLanData,
+    );
+
+    errorEventListenerRef.current = window.electron.ipcRenderer.on(
+      'error',
+      handleIncomingError,
     );
 
     return () => {
       console.log('Component unmounted');
       handleStopListening();
 
-      // Call the cleanup function if it exists
       if (containerEventListenerRef.current) {
         containerEventListenerRef.current();
       }
@@ -305,8 +369,16 @@ export default function SeventhDiagram() {
         networkEventListenerRef.current();
       }
 
+      if (hostEventListenerRef.current) {
+        hostEventListenerRef.current();
+      }
+
       if (lanEventListenerRef.current) {
         lanEventListenerRef.current();
+      }
+
+      if (errorEventListenerRef.current) {
+        errorEventListenerRef.current();
       }
     };
   }, []);

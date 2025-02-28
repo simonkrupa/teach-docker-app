@@ -14,21 +14,29 @@ import * as pty from 'node-pty';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import Docker from 'dockerode';
+
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import DockerEventListener from './listeners/dockerEventListener';
+import platformNetworkInterfacesMap from './utils/platformUtils';
+import SshConnector from './listeners/sshConnector';
 
-const Docker = require('dockerode');
+import {
+  getExistingUserOrCreate,
+  increaseUserProgress,
+  createFileIfNotExists,
+} from './utils/userProgress';
 
 // templates for each diagram page
-const diagram1 = require('./data/diagram1.json');
-const diagram2 = require('./data/diagram2.json');
-const diagram3 = require('./data/diagram3.json');
-const diagram4 = require('./data/diagram4.json');
-const diagram5 = require('./data/diagram5.json');
-const diagram5n1 = require('./data/diagram5n1.json');
-const diagram6 = require('./data/diagram6.json');
-const diagram7 = require('./data/diagram7.json');
+import diagram1 from './data/diagram1.json';
+import diagram2 from './data/diagram2.json';
+import diagram3 from './data/diagram3.json';
+import diagram4 from './data/diagram4.json';
+import diagram5 from './data/diagram5.json';
+import diagram5n1 from './data/diagram5n1.json';
+import diagram6 from './data/diagram6.json';
+import diagram7 from './data/diagram7.json';
 
 const osShell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
@@ -44,13 +52,52 @@ class AppUpdater {
   }
 }
 
+// TODO
+const config: SshConfig = {
+  host: '',
+  port: 22,
+  username: '',
+  password: '',
+};
+
+const configOverlay: SshConfig = {
+  host: '',
+  port: 22,
+  username: '',
+  password: '',
+};
+
 let mainWindow: BrowserWindow | null = null;
 let dockerEventListener: DockerEventListener | null = null;
 let dockerEventListenerOverlay: DockerEventListener | null = null;
+let sshConnector: SshConnector | null = null;
+let sshConnectorOverlay: SshConnector | null = null;
 let hostIpAddress: string | null = null;
 
+ipcMain.on('get-user-progress', (event, arg) => {
+  const username = arg[0];
+  const progress = getExistingUserOrCreate(username);
+  if (progress === undefined) {
+    console.log('User does not exist:', username);
+    event.reply('get-user-progress', undefined);
+  }
+  event.reply('get-user-progress', [username, progress]);
+});
+
+ipcMain.on('write-user-progress', (event, arg) => {
+  increaseUserProgress(arg[0]);
+});
+
 function setDockerEventListener(mainWindow: BrowserWindow, ipAddress: string) {
-  dockerEventListener = new DockerEventListener(mainWindow, ipAddress);
+  if (sshConnector === null) {
+    throw new Error('SSH connector is not initialized.');
+  }
+  // config.host = ipAddress;
+  dockerEventListener = new DockerEventListener(
+    mainWindow,
+    ipAddress,
+    sshConnector,
+  );
   hostIpAddress = ipAddress;
   return dockerEventListener;
 }
@@ -59,45 +106,60 @@ function setDockerEventListenerOverlay(
   mainWindow: BrowserWindow,
   ipAddress: string,
 ) {
-  dockerEventListenerOverlay = new DockerEventListener(mainWindow, ipAddress);
+  if (sshConnectorOverlay === null) {
+    throw new Error('SSH connector is not initialized.');
+  }
+  dockerEventListenerOverlay = new DockerEventListener(
+    mainWindow,
+    ipAddress,
+    sshConnectorOverlay,
+  );
   return dockerEventListenerOverlay;
 }
 
 function getNetworkInterfaces() {
   const interfaces = os.networkInterfaces();
   const filteredInterfaces = Object.keys(interfaces)
-    .filter((key) => !key.toLowerCase().startsWith('lo')) // Filter out interfaces starting with 'lo'
-    .flatMap(
-      (key) =>
-        interfaces[key]
-          .filter((address) => address.family === 'IPv4') // Filter only IPv4 addresses
-          .map((address) => ({ key, ...address })), // Include the key with each address
+    .filter((key) => !key.toLowerCase().startsWith('lo'))
+    .flatMap((key) =>
+      interfaces[key]
+        .filter((address) => address.family === 'IPv4')
+        .map((address) => ({ key, ...address })),
     );
 
-  //TODO temp change
-  const tempInterfaces = Object.values(filteredInterfaces).filter(
-    (item) => item.key === 'Wi-Fi',
-  );
-  return tempInterfaces.length > 0 ? tempInterfaces[0] : null;
+  const platform = os.platform();
+  const keyBasedOnPlatform = platformNetworkInterfacesMap.get(platform);
+  if (keyBasedOnPlatform) {
+    const tempInterfaces = Object.values(filteredInterfaces).filter((item) =>
+      item.key.toLowerCase().startsWith(keyBasedOnPlatform),
+    );
+    if (tempInterfaces.length === 0 && platform === 'win32') {
+      Object.values(filteredInterfaces).find((item) => {
+        if (item.key.toLowerCase().startsWith('eth')) {
+          tempInterfaces.push(item);
+        }
+      });
+    }
+    return tempInterfaces.length > 0 ? tempInterfaces[0] : null;
+  }
+  return null;
+}
+
+function getHostNetworkInterface(requestedIpAddr: string) {
+  dockerEventListener?.getHostNetworkInterface(requestedIpAddr);
 }
 
 function sendHostIpAddress(hostIpAddress: string) {
-  mainWindow?.webContents.send('host-ip-address', hostIpAddress);
+  getHostNetworkInterface(hostIpAddress);
+  mainWindow?.webContents.send('host-ip-address', { ip: hostIpAddress });
 }
 
-function sendLan(hostIpAddress: string) {
-  // console.log(JSON.stringify(getNetworkInterfaces()));
-  mainWindow?.webContents.send(
-    'lan-data',
-    JSON.stringify(getNetworkInterfaces()),
-  );
+function sendLan() {
+  const lanData = getNetworkInterfaces();
+  if (lanData) {
+    mainWindow?.webContents.send('lan-data', JSON.stringify(lanData));
+  }
 }
-
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -111,23 +173,24 @@ if (isDebug) {
   require('electron-debug')();
 }
 
-const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
+// const installExtensions = async () => {
+//   const installer = require('electron-devtools-installer');
+//   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+//   const extensions = ['REACT_DEVELOPER_TOOLS'];
 
-  return installer
-    .default(
-      extensions.map((name) => installer[name]),
-      forceDownload,
-    )
-    .catch(console.log);
-};
+//   return installer
+//     .default(
+//       extensions.map((name) => installer[name]),
+//       forceDownload,
+//     )
+//     .catch(console.log);
+// };
 
 const createWindow = async () => {
-  if (isDebug) {
-    await installExtensions();
-  }
+  // if (isDebug) {
+  //   await installExtensions();
+  // }
+  createFileIfNotExists(app.getPath('userData'));
 
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')
@@ -141,7 +204,7 @@ const createWindow = async () => {
     show: false,
     width: 1720,
     height: 880,
-    icon: getAssetPath('icon.png'),
+    icon: getAssetPath('block.png'),
     frame: false,
     paintWhenInitiallyHidden: true,
     webPreferences: {
@@ -227,7 +290,32 @@ const createWindow = async () => {
 
   ipcMain.on('stop-listening', () => {
     dockerEventListener?.stopListeningToEvents();
+    dockerEventListenerOverlay?.stopListeningToEvents();
   });
+
+  function declareHostsIpAddresses(ip1: string, ip2: string) {
+    mainWindow?.webContents.send('set-nodes-ip', { ip1, ip2 });
+  }
+
+  async function validateSshConnection(ipAddress) {
+    config.host = ipAddress;
+    if (sshConnector !== null) {
+      sshConnector.disconnect();
+    }
+    sshConnector = new SshConnector(config);
+    await sshConnector.waitForConnection();
+    return sshConnector.isConnectedStatus();
+  }
+
+  async function validateSshConnectionOverlay(ipAddress) {
+    configOverlay.host = ipAddress;
+    if (sshConnectorOverlay !== null) {
+      sshConnectorOverlay.disconnect();
+    }
+    sshConnectorOverlay = new SshConnector(configOverlay);
+    await sshConnectorOverlay.waitForConnection();
+    return sshConnectorOverlay.isConnectedStatus();
+  }
 
   async function validateDockerAPI(ipAddress) {
     // Initialize Dockerode with the provided IP address
@@ -250,12 +338,28 @@ const createWindow = async () => {
 
   ipcMain.on('validate-primary-ip', async (event, arg) => {
     const isValid = await validateDockerAPI(arg[0]);
-    event.reply('validate-primary-ip', [isValid]);
+    [config.username, config.password] = [arg[1], arg[2]];
+    if (isValid) {
+      const isSshAccessible = await validateSshConnection(arg[0]);
+      if (isSshAccessible) {
+        event.reply('validate-primary-ip', [true]);
+        return;
+      }
+    }
+    event.reply('validate-primary-ip', [false]);
   });
 
   ipcMain.on('validate-secondary-ip', async (event, arg) => {
     const isValid = await validateDockerAPI(arg[0]);
-    event.reply('validate-secondary-ip', [isValid]);
+    [configOverlay.username, configOverlay.password] = [arg[1], arg[2]];
+    if (isValid) {
+      const isSshAccessible = await validateSshConnectionOverlay(arg[0]);
+      if (isSshAccessible) {
+        event.reply('validate-secondary-ip', [true]);
+        return;
+      }
+    }
+    event.reply('validate-secondary-ip', [false]);
   });
 
   ipcMain.on('set-docker-vms', async (event, arg) => {
@@ -292,8 +396,6 @@ const createWindow = async () => {
       containerToListen,
       uniqueNetworks,
     );
-    console.log('Host IP Address2:', hostIpAddress);
-
     sendHostIpAddress(hostIpAddress);
   });
   ipcMain.on('start-listening-3', () => {
@@ -330,6 +432,7 @@ const createWindow = async () => {
     console.log('Starting listening to events for diagram 5 ');
     const containerToListen = new Map<string, string>();
     const uniqueNetworks = new Set<string>();
+    declareHostsIpAddresses(config.host, configOverlay.host);
     diagram5.containers.forEach((container) => {
       containerToListen.set(container.data.label, container.network);
       uniqueNetworks.add(container.network);
@@ -339,11 +442,16 @@ const createWindow = async () => {
       containerToListenOverlay.set(container.data.label, container.network);
       uniqueNetworks.add(container.network);
     });
-    dockerEventListenerOverlay?.listenToEvents(containerToListenOverlay);
+    dockerEventListenerOverlay?.listenToEventsSecondary(
+      containerToListenOverlay,
+    );
+    const emptySet = new Set<string>();
+    emptySet.add('docker_gwbridge2');
     dockerEventListenerOverlay?.getCurrentStateOfContainers(
       containerToListenOverlay,
-      uniqueNetworks,
+      emptySet,
     );
+    uniqueNetworks.add('docker_gwbridge1');
     dockerEventListener?.listenToEvents(containerToListen);
     dockerEventListener?.getCurrentStateOfContainers(
       containerToListen,
@@ -366,7 +474,7 @@ const createWindow = async () => {
       uniqueNetworks,
     );
     sendHostIpAddress(hostIpAddress);
-    sendLan(hostIpAddress);
+    sendLan();
   });
   ipcMain.on('start-listening-7', () => {
     console.log('Starting listening to events for diagram 7');
@@ -381,7 +489,8 @@ const createWindow = async () => {
       containerToListen,
       uniqueNetworks,
     );
-    sendLan(hostIpAddress);
+    sendHostIpAddress(hostIpAddress);
+    sendLan();
   });
 };
 

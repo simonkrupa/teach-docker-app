@@ -39,3 +39,13 @@
 .text-container {
   display: flex;
 }
+
+.ant-buttons {
+  background: #001529;
+  color: white;
+}
+
+.ant-buttons:hover {
+  background: #1677ff !important;
+  color: white !important;
+}
