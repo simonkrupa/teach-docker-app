@@ -9,3 +9,8 @@ export type ContainerNodeProps = {
     mac: string;
   };
 };
+
+export interface TerminalProps {
+  id: number;
+  active: boolean;
+}

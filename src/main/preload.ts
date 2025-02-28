@@ -24,7 +24,9 @@ export type Channels =
   | 'set-docker-vms'
   | 'window-resize'
   | 'terminal.keystroke'
-  | 'terminal.incomingData';
+  | 'terminal.incomingData'
+  | 'terminal.restore.data'
+  | 'create-terminal';
 
 const electronHandler = {
   ipcRenderer: {

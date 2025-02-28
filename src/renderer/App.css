@@ -25,3 +25,53 @@ body {
   /* padding: 5%; */
   /* padding-top: 2%; */
 }
+
+.terminal-choice {
+  background: #001520;
+  width: 100%;
+}
+
+.term-buttons {
+  height: 20px;
+  background: lightblue;
+  border-radius: 0;
+}
+
+.term-button-choice {
+  height: 20px !important;
+  width: 60px !important;
+  background: #001520;
+  border-radius: 0 !important;
+  border: 0 !important;
+  color: white !important;
+}
+
+.term-button-choice:hover {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+  color: black !important;
+}
+
+.ter .terminal-header {
+  /* display: flex; */
+  height: 20px;
+}
+
+.term-button-add {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  color: black;
+  height: 20px;
+  width: 20px;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+}
+
+.term-button-add:hover {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+  color: black !important;
+}
+
+.xterm .xterm-viewport {
+  overflow-y: hidden !important;
+}

@@ -32,6 +32,10 @@ const diagram7 = require('./data/diagram7.json');
 
 const osShell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
+const ptyProcesses = new Map<number, pty.IPty>();
+const ptyProcessesData = new Map<number, any>();
+let processCounter = 0;
+
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -48,7 +52,6 @@ let hostIpAddress: string | null = null;
 function setDockerEventListener(mainWindow: BrowserWindow, ipAddress: string) {
   dockerEventListener = new DockerEventListener(mainWindow, ipAddress);
   hostIpAddress = ipAddress;
-  console.log('Host IP Address:', hostIpAddress);
   return dockerEventListener;
 }
 
@@ -174,24 +177,44 @@ const createWindow = async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  const ptyProcess = pty.spawn(osShell, [], {
-    name: 'xterm-color',
-    cols: 160,
-    rows: 30,
-    // cwd: process.env.HOME,
-    env: process.env,
-    encoding: 'utf-8',
+  function createPtyProcess() {
+    const ptyProcess = pty.spawn(osShell, [], {
+      name: 'xterm-color',
+      cols: 160,
+      rows: 30,
+      env: process.env,
+      encoding: 'utf-8',
+    });
+
+    const processId = processCounter;
+    ptyProcesses.set(processId, ptyProcess);
+    ptyProcess.onData((data) => {
+      mainWindow?.webContents.send(`terminal.incomingData`, [processId, data]);
+      let existingData = ptyProcessesData.get(processId);
+      existingData += data;
+      ptyProcessesData.set(processId, existingData);
+    });
+    processCounter += 1;
+
+    return processId;
+  }
+
+  ipcMain.on(`terminal.keystroke`, (event, key) => {
+    const ptyProcess = ptyProcesses.get(key[0]);
+    if (ptyProcess) {
+      ptyProcess.write(key[1]);
+    }
   });
 
-  ptyProcess.onData((data) => {
-    mainWindow?.webContents.send('terminal.incomingData', data);
+  ipcMain.on(`terminal.restore.data`, (event, key) => {
+    const ptyData = ptyProcessesData.get(key[0]);
+    mainWindow?.webContents.send(`terminal.incomingData`, [key[0], ptyData]);
   });
 
-  ipcMain.on('terminal.keystroke', (event, key) => {
-    ptyProcess.write(key[0]);
+  ipcMain.on('create-terminal', () => {
+    createPtyProcess();
   });
 
-  // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
     return { action: 'deny' };

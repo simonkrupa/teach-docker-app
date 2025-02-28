@@ -3,7 +3,7 @@
   overflow-y: auto;
   width: 100%;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  height: calc(100vh - 30px - 195px);
+  height: calc(100vh - 30px - 175px);
   color: black;
   padding: 5%;
   padding-top: 2%;
@@ -21,7 +21,7 @@
   overflow-y: auto;
   width: 100%;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  height: calc(100vh - 30px - 195px);
+  height: calc(100vh - 30px - 175px);
   color: black;
   padding: 5%;
   padding-top: 2%;
@@ -78,32 +78,32 @@
 }
 
 .terminal-container {
-  /* width: 100%;
+  width: 100%;
   background: #001529;
-  height: 195px;
+  height: 155px;
   overflow-x: hidden;
   overflow-y: auto;
-  scrollbar-gutter: stable; */
+  scrollbar-gutter: stable;
 }
 
 .terminal-container::-webkit-scrollbar {
-  width: 5px; /* Width of the scrollbar */
+  width: 5px !important; /* Width of the scrollbar */
 }
 
 .terminal-container::-webkit-scrollbar-track {
   /* background: #1f1f1f; Background of the scrollbar track */
   /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); */
-  background-color: #001529;
+  background-color: #001529 !important;
 }
 
 .terminal-container::-webkit-scrollbar-thumb {
   /* background-color: #1890ff; Color of the scrollbar thumb */
   /* background-color: #001529; */
 
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  border-radius: 4px; /*Rounded corners for the scrollbar thumb*/
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+  border-radius: 4px !important; /*Rounded corners for the scrollbar thumb*/
 }
 
 .terminal-container::-webkit-scrollbar-thumb:hover {
-  background-color: #40a9ff; /* Color of the scrollbar thumb on hover */
+  background-color: #40a9ff !important; /* Color of the scrollbar thumb on hover */
 }
