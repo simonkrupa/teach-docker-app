@@ -3,7 +3,6 @@
     "id": "1",
     "type": "containerNode",
     "label": "/my-nginx4",
-    "ip": "",
     "state": "running",
     "network": "host"
   }

@@ -65,6 +65,10 @@ const nodesValidator = (currentNodes, correctNodes) => {
     ) {
       excludeKeysArray = excludeKeysAndIp;
     }
+    // Exclude ip from host task
+    else if (obj.type === 'containerNode' && obj.data.label === '/my-nginx4') {
+      excludeKeysArray = excludeKeysAndIp;
+    }
   });
 
   const currentNodesFlatten = flattenedArray
