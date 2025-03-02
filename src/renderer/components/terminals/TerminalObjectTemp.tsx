@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Terminal } from '@xterm/xterm';
 import '@xterm/xterm/css/xterm.css';
 import { FitAddon } from 'xterm-addon-fit';
@@ -8,6 +8,8 @@ import { TerminalProps } from '../../types/types';
 export default function TerminalObjectTemp({ id, active }: TerminalProps) {
   const terminalRef = useRef<HTMLDivElement | null>(null);
   const terminalInstanceRef = useRef<Terminal | null>(null);
+  const terminalIncDataListenerRef = useRef<() => void | null>(null);
+  const windwoResizeListenerRef = useRef<() => void | null>(null);
 
   useEffect(() => {
     if (!terminalInstanceRef.current) {
@@ -35,13 +37,16 @@ export default function TerminalObjectTemp({ id, active }: TerminalProps) {
         fitAddon.fit();
       };
 
-      window.electron.ipcRenderer.on('window-resize', handleResize);
+      windwoResizeListenerRef.current = window.electron.ipcRenderer.on(
+        'window-resize',
+        handleResize,
+      );
 
       const handleKeystroke = (e: string) => {
         window.electron.ipcRenderer.sendMessage('terminal.keystroke', [id, e]);
       };
 
-      window.electron.ipcRenderer.on(
+      terminalIncDataListenerRef.current = window.electron.ipcRenderer.on(
         'terminal.incomingData',
         handleIncomingData,
       );
@@ -67,14 +72,20 @@ export default function TerminalObjectTemp({ id, active }: TerminalProps) {
         console.log('disposing terminal', id);
         terminalInstanceRef.current.dispose();
       }
+      if (terminalIncDataListenerRef.current) {
+        terminalIncDataListenerRef.current();
+      }
+      if (windwoResizeListenerRef.current) {
+        windwoResizeListenerRef.current();
+      }
     };
   }, []);
 
   useEffect(() => {
     if (active && terminalInstanceRef.current) {
-      window.electron.ipcRenderer.sendMessage('terminal.restore.data', [id]);
+      window.electron.ipcRenderer.sendMessage('terminal-restore-data', [id]);
     }
-  }, [active]);
+  }, [active, id]);
 
   return <div className="terminal-container" ref={terminalRef} />;
 }

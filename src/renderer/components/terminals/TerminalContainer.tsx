@@ -54,11 +54,7 @@ export default function TerminalContainer() {
         {terminals.map(
           (terminalId) =>
             terminalId === activeTerminal && (
-              <TerminalObjectTemp
-                key={terminalId}
-                id={terminalId}
-                active={true}
-              />
+              <TerminalObjectTemp key={terminalId} id={terminalId} active />
             ),
         )}
       </div>

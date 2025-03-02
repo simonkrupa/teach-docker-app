@@ -26,12 +26,12 @@ export type Channels =
   | 'error'
   | 'veth-data'
   | 'set-nodes-ip'
-  | 'overlay-network-prop';
+  | 'overlay-network-prop'
   | 'set-docker-vms'
   | 'window-resize'
   | 'terminal.keystroke'
   | 'terminal.incomingData'
-  | 'terminal.restore.data'
+  | 'terminal-restore-data'
   | 'create-terminal';
 
 const electronHandler = {

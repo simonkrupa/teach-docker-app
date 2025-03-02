@@ -101,8 +101,8 @@ export default function App() {
             <Route path="/ipvlan/task" element={<IpvlanTask />} />
           </Routes>
         </Layout>
-        <TerminalContainer />
-    </div>
+        {!isWelcomeOrSettingsPage && <TerminalContainer />}
+      </div>
     </section>
   );
 }

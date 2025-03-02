@@ -20,6 +20,7 @@ import {
 const VETH_NETWORKS = ['bridge', 'my-bridge'];
 const NO_ETH_NETWORKS = ['none', 'host'];
 const OVERLAY_VETH = ['my-overlay'];
+const IPVLAN_NETWORKS = ['my-ipvlan'];
 
 class DockerEventListener {
   docker: any;
@@ -186,6 +187,19 @@ class DockerEventListener {
       const containerEth = parsedInterfaces.find((netInterface) => {
         return netInterface.details.mac === mac;
       });
+      if (!containerEth && IPVLAN_NETWORKS.includes(containerData.network)) {
+        const firstFilteredInterface = parsedInterfaces.find((netInterface) => {
+          return netInterface.name !== 'lo';
+        });
+        if (firstFilteredInterface) {
+          containerData.eth = firstFilteredInterface.name;
+          containerData.mac = firstFilteredInterface.details.mac;
+          this.mainWindow.webContents.send(
+            'container-data',
+            JSON.stringify(containerData),
+          );
+        }
+      }
       if (!containerEth) {
         console.error('Could not find eth interface');
         this.mainWindow.webContents.send(

@@ -80,7 +80,7 @@
   }
 }
 
-.host-network-interface {
+.host-enh-network-interface {
   position: absolute;
   bottom: 0;
   width: 100px;

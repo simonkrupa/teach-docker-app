@@ -269,9 +269,11 @@ const createWindow = async () => {
     }
   });
 
-  ipcMain.on(`terminal.restore.data`, (event, key) => {
+  ipcMain.on(`terminal-restore-data`, (event, key) => {
     const ptyData = ptyProcessesData.get(key[0]);
-    mainWindow?.webContents.send(`terminal.incomingData`, [key[0], ptyData]);
+    if (ptyData) {
+      mainWindow?.webContents.send(`terminal.incomingData`, [key[0], ptyData]);
+    }
   });
 
   ipcMain.on('create-terminal', () => {

@@ -37,10 +37,6 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
     navigate('/welcome');
   };
 
-  useEffect(() => {
-    console.log('FrameBar username:', username);
-  }, [username]);
-
   return (
     <div className="frameBar drag">
       <div className="button-group">

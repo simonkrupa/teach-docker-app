@@ -102,7 +102,7 @@ const HostNodeEnhanced = memo(function HostNodeEnhanced(props: any) {
           <div className="host-node-enhanced">
             <div className="host-container-enhanced">
               <div style={{ display: 'flex' }}>
-                <div className="host-category">{props.data.label}</div>
+                <div className="host-category">{props.data.nodeLabel}</div>
                 {componentToRender}
               </div>
               <div style={{ display: 'flex' }}>
