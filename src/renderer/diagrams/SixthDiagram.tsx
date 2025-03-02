@@ -89,6 +89,7 @@ const initialNodes = [
       network: '',
       port: '',
       hostPort: '',
+      mac: '',
       eth: '',
     },
     draggable: false,
@@ -111,8 +112,8 @@ const initialNodes = [
   {
     id: '5',
     position: {
-      x: 160,
-      y: 700,
+      x: 200,
+      y: 600,
     },
     type: 'lanNode',
     data: {
@@ -231,10 +232,8 @@ export default function SixthDiagram() {
               label: newData.label,
               state: newData.status,
               network: newData.network,
-              port: newData?.port || '',
-              hostPort: newData?.hostPort || '',
-              mac: newData?.mac || '',
-              eth: newData?.eth || '',
+              mac: newData?.mac,
+              eth: newData?.eth,
             },
           };
         }
@@ -331,7 +330,7 @@ export default function SixthDiagram() {
             ...item,
             data: {
               ...item.data,
-              ip: data,
+              ip: data.ip,
             },
           };
         }

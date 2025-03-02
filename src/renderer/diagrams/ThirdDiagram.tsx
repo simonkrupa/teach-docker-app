@@ -45,7 +45,7 @@ const initialNodes = [
     type: 'hostNode',
     data: {
       label: 'Host',
-      ip: 'undefined',
+      ip: '',
       hEth: '',
     },
     draggable: false,
@@ -181,6 +181,15 @@ export default function ThirdDiagram() {
               ...item.data,
               ip: data.ip,
               hEth: data.eth,
+            },
+          };
+        }
+        if (item.type === 'containerNode' && item.desiredNetwork === 'host') {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              ip: data.ip,
             },
           };
         }

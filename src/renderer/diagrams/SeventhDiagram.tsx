@@ -129,7 +129,14 @@ const initialEdges = [
     source: '2',
     target: '5',
     animated: true,
-    hidden: true,
+    reconnectable: false,
+  },
+  {
+    id: 'e0-5',
+    source: '0',
+    sourceHandle: 'target-lan',
+    target: '5',
+    animated: true,
     reconnectable: false,
   },
 ];
@@ -146,29 +153,22 @@ export default function SeventhDiagram() {
   const [deleteEdge, setDeleteEdge] = useState({ node: null, newData: null });
   const navigate = useNavigate();
 
-  const startEdges = useCallback((node, newData) => {
+  const startEdges = useCallback((nodeId) => {
     setEdges((prevEdges) => {
       return prevEdges.map((edge) => {
-        if (edge.source === node.id) {
-          setStartEdge({ node: null, newData: null });
-          return { ...edge, hidden: false };
-        }
-        if (edge.id === 'e2-5' && edge.hidden === true) {
+        if (edge.source === nodeId) {
+          setStartEdge(null);
           return { ...edge, hidden: false };
         }
         return edge;
       });
     });
   }, []);
-
-  const deleteEdges = useCallback((node, newData) => {
+  const deleteEdges = useCallback((nodeId) => {
     setEdges((prevEdges) => {
       return prevEdges.map((edge) => {
-        if (edge.source === node.id) {
+        if (edge.source === nodeId) {
           setDeleteEdge(null, null);
-          return { ...edge, hidden: true };
-        }
-        if (edge.id === 'e2-5' && edge.hidden === false) {
           return { ...edge, hidden: true };
         }
         return edge;
@@ -187,9 +187,9 @@ export default function SeventhDiagram() {
             newData.status === 'running' &&
             newData.network === item.desiredNetwork
           ) {
-            setStartEdge({ node: item, newData: newData });
+            setStartEdge(item.id);
           } else {
-            setDeleteEdge({ node: item, newData: newData });
+            setDeleteEdge(item.id);
           }
           return {
             ...item,
@@ -199,10 +199,8 @@ export default function SeventhDiagram() {
               label: newData.label,
               state: newData.status,
               network: newData.network,
-              port: newData?.port || '',
-              hostPort: newData?.hostPort || '',
-              mac: newData?.mac || '',
-              eth: newData?.eth || '',
+              mac: newData?.mac,
+              eth: newData?.eth,
             },
           };
         }
@@ -234,17 +232,13 @@ export default function SeventhDiagram() {
 
   useEffect(() => {
     if (deleteEdge !== null) {
-      if (deleteEdge?.node !== null) {
-        deleteEdges(deleteEdge.node, deleteEdge.newData);
-      }
+      deleteEdges(deleteEdge);
     }
   }, [deleteEdge, deleteEdges]);
 
   useEffect(() => {
     if (startEdge !== null) {
-      if (startEdge?.node !== null) {
-        startEdges(startEdge.node, startEdge.newData);
-      }
+      startEdges(startEdge);
     }
   }, [startEdge, startEdges]);
 
@@ -303,7 +297,7 @@ export default function SeventhDiagram() {
             ...item,
             data: {
               ...item.data,
-              ip: data,
+              ip: data.ip,
             },
           };
         }

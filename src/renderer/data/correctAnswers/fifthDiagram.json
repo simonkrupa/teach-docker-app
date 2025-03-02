@@ -1,19 +1,50 @@
 [
   {
     "id": "1",
-    "type": "containerNode",
+    "type": "containerNodeEnhanced",
     "label": "/my-nginx6",
-    "ip": "10.0.1.2",
     "state": "running",
     "network": "my-overlay"
+  },
+  {
+    "id": "3",
+    "type": "containerNodeEnhanced",
+    "label": "/my-nginx7",
+    "state": "running",
+    "network": "my-overlay"
+  },
+  {
+    "id": "-2",
+    "type": "hostNodeEnhanced",
+    "status": "ready",
+    "availability": "active",
+    "role": "manager"
+  },
+  {
+    "id": "-1",
+    "type": "hostNodeEnhanced",
+    "status": "ready",
+    "availability": "active",
+    "role": "worker"
   },
   {
     "id": "2",
     "type": "networkNode",
     "label": "my-overlay",
-    "driver": "overlay",
-    "subnet": "10.0.1.0/24",
-    "gateway": "10.0.1.1"
+    "driver": "overlay"
+  },
+  {
+    "id": "4",
+    "type": "networkNode",
+    "label": "docker_gwbridge1",
+    "driver": "bridge"
+  },
+  {
+    "id": "5",
+    "type": "networkNode",
+    "label": "docker_gwbridge2",
+    "driver": "bridge"
   }
+
 ]
 

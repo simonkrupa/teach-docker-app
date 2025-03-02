@@ -3,17 +3,29 @@
     "id": "1",
     "type": "containerNode",
     "label": "/my-nginx8",
-    "ip": "192.168.100.2",
     "state": "running",
     "network": "my-macvlan"
   },
   {
-    "id": "3",
+    "id": "6",
+    "type": "containerNode",
+    "label": "/my-nginx10",
+    "state": "running",
+
+    "network": "my-macvlan"
+  },
+  {
+    "id": "4",
+    "type": "containerNode",
+    "label": "/my-nginx9",
+    "state": "running",
+    "network": "host"
+  },
+  {
+    "id": "2",
     "type": "networkNode",
     "label": "my-macvlan",
-    "driver": "bridge",
-    "subnet": "192.168.100.0/24",
-    "gateway": "192.168.100.1"
+    "driver": "macvlan"
   }
 ]
 

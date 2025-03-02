@@ -1,6 +1,14 @@
 import _ from 'lodash';
 
 const excludeKeys = [
+  'eth2',
+  'desiredNetwork2',
+  'ip2',
+  'mac2',
+  'nodeId',
+  'nodeLabel',
+  'peers',
+  'network2',
   'position',
   'draggable',
   'hostPort',
@@ -13,21 +21,59 @@ const excludeKeys = [
   'width',
 ];
 
-const excludeObjects = ['vethNode', 'hostNode'];
+const excludeKeysAndIp = [
+  'eth2',
+  'desiredNetwork2',
+  'ip2',
+  'mac2',
+  'nodeId',
+  'nodeLabel',
+  'peers',
+  'network2',
+  'position',
+  'draggable',
+  'hostPort',
+  'mac',
+  'port',
+  'eth',
+  'hEth',
+  'desiredNetwork',
+  'height',
+  'width',
+  'ip',
+  'subnet',
+  'gateway',
+];
+
+const excludeObjects = [
+  'vethNode',
+  'hostNode',
+  'lanNode',
+  'overlayNetworkNode',
+];
 
 const nodesValidator = (currentNodes, correctNodes) => {
   const flattenedArray = currentNodes.flatMap((obj) => {
     return [{ ...obj, ...obj.data }];
   });
 
-  // Remove the 'data' property after merging
+  let excludeKeysArray = excludeKeys;
+  flattenedArray.forEach((obj) => {
+    if (
+      obj.type === 'networkNode' &&
+      ['macvlan', 'ipvlan', 'overlay'].includes(obj.data.driver)
+    ) {
+      excludeKeysArray = excludeKeysAndIp;
+    }
+  });
+
   const currentNodesFlatten = flattenedArray
     .filter((obj) => !excludeObjects.includes(obj.type))
     .map((obj) => {
       const { data, ...filteredObj } = obj;
       return Object.fromEntries(
         Object.entries(filteredObj).filter(
-          ([key]) => !excludeKeys.includes(key),
+          ([key]) => !excludeKeysArray.includes(key),
         ),
       );
     });
