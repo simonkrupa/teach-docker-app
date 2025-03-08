@@ -1,0 +1,16 @@
+name: Build macOS App
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - name: Build macOS App
+        run: npm run package
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: macOS-App
+          path: release/build/
