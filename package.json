@@ -97,16 +97,14 @@
     }
   },
   "dependencies": {
+    "@electron/rebuild": "^3.3.0",
     "@xterm/addon-fit": "^0.10.0",
     "@xterm/xterm": "^5.5.0",
     "antd": "^5.19.1",
-    "dockerode": "^4.0.2",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",
-    "electron-rebuild": "^3.2.9",
     "electron-updater": "^6.1.4",
     "lodash": "^4.17.21",
-    "node-pty": "^1.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-flow-renderer": "^10.3.17",
@@ -119,7 +117,6 @@
   },
   "devDependencies": {
     "@electron/notarize": "^2.1.0",
-    "@electron/rebuild": "^3.3.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "@svgr/webpack": "^8.1.0",
     "@teamsupercell/typings-for-css-modules-loader": "^2.5.2",

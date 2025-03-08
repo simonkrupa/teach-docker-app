@@ -22,8 +22,6 @@ export default function MacvlanTask() {
       <SyntaxHighlighter
         language="bash"
         style={dracula}
-        // wrapLines
-        // lineProps={{ style: { whiteSpace: 'pre-wrap' } }}
         customStyle={{ whiteSpace: 'pre' }} // Ensures new lines are respected
       >
         {cmmd}
