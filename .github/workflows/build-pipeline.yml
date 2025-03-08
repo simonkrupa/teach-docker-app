@@ -8,6 +8,10 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21.2.0'
       - name: Install dependencies
         run: npm install
       - name: Build macOS App
@@ -16,4 +20,56 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macOS-App
+          path: release/build/
+
+
+
+name: Build Electron App
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Node.js
+
+
+      # Install Xcode Command Line Tools
+      - name: Install Xcode Command Line Tools
+        run: |
+          sudo xcode-select --install
+          sudo xcodebuild -license accept
+
+      # Install Python
+      - name: Install Python
+        run: |
+          brew install python@3.9
+          export PATH="/opt/homebrew/opt/python@3.9/bin:$PATH"
+          python3 --version
+
+      # Install Electron headers
+      - name: Install Electron headers
+        run: |
+          export ELECTRON_VERSION=26.2.1
+          export ELECTRON_RUN_AS_NODE=true
+          npm install
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          npm install --production --omit=dev
+
+      # Build the application
+      - name: Build Electron app
+        run: |
+          npm run build
+
+      # Upload the build artifact
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
           path: release/build/
