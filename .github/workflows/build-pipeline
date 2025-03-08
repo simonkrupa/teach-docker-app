@@ -1,5 +1,8 @@
 name: Build macOS App
 
+on:
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: macos-latest
