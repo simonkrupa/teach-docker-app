@@ -1,0 +1,23 @@
+name: Build Linux App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21.2.0'
+      - name: Install dependencies
+        run: npm install
+      - name: Build win App
+        run: npm run package
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Linux-App
+          path: release/build/
