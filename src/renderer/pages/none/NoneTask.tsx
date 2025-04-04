@@ -12,7 +12,25 @@ export default function NoneTask() {
   };
   return (
     <div className="all-pages">
-      <h1>None task</h1>
+      <h1>Úloha: Žiadna sieť</h1>
+      <p>
+        Vašou úlohou je vytvoriť a spustiť docker kontajner bez akéhokoľvek
+        sieťového pripojenia. Výsledkom by mal byť kontajner, ktorý nedokáže
+        komunikovať s hostiteľským systémom, ani s inými kontajnermi, ani s
+        Internatom.
+      </p>
+      <p>
+        Pre overenie úspešnosti úlohy je potrebné vykonať príkaz
+        <SyntaxHighlighter language="bash" style={dracula}>
+          ip link show
+        </SyntaxHighlighter>
+        alebo
+        <SyntaxHighlighter language="bash" style={dracula}>
+          ls /sys/class/net
+        </SyntaxHighlighter>
+        a skontrolovať, či kontajner nemá žiadne sieťové pripojenie a vidíme len
+        loopback interface.
+      </p>
       <SyntaxHighlighter language="bash" style={dracula}>
         docker run -d --name=my-nginx5 --network=none nginx
       </SyntaxHighlighter>

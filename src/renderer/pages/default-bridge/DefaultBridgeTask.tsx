@@ -12,7 +12,7 @@ export default function DefaultBridgeTask() {
   };
   return (
     <div className="all-pages">
-      <h1>Default bridge task</h1>
+      <h1>Úloha predvolená mostová sieť</h1>
       <p>To list all docker networks</p>
       <SyntaxHighlighter language="bash" style={dracula}>
         docker network ls
