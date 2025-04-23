@@ -11,7 +11,7 @@
       "type": "containerNode",
       "data": {
         "network": "my-macvlan",
-        "label": "my-nginx11",
+        "label": "busybox-1",
         "ip": "undefined",
         "state": "running"
       }
@@ -27,7 +27,7 @@
       "type": "containerNode",
       "data": {
         "network": "my-macvlan",
-        "label": "my-nginx12",
+        "label": "busybox-2",
         "ip": "undefined",
         "state": "running"
       }

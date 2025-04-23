@@ -52,7 +52,6 @@ class AppUpdater {
   }
 }
 
-// TODO
 const config: SshConfig = {
   host: '',
   port: 22,

@@ -47,7 +47,7 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
         >
           {isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </Button>
-        <Tooltip placement="top" title="Settings">
+        <Tooltip placement="top" title="Nastavenia">
           <Button
             onClick={() => navigate('/settings')}
             className="collapseBtn no-drag"
@@ -57,7 +57,7 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
           </Button>
         </Tooltip>
         {showLogout && (
-          <Tooltip placement="top" title="Log out">
+          <Tooltip placement="top" title="Odhlásenie">
             <Button
               onClick={handleLogoutAction}
               className="collapseBtn no-drag"
@@ -70,16 +70,14 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
       </div>
       <div className="framebar-username">{username}</div>
 
-      <div className="appName">Learn Docker</div>
+      <div className="appName">Komunikácia docker kontajnerov</div>
       <Button
         onClick={handleMinimizeClick}
         className="controlBtn no-drag"
         type="primary"
         shape="circle"
         style={{ backgroundColor: 'lightblue', color: 'black' }}
-      >
-        -
-      </Button>
+      />
       <Button
         onClick={handleExitClick}
         danger

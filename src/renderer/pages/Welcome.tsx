@@ -57,23 +57,21 @@ export default function Welcome() {
   return (
     <div className="welcome-page">
       <div className="first-col-welcome">
-        <h1 className="header-welcome">WELCOME</h1>
-        <h2 className="header-h2">Learn Docker Networking</h2>
+        <h1 className="header-welcome">Úvod</h1>
+        <h2 className="header-h2">Komunikácia kontajnerov</h2>
         <p className="welcome-font-p">
-          Welcome to Learn Docker Networking app. This app will help you
-          understand concepts of docker networking through explanation and
-          providing tasks to practice and visually track your progress and
-          results
+          Vitajte v aplikácie pre výučbu komunikácie docker kontajnerov. Táto
+          aplikácia vám pomôže porozumieť konceptom docker sieti prostredníctvom
+          teoretických častí a praktických úloh, ktoré budú vizualizovať váš
+          aktuálny progres.
         </p>
         <br />
         <br />
-        <h3 className="header-h3">
-          Please provide username under which your progress will be tracked
-        </h3>
+        <h3 className="header-h3">Zadefinujte používateľské meno</h3>
         <Input
           size="large"
           className="input-welcome"
-          placeholder="Username"
+          placeholder="Používateľské meno"
           prefix={<UserOutlined />}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -85,7 +83,7 @@ export default function Welcome() {
           className="button-welcome"
           type="primary"
         >
-          Start
+          Štart
         </Button>
         <br />
         {alertInfo.visible && (

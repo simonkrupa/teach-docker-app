@@ -34,7 +34,7 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem(
-    'Home',
+    'Domovská stránka',
     '/home',
     <HomeOutlined />,
     undefined,
@@ -44,7 +44,7 @@ const items: MenuItem[] = [
     0,
   ),
   getItem(
-    '1. Bridge',
+    '1. Bridge sieť',
     '/bridge',
     undefined,
     [
@@ -58,7 +58,7 @@ const items: MenuItem[] = [
     1,
   ),
   getItem(
-    '2. Default Bridge',
+    '2. Predvolený bridge',
     '/default-bridge',
     undefined,
     [
@@ -72,7 +72,7 @@ const items: MenuItem[] = [
     2,
   ),
   getItem(
-    '3. Host',
+    '3. Host sieť',
     '/host',
     undefined,
     [
@@ -86,7 +86,7 @@ const items: MenuItem[] = [
     3,
   ),
   getItem(
-    '4. None',
+    '4. None sieť',
     '/none',
     undefined,
     [
@@ -100,7 +100,7 @@ const items: MenuItem[] = [
     4,
   ),
   getItem(
-    '5. Macvlan',
+    '5. Macvlan sieť',
     '/macvlan',
     undefined,
     [
@@ -114,7 +114,7 @@ const items: MenuItem[] = [
     5,
   ),
   getItem(
-    '6. Ipvlan',
+    '6. Ipvlan sieť',
     '/ipvlan',
     undefined,
     [
@@ -128,7 +128,7 @@ const items: MenuItem[] = [
     6,
   ),
   getItem(
-    '7. Overlay',
+    '7. Overlay sieť',
     '/overlay',
     undefined,
     [

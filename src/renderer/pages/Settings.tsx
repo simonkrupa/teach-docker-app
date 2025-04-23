@@ -86,7 +86,7 @@ export default function Settings() {
       setAlertInfoPrimary({
         visible: true,
         type: 'error',
-        message: 'Primary IP address can not be empty.',
+        message: 'IP adresa primárneho virtuálneho stroja nemôže byť prázdna.',
       });
       // setLoadingPrimaryTest(false);
       return;
@@ -95,7 +95,7 @@ export default function Settings() {
       setAlertInfoPrimary({
         visible: true,
         type: 'error',
-        message: 'IPs can not be same for both VMs.',
+        message: 'IP adresy nemôžu byť rovnaké pre obe virtuálne stroje.',
       });
       // setLoadingPrimaryTest(false);
       return;
@@ -114,7 +114,8 @@ export default function Settings() {
       setAlertInfoSecondary({
         visible: true,
         type: 'error',
-        message: 'Secondary IP address can not be empty.',
+        message:
+          'IP adresa sekundárneho virtuálneho stroja nemôže byť prázdna.',
       });
       return;
     }
@@ -122,7 +123,7 @@ export default function Settings() {
       setAlertInfoSecondary({
         visible: true,
         type: 'error',
-        message: 'IPs can not be same for both VMs.',
+        message: 'IP adresy nemôžu byť rovnaké pre obe virtuálne stroje.',
       });
       return;
     }
@@ -140,14 +141,14 @@ export default function Settings() {
         setAlertInfoPrimary({
           visible: true,
           type: 'success',
-          message: 'The Virtual Machine is reachable!',
+          message: 'Spojenie s virtuálnym strojom prebehlo úspešne.',
         });
         setPrimaryIpValid(true);
       } else {
         setAlertInfoPrimary({
           visible: true,
           type: 'error',
-          message: 'Failed to reach the Virtual Machine.',
+          message: 'Spojenie s virtuálnym strojom zlyhalo.',
         });
         setPrimaryIpValid(false);
       }
@@ -159,14 +160,14 @@ export default function Settings() {
         setAlertInfoSecondary({
           visible: true,
           type: 'success',
-          message: 'The Virtual Machine is reachable!',
+          message: 'Spojenie s virtuálnym strojom prebehlo úspešne.',
         });
         setSecondaryIpValid(true);
       } else {
         setAlertInfoSecondary({
           visible: true,
           type: 'error',
-          message: 'Failed to reach the Virtual Machine.',
+          message: 'Spojenie s virtuálnym strojom zlyhalo.',
         });
         setSecondaryIpValid(false);
       }
@@ -202,15 +203,15 @@ export default function Settings() {
   return (
     <div className="settings-page">
       <h1 className="header-name" style={{ marginBottom: '0' }}>
-        Settings
+        Nastavenia
       </h1>
       <h2 style={{ marginBottom: '3%' }}>
-        Please provide IP Addresses and credentials for Virtual Machines with
-        Docker
+        Zadefinujte IP adresy a prihlasovacie údaje pre virtuálne stroje bežiace
+        docker.
       </h2>
       <div style={{ display: 'flex' }}>
         <div className="primary-vm">
-          <h3>Primary Virutal Machine's IP address</h3>
+          <h3>IP adresa primárneho virtuálneho stroja</h3>
 
           <Input
             className="input-component"
@@ -219,14 +220,14 @@ export default function Settings() {
             variant="filled"
           />
           <div className="vm-credentials">
-            <h4 className="h4-credentials">VM's username</h4>
+            <h4 className="h4-credentials">Používateľské meno</h4>
             <Input
               className="input-component"
               variant="filled"
               value={primaryUserNameValue}
               onChange={handlePrimaryUserNameChange}
             />
-            <h4 className="h4-credentials">VM's password</h4>
+            <h4 className="h4-credentials">Používateľské heslo</h4>
             <Input.Password
               className="input-component"
               variant="filled"
@@ -235,13 +236,13 @@ export default function Settings() {
             />
           </div>
           <Button
-            className="generic-button"
+            className="generic-button-settings"
             type="primary"
             onClick={handlePrimaryIpTest}
             loading={loadingPrimaryTest}
             style={{ width: '100%', marginTop: '2em', marginBottom: '1em' }}
           >
-            Test connection
+            Pripojenie
           </Button>
           {alertInfoPrimary.visible && (
             <Alert
@@ -266,7 +267,7 @@ export default function Settings() {
         </div>
 
         <div className="primary-vm">
-          <h3>Secondary Virtual Machine's IP address</h3>
+          <h3>IP adresa sekundárneho virtuálneho stroja</h3>
 
           <Input
             className="input-component"
@@ -275,14 +276,14 @@ export default function Settings() {
             variant="filled"
           />
           <div className="vm-credentials">
-            <h4 className="h4-credentials">VM's username</h4>
+            <h4 className="h4-credentials">Používateľské meno</h4>
             <Input
               className="input-component"
               variant="filled"
               value={secondaryUserNameValue}
               onChange={handleSecondaryUserNameChange}
             />
-            <h4 className="h4-credentials">VM's password</h4>
+            <h4 className="h4-credentials">Používateľské heslo</h4>
             <Input.Password
               className="input-component"
               variant="filled"
@@ -291,13 +292,13 @@ export default function Settings() {
             />
           </div>
           <Button
-            className="generic-button"
+            className="generic-button-settings"
             type="primary"
             onClick={handleSecondaryIpTest}
             loading={loadingSecondaryTest}
             style={{ width: '100%', marginTop: '2em', marginBottom: '1em' }}
           >
-            Test connection
+            Pripojenie
           </Button>
           {alertInfoSecondary.visible && (
             <Alert
@@ -325,7 +326,7 @@ export default function Settings() {
         </div>
       </div>
       <Button onClick={handleStartApp} className="submit-button" type="primary">
-        Apply
+        Použiť
       </Button>
     </div>
   );

@@ -37,7 +37,7 @@ const initialNodes = [
   },
   {
     id: '1',
-    position: { x: 250, y: 120 },
+    position: { x: 170, y: 120 },
     type: 'containerNode',
     desiredNetwork: 'bridge',
     data: {
@@ -55,11 +55,42 @@ const initialNodes = [
   {
     id: 'v1',
     position: {
-      x: 250,
+      x: 170,
       y: 280,
     },
     type: 'vethNode',
     desiredContainer: '/my-nginx3',
+    data: {
+      label: undefined,
+    },
+    draggable: false,
+  },
+
+  {
+    id: '5',
+    position: { x: 330, y: 120 },
+    type: 'containerNode',
+    desiredNetwork: 'bridge',
+    data: {
+      label: '/my-alpine',
+      ip: '',
+      state: undefined,
+      network: '',
+      port: '',
+      hostPort: '',
+      mac: '',
+      eth: '',
+    },
+    draggable: false,
+  },
+  {
+    id: 'v5',
+    position: {
+      x: 330,
+      y: 280,
+    },
+    type: 'vethNode',
+    desiredContainer: '/my-alpine',
     data: {
       label: undefined,
     },
@@ -94,6 +125,22 @@ const initialEdges = [
   {
     id: 'v1-2',
     source: 'v1',
+    target: '2',
+    animated: true,
+    hidden: true,
+    reconnectable: false,
+  },
+  {
+    id: '5-v5',
+    source: '5',
+    target: 'v5',
+    animated: true,
+    hidden: true,
+    reconnectable: false,
+  },
+  {
+    id: 'v5-2',
+    source: 'v5',
     target: '2',
     animated: true,
     hidden: true,
@@ -379,7 +426,7 @@ export default function SecondDiagram() {
           type="primary"
           onClick={handleValidateAnswer}
         >
-          Validate Answer
+          Overenie úlohy
         </Button>
       </ReactFlow>
     </div>

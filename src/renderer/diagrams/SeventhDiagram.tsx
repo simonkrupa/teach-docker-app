@@ -31,7 +31,7 @@ const initialNodes = [
     type: 'containerNode',
     desiredNetwork: 'my-ipvlan',
     data: {
-      label: '/my-nginx11',
+      label: '/busybox-1',
       ip: 'undefined',
       state: undefined,
       network: '',
@@ -51,7 +51,7 @@ const initialNodes = [
     type: 'containerNode',
     desiredNetwork: 'my-ipvlan',
     data: {
-      label: '/my-nginx12',
+      label: '/busybox-2',
       ip: 'undefined',
       state: undefined,
       network: '',
@@ -406,7 +406,7 @@ export default function SeventhDiagram() {
           type="primary"
           onClick={handleValidateAnswer}
         >
-          Validate Answer
+          Overenie úlohy
         </Button>
       </ReactFlow>
     </div>

@@ -19,14 +19,26 @@ export default function Home() {
 
   return (
     <div className="all-pages">
-      <h1>Docker teaching app</h1>
-      <p>This is the home page of the app.</p>
-      <p>Here you will learn about Docker and Docker networking.</p>
-      <p>Side bar on the left provides navigation between chapters.</p>
+      <h1>Komunikácia kontajnerov</h1>
       <p>
-        Bottom of the window provides terminal where you can complete all the
-        tasks. You may also use external tools.
+        Toto je domovská stránka aplikácie na výučbu komunikácie docker
+        kontajnerov.
       </p>
+      <p>
+        Aplikácia obsahuje úlohy na demonštráciu všetkých dostupných druhov
+        docker sietí. Každá úloha obsahuje v prvej sekcií teoretickú časť danej
+        docker siete. V druhej časti je špecifikovaná praktická úloha. V tretej
+        časti sa nachádza vizualizačné plátno, kde sa odzrkadľuje aktuálny stav
+        docker kontajnerov, sietí a sieťových prvkov relevantných pre danú
+        úlohu.
+      </p>
+
+      <p>
+        Pre splnenie úlohy je potrebné overiť správnosť úlohy tlačidlom
+        nachádzajúcim sa na vizualizačnom plátne úlohy.
+      </p>
+
+      <p>Čo je docker TODO</p>
 
       <Button
         onClick={handleProceedNavigation}

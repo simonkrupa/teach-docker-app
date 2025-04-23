@@ -433,13 +433,13 @@ export default function FirstDiagram() {
         {messageBoxState === 'success' && (
           <MessageBox
             type={messageBoxState}
-            message="Task completed successfully"
+            message="Úloha bola úspešne splnená."
           />
         )}
         {messageBoxState === 'error' && (
           <MessageBox
             type={messageBoxState}
-            message="Not all requirements fulfilled"
+            message="Výsledok úlohy nie je v správnom stave."
           />
         )}
         <Button
@@ -447,7 +447,7 @@ export default function FirstDiagram() {
           type="primary"
           onClick={handleValidateAnswer}
         >
-          Validate Answer
+          Overenie úlohy
         </Button>
       </ReactFlow>
     </div>

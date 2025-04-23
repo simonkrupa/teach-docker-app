@@ -39,7 +39,7 @@ export default function MessageBox({ type, message }) {
           />
         )}
         <div className="message-container">
-          <h4 className="message-header">Summary</h4>
+          <h4 className="message-header">Zhrnutie</h4>
           <p className="message-text">{message}</p>
         </div>
         {type === 'success' && (

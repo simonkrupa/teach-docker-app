@@ -15,6 +15,22 @@
         "ip": "undefined",
         "state": "running"
       }
+    },
+    {
+      "network": "bridge",
+      "id": "5",
+      "position":
+        {
+          "x": 140,
+          "y": 100
+        },
+      "type": "containerNode",
+      "data": {
+        "network": "bridge",
+        "label": "my-alpine",
+        "ip": "undefined",
+        "state": "running"
+      }
     }
   ],
   "networks": []

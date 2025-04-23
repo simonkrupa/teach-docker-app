@@ -8,6 +8,14 @@
     "network": "bridge"
   },
   {
+    "id": "5",
+    "type": "containerNode",
+    "label": "/my-alpine",
+    "ip": "172.17.0.3",
+    "state": "running",
+    "network": "bridge"
+  },
+  {
     "id": "2",
     "type": "networkNode",
     "label": "bridge",

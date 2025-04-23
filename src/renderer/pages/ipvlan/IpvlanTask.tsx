@@ -17,8 +17,8 @@ export default function IpvlanTask() {
   };
   return (
     <div className="all-pages">
-      <h1>Ipvlan task</h1>
-      <SyntaxHighlighter
+      <h1>Úloha - ipvlan sieť</h1>
+      {/* <SyntaxHighlighter
         language="bash"
         style={dracula}
         customStyle={{ whiteSpace: 'pre' }} // Ensures new lines are respected
@@ -30,13 +30,21 @@ export default function IpvlanTask() {
       </SyntaxHighlighter>
       <SyntaxHighlighter language="bash" style={dracula}>
         docker run --name my-nginx12 --network my-ipvlan -d nginx
-      </SyntaxHighlighter>
+      </SyntaxHighlighter> */}
+      <ol>
+        <li>Vytvorenie docker ipvlan siete s názvom my-ipvlan.</li>
+        <li>
+          Vytvorenie 2 busybox docker kontajnerov pripojených na docker ipvlan
+          sieť s názvami busybox-1 a busybox-2.
+        </li>
+        <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
+      </ol>
       <Button
         onClick={handleProceedNavigation}
         className="generic-button"
         type="primary"
       >
-        Next
+        Ďalej
       </Button>
     </div>
   );

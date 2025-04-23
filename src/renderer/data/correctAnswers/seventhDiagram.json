@@ -2,14 +2,14 @@
   {
     "id": "1",
     "type": "containerNode",
-    "label": "/my-nginx11",
+    "label": "/busybox-1",
     "state": "running",
     "network": "my-ipvlan"
   },
   {
     "id": "3",
     "type": "containerNode",
-    "label": "/my-nginx12",
+    "label": "/busybox-2",
     "state": "running",
     "network": "my-ipvlan"
   },

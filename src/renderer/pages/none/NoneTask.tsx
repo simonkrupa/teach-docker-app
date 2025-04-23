@@ -12,14 +12,15 @@ export default function NoneTask() {
   };
   return (
     <div className="all-pages">
-      <h1>Úloha: Žiadna sieť</h1>
-      <p>
-        Vašou úlohou je vytvoriť a spustiť docker kontajner bez akéhokoľvek
-        sieťového pripojenia. Výsledkom by mal byť kontajner, ktorý nedokáže
-        komunikovať s hostiteľským systémom, ani s inými kontajnermi, ani s
-        Internatom.
-      </p>
-      <p>
+      <h1>Úloha - none sieť</h1>
+      <ol>
+        <li>
+          Vytvorenie docker kontajnera pripojeného na docker none sieť s názvom
+          my-nginx5.
+        </li>
+        <li>Validácia prístupu ku kontajneru a jeho komunikácia.</li>
+      </ol>
+      {/* <p>
         Pre overenie úspešnosti úlohy je potrebné vykonať príkaz
         <SyntaxHighlighter language="bash" style={dracula}>
           ip link show
@@ -33,13 +34,13 @@ export default function NoneTask() {
       </p>
       <SyntaxHighlighter language="bash" style={dracula}>
         docker run -d --name=my-nginx5 --network=none nginx
-      </SyntaxHighlighter>
+      </SyntaxHighlighter> */}
       <Button
         onClick={handleProceedNavigation}
         className="generic-button"
         type="primary"
       >
-        Next
+        Ďalej
       </Button>
     </div>
   );

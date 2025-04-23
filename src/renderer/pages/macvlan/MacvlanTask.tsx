@@ -17,9 +17,21 @@ export default function MacvlanTask() {
   };
   return (
     <div className="all-pages">
-      <h1>Maclvan task</h1>
-      <p>Bridged adapter in vbox. </p>
-      <SyntaxHighlighter
+      <h1>Úloha - macvlan sieť</h1>
+      <ol>
+        <li>Vytvorenie docker macvlan siete s názvom my-macvlan.</li>
+        <li>
+          Vytvorenie 2 nginx docker kontajnerov pripojených na docker macvlan
+          sieť s názvami my-nginx8 a my-nginx10.
+        </li>
+        <li>
+          Vytvorenie nginx kontajnera pripojeného na docker host sieť s názvom
+          my-nginx9.
+        </li>
+        <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
+      </ol>
+      {/* <p>Bridged adapter in vbox. </p> */}
+      {/* <SyntaxHighlighter
         language="bash"
         style={dracula}
         customStyle={{ whiteSpace: 'pre' }} // Ensures new lines are respected
@@ -38,13 +50,13 @@ export default function MacvlanTask() {
       <p>Visible on: </p>
       <p>http://192.168.100.35/</p>
       <p>http://192.168.100.3/</p>
-      <p>http://192.168.100.2/</p>
+      <p>http://192.168.100.2/</p> */}
       <Button
         onClick={handleProceedNavigation}
         className="generic-button"
         type="primary"
       >
-        Next
+        Ďalej
       </Button>
     </div>
   );

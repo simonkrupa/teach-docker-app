@@ -304,7 +304,7 @@ export default function ThirdDiagram() {
           type="primary"
           onClick={handleValidateAnswer}
         >
-          Validate Answer
+          Overenie úlohy
         </Button>
       </ReactFlow>
     </div>

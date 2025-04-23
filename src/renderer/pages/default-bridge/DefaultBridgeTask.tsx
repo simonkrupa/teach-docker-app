@@ -12,20 +12,31 @@ export default function DefaultBridgeTask() {
   };
   return (
     <div className="all-pages">
-      <h1>Úloha predvolená mostová sieť</h1>
-      <p>To list all docker networks</p>
-      <SyntaxHighlighter language="bash" style={dracula}>
+      <h1>Úloha - predvolená bridge sieť</h1>
+      <ol>
+        <li>
+          Vytvorenie nginx kontajnera s názvom my-nginx3 pripojeného na
+          predvolenú sieť bridge
+        </li>
+        <li>
+          Vytvorenie alpine kontajnera s názvom my-alpine pripojeného na
+          predvolenú sieť bridge
+        </li>
+        <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
+      </ol>
+
+      {/* <SyntaxHighlighter language="bash" style={dracula}>
         docker network ls
       </SyntaxHighlighter>
       <SyntaxHighlighter language="bash" style={dracula}>
         docker run -d --name=my-nginx3 nginx
-      </SyntaxHighlighter>
+      </SyntaxHighlighter> */}
       <Button
         onClick={handleProceedNavigation}
         className="generic-button"
         type="primary"
       >
-        Next
+        Ďalej
       </Button>
     </div>
   );
