@@ -120,11 +120,16 @@ function mapNetworkData(networkData: any, networkNameForOverlay: string) {
   if (networkData.Name === 'docker_gwbridge') {
     networkData.Name = networkNameForOverlay;
   }
+  let parentInterface = '';
+  if (networkData.Options.parent) {
+    parentInterface = networkData.Options.parent;
+  }
   return {
     name: networkData.Name,
     subnet: networkData.IPAM.Config?.[0]?.Subnet || '',
     driver: networkData.Driver,
     gateway: networkData.IPAM.Config?.[0]?.Gateway || '',
+    parentInterface,
   };
 }
 

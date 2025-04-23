@@ -112,7 +112,7 @@ const initialNodes = [
   {
     id: '5',
     position: {
-      x: 200,
+      x: 250,
       y: 600,
     },
     type: 'lanNode',
@@ -148,6 +148,7 @@ const initialEdges = [
     target: '5',
     animated: true,
     reconnectable: false,
+    label: '',
   },
   {
     id: 'e4-0',
@@ -238,6 +239,15 @@ export default function SixthDiagram() {
           };
         }
         if (item.data.label === newData.name && item.type === 'networkNode') {
+          if (newData.parentInterface !== '') {
+            setEdges((prevEdges) =>
+              prevEdges.map((edge) =>
+                edge.id === 'e2-5'
+                  ? { ...edge, label: newData.parentInterface }
+                  : edge,
+              ),
+            );
+          }
           return {
             ...item,
             data: {
