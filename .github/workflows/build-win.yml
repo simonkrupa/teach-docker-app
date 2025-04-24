@@ -24,3 +24,11 @@ jobs:
       #   with:
       #     name: Windows-App
       #     path: win-release.zip
+      - name: Create GH Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: win-build-${{ github.run_number }}
+          name: Windows Build ${{ github.run_number }}
+          files: win-release.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
