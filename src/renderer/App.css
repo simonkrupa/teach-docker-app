@@ -60,6 +60,13 @@ body {
   color: black !important;
 }
 
+.tooltip-copying {
+  background: #001520;
+  color: white;
+  border-radius: 0;
+  margin-left: 10px;
+}
+
 .xterm .xterm-viewport {
   overflow-y: hidden !important;
 }

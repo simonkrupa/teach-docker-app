@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import '../../App.css';
 import TerminalObjectTemp from './TerminalObjectTemp';
 
@@ -48,6 +49,18 @@ export default function TerminalContainer() {
           >
             +
           </Button>
+          <Tooltip
+            placement="top"
+            title={
+              <>
+                Copy: Ctrl + Insert
+                <br />
+                Paste: Shift + Insert
+              </>
+            }
+          >
+            <QuestionCircleOutlined className="tooltip-copying" />
+          </Tooltip>
         </div>
       </div>
       <div>
