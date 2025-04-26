@@ -25,9 +25,7 @@ jobs:
         run: npm run package
       - name: Zip the file before upload
         run: |
-          cd release/build
-          zip -r macos-release.zip *
-          mv macos-release.zip ../
+          zip -r macos-release.zip release/build/*
       - name: Create GH Release
         uses: softprops/action-gh-release@v1
         with:
