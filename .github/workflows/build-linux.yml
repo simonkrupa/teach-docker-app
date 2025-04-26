@@ -16,8 +16,13 @@ jobs:
         run: npm install
       - name: Build win App
         run: npm run package
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: Linux-App
-          path: release/build/
+      - name: Zip the file before upload
+        run: |
+          cd release/build
+          zip -r linux-release.zip *
+          mv linux-release.zip ../
+      # - name: Upload Artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: Linux-App
+      #     path: release/build/
