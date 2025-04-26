@@ -33,6 +33,6 @@ jobs:
         with:
           tag_name: mac-build-${{ github.run_number }}
           name: Mac Build ${{ github.run_number }}
-          files: mac-release.zip
+          files: macos-release.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
