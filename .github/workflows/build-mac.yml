@@ -25,8 +25,11 @@ jobs:
           cd release/build
           zip -r macos-release.zip *
           mv macos-release.zip ../
-      # - name: Upload Artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: macOS-App
-      #     path: release/build/
+      - name: Create GH Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: mac-build-${{ github.run_number }}
+          name: Mac Build ${{ github.run_number }}
+          files: mac-release.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
