@@ -25,6 +25,12 @@ export default function DefaultBridgeTask() {
         <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
       </ol>
 
+      <p>
+        Pre testovanie egress komunikácie môžete využiť príkaz ping. Takisto
+        otestujte vzájomnú komunikáciu kontajnerov pomocou IP adresy a názvu
+        kontajnera. Ingress si môžeme overiť prístupom na port 80 kde sa
+        nachádza nginx server.
+      </p>
       <img
         src={bridgeImage}
         alt=""

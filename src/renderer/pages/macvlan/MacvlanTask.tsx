@@ -25,12 +25,19 @@ export default function MacvlanTask() {
         </li>
         <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
       </ol>
+      <p>
+        Pre testovanie egress komunikácie môžete využiť príkaz ping. Takisto
+        otestujte vzájomnú komunikáciu kontajnerov pomocou IP adresy a názvu
+        kontajnera. Ingress si môžeme overiť prístupom na port 80 kde sa
+        nachádza nginx server. Porovnajte rozdiely medzi nginx kontajnermi na
+        macvlan a host sieti.
+      </p>
       <img
         src={macvlanImage}
         alt=""
         style={{
           width: '500px',
-          height: '600px',
+          height: '602px',
           display: 'block',
           margin: '0 auto',
         }}

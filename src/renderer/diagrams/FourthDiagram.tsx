@@ -184,15 +184,12 @@ export default function FourthDiagram() {
       >
         <Controls showInteractive={false} />
         {messageBoxState === 'success' && (
-          <MessageBox
-            type={messageBoxState}
-            message="Task completed successfully"
-          />
+          <MessageBox type={messageBoxState} message="Úloha úspešne splnená" />
         )}
         {messageBoxState === 'error' && (
           <MessageBox
             type={messageBoxState}
-            message="Not all requirements fulfilled"
+            message="Úloha nesplnená, skontrolujte diagram"
           />
         )}
         <Button

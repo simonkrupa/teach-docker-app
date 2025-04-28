@@ -34,7 +34,7 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem(
-    'Domovská stránka',
+    'Úvod',
     '/home',
     <HomeOutlined />,
     undefined,

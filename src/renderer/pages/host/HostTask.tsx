@@ -20,12 +20,18 @@ export default function HostTask() {
         </li>
         <li>Validácia prístupu ku kontajneru a jeho komunikácia.</li>
       </ol>
+      <p>
+        Pre testovanie egress komunikácie môžete využiť príkaz ping. Takisto
+        otestujte vytvorenie viacerích nginx kontajnerov na sieti host súčasne.
+        Ingress si môžeme overiť prístupom na port 80 kde sa nachádza nginx
+        server.
+      </p>
       <img
         src={hostImage}
         alt=""
         style={{
           width: '500px',
-          height: '500px',
+          height: '504px',
           display: 'block',
           margin: '0 auto',
         }}

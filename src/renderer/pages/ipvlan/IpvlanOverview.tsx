@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
+import ipvlanImage from 'assets/imgs/ipvlan.drawio.png';
 import DropdownWithHint from '../../components/Hint';
 
 export default function IpvlanOverview() {
@@ -23,6 +24,17 @@ export default function IpvlanOverview() {
         na rozdiel od macvlan siete. Ďalšou výhodou je podpora bezdrôtového
         pripojenia, ktoré macvlan sieť nepodporuje.
       </p>
+
+      <img
+        src={ipvlanImage}
+        alt=""
+        style={{
+          width: '411px',
+          height: '451px',
+          display: 'block',
+          margin: '0 auto',
+        }}
+      />
       <Button
         onClick={handleProceedNavigation}
         className="generic-button"

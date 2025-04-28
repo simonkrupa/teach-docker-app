@@ -25,12 +25,19 @@ export default function OverlayTask() {
         </li>
         <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
       </ol>
+      <p>
+        Pre testovanie egress komunikácie môžete využiť príkaz ping. Takisto
+        otestujte vzájomnú komunikáciu kontajnerov pomocou IP adresy a názvu
+        kontajnera. Ingress si môžeme overiť prístupom na port 80 kde sa
+        nachádza nginx server. Pomocou príkazu tcpdump si môžete porovnať
+        sieťovú komunikáciu pri egresse a vzájomnej kommunikácií kontajnerov.
+      </p>
       <img
         src={overlayImage}
         alt=""
         style={{
-          width: '600px',
-          height: '680px',
+          width: '700px',
+          height: '794px',
           display: 'block',
           margin: '0 auto',
         }}

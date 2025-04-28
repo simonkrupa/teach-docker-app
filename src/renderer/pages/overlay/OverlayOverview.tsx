@@ -50,14 +50,14 @@ export default function OverlayOverview() {
         src={overlayImage1}
         alt=""
         className="images"
-        style={{ height: '250px' }}
+        style={{ height: '231px', width: '501px' }}
       />
       <p></p>
       <img
         src={overlayImage2}
         alt=""
         className="images"
-        style={{ height: '450px' }}
+        style={{ height: '446px', width: '501px' }}
       />
       <p>
         Po vytvorení docker overlay siete prostredníctvom docker swarmu docker
@@ -90,7 +90,7 @@ export default function OverlayOverview() {
         src={overlaySwarmImage}
         alt=""
         className="images"
-        style={{ height: '300px' }}
+        style={{ height: '291px', width: '481px' }}
       />
       <Button
         onClick={handleProceedNavigation}

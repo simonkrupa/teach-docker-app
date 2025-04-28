@@ -38,7 +38,16 @@ export default function BridgeOverview() {
         potreby je možné jeden kontajner pripojiť na viacero sietí naraz,
         kontajner dostane nové sieťové rozhranie.
       </p>
-      <img src={bridgeImage} alt="" className="images" />
+      <img
+        src={bridgeImage}
+        alt=""
+        style={{
+          width: '641px',
+          height: '401px',
+          display: 'block',
+          margin: '0 auto',
+        }}
+      />
 
       <Button
         onClick={handleProceedNavigation}

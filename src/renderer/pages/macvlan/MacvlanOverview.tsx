@@ -57,7 +57,7 @@ export default function MacvlanOverview() {
         src={macvlanImage}
         alt=""
         className="images"
-        style={{ height: '480px' }}
+        style={{ height: '476px', width: '441px' }}
       />
       <Button
         onClick={handleProceedNavigation}

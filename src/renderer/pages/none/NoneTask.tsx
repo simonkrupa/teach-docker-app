@@ -20,12 +20,17 @@ export default function NoneTask() {
         </li>
         <li>Validácia prístupu ku kontajneru a jeho komunikácia.</li>
       </ol>
+      <p>
+        Pre testovanie egress komunikácie môžete využiť príkaz ping. Takisto
+        otestujte vzájomnú komunikáciu kontajnerov pomocou IP adresy. Ingress si
+        môžeme overiť prístupom na port 80 kde sa nachádza nginx server.
+      </p>
       <img
         src={noneImage}
         alt=""
         style={{
           width: '500px',
-          height: '500px',
+          height: '505px',
           display: 'block',
           margin: '0 auto',
         }}
