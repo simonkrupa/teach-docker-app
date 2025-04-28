@@ -14,7 +14,7 @@ export default function Home() {
       ]);
       setUserData(username, String(Number(progress) + 1));
     }
-    navigate('/bridge/overview');
+    navigate('/default-bridge/overview');
   };
 
   return (

@@ -24,7 +24,7 @@ export default function Welcome() {
       setAlertInfo({
         visible: true,
         type: 'error',
-        message: 'Please provide username',
+        message: 'Prosím zadajte používateľské meno',
       });
     }
   };
@@ -37,7 +37,7 @@ export default function Welcome() {
       setAlertInfo({
         visible: true,
         type: 'error',
-        message: 'Username does not exist',
+        message: 'Používateľské meno neexistuje',
       });
     }
   };

@@ -1,6 +1,6 @@
 export const navigationMap: Map<string, string> = new Map([
-  ['bridge', '/default-bridge'],
-  ['default-bridge', '/host'],
+  ['default-bridge', '/bridge'],
+  ['bridge', '/host'],
   ['overlay', '/temp'],
   ['host', '/none'],
   ['none', '/macvlan'],
@@ -9,8 +9,8 @@ export const navigationMap: Map<string, string> = new Map([
 ]);
 
 export const progressMap: Map<string, string> = new Map([
-  ['1', '/bridge'],
-  ['2', '/default-bridge'],
+  ['1', '/default-bridge'],
+  ['2', '/bridge'],
   ['3', '/host'],
   ['4', '/none'],
   ['5', '/macvlan'],
