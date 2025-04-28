@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 import hostImage from 'assets/imgs/host.png';
+import DropdownWithHint from '../../components/Hint';
 
 export default function HostOverview() {
   const navigate = useNavigate();
@@ -46,6 +47,7 @@ export default function HostOverview() {
       >
         Ďalej
       </Button>
+      <DropdownWithHint />
     </div>
   );
 }

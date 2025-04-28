@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { Button } from 'antd';
+import { Button, Dropdown } from 'antd';
 import '../Pages.css';
 import overlayImage1 from 'assets/imgs/overlay1.png';
 import overlayImage2 from 'assets/imgs/overlay2.png';
 import overlaySwarmImage from 'assets/imgs/swarm-overlay.png';
+import DropdownWithHint from '../../components/Hint';
 
 export default function OverlayOverview() {
   const navigate = useNavigate();
@@ -98,6 +99,7 @@ export default function OverlayOverview() {
       >
         Ďalej
       </Button>
+      <DropdownWithHint />
     </div>
   );
 }

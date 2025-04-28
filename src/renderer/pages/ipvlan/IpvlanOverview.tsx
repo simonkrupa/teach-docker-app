@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
+import DropdownWithHint from '../../components/Hint';
 
 export default function IpvlanOverview() {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ export default function IpvlanOverview() {
       >
         Ďalej
       </Button>
+      <DropdownWithHint />
     </div>
   );
 }

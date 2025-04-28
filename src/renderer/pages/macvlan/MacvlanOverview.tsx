@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 import macvlanImage from 'assets/imgs/macvlan.png';
+import DropdownWithHint from '../../components/Hint';
 
 export default function MacvlanOverview() {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ export default function MacvlanOverview() {
         src={macvlanImage}
         alt=""
         className="images"
-        style={{ height: '450px' }}
+        style={{ height: '480px' }}
       />
       <Button
         onClick={handleProceedNavigation}
@@ -65,6 +66,7 @@ export default function MacvlanOverview() {
       >
         Ďalej
       </Button>
+      <DropdownWithHint />
     </div>
   );
 }
