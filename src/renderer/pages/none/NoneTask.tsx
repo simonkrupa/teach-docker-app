@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import noneImage from 'assets/imgs/nonetask.jpg';
+import DropdownWithHint from '../../components/Hint';
 
 export default function NoneTask() {
   const navigate = useNavigate();
@@ -20,21 +20,16 @@ export default function NoneTask() {
         </li>
         <li>Validácia prístupu ku kontajneru a jeho komunikácia.</li>
       </ol>
-      {/* <p>
-        Pre overenie úspešnosti úlohy je potrebné vykonať príkaz
-        <SyntaxHighlighter language="bash" style={dracula}>
-          ip link show
-        </SyntaxHighlighter>
-        alebo
-        <SyntaxHighlighter language="bash" style={dracula}>
-          ls /sys/class/net
-        </SyntaxHighlighter>
-        a skontrolovať, či kontajner nemá žiadne sieťové pripojenie a vidíme len
-        loopback interface.
-      </p>
-      <SyntaxHighlighter language="bash" style={dracula}>
-        docker run -d --name=my-nginx5 --network=none nginx
-      </SyntaxHighlighter> */}
+      <img
+        src={noneImage}
+        alt=""
+        style={{
+          width: '500px',
+          height: '500px',
+          display: 'block',
+          margin: '0 auto',
+        }}
+      />
       <Button
         onClick={handleProceedNavigation}
         className="generic-button"
@@ -42,6 +37,7 @@ export default function NoneTask() {
       >
         Ďalej
       </Button>
+      <DropdownWithHint />
     </div>
   );
 }

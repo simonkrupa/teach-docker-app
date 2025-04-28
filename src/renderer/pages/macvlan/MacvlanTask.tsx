@@ -1,16 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import macvlanImage from 'assets/imgs/macvlantask.jpg';
+import DropdownWithHint from '../../components/Hint';
 
 export default function MacvlanTask() {
   const navigate = useNavigate();
-  const cmmd = `docker network create \\
-        -d macvlan \\
-        --subnet=192.168.100.0/24 \\
-        --gateway=192.168.100.1 \\
-        -o parent=enp0s10 my-macvlan`;
 
   const handleProceedNavigation = () => {
     navigate('/macvlan/sixth-diagram');
@@ -30,27 +25,16 @@ export default function MacvlanTask() {
         </li>
         <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
       </ol>
-      {/* <p>Bridged adapter in vbox. </p> */}
-      {/* <SyntaxHighlighter
-        language="bash"
-        style={dracula}
-        customStyle={{ whiteSpace: 'pre' }} // Ensures new lines are respected
-      >
-        {cmmd}
-      </SyntaxHighlighter>
-      <SyntaxHighlighter language="bash" style={dracula}>
-        docker run --name my-nginx8 --network my-macvlan -d nginx
-      </SyntaxHighlighter>
-      <SyntaxHighlighter language="bash" style={dracula}>
-        docker run --name my-nginx10 --network my-macvlan -d nginx
-      </SyntaxHighlighter>
-      <SyntaxHighlighter language="bash" style={dracula}>
-        docker run --name my-nginx9 --network host -d nginx
-      </SyntaxHighlighter>
-      <p>Visible on: </p>
-      <p>http://192.168.100.35/</p>
-      <p>http://192.168.100.3/</p>
-      <p>http://192.168.100.2/</p> */}
+      <img
+        src={macvlanImage}
+        alt=""
+        style={{
+          width: '500px',
+          height: '600px',
+          display: 'block',
+          margin: '0 auto',
+        }}
+      />
       <Button
         onClick={handleProceedNavigation}
         className="generic-button"
@@ -58,6 +42,7 @@ export default function MacvlanTask() {
       >
         Ďalej
       </Button>
+      <DropdownWithHint />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 import bridgeImage from 'assets/imgs/userbridge.png';
+import DropdownWithHint from '../../components/Hint';
 
 export default function BridgeOverview() {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ export default function BridgeOverview() {
       >
         Ďalej
       </Button>
+      <DropdownWithHint />
     </div>
   );
 }

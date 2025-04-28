@@ -1,7 +1,7 @@
 export const navigationMap: Map<string, string> = new Map([
   ['bridge', '/default-bridge'],
   ['default-bridge', '/host'],
-  ['overlay', '/temp'], //TODO add ending
+  ['overlay', '/temp'],
   ['host', '/none'],
   ['none', '/macvlan'],
   ['macvlan', '/ipvlan'],

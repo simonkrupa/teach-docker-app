@@ -141,11 +141,6 @@ class DockerEventListener {
               network: 'docker_gwbridge1',
             }),
           );
-          // send data to container with ip and mac for new eth
-          // this.mainWindow.webContents.send(
-          //   'network-data',
-          //   JSON.stringify(result),
-          // );
           const vethCommand = `ip link show type veth`;
           const veth = await this.sshConnector.executeSshCommand(vethCommand);
           const parsedVeth = parseIpLinkOutput(veth);
@@ -252,20 +247,6 @@ class DockerEventListener {
         if (containerData.network !== desiredNetwork) {
           return;
         }
-        // const vxlanId = await this.docker
-        //   .getNetwork(containerData.network)
-        //   .inspect((err, networkData) => {
-        //     if (err) {
-        //       console.error('Error:', err);
-        //       return null;
-        //     }
-        //     return mapVxlanId(networkData).vxlanId;
-        //   });
-        // console.log('vxlan', vxlanId);
-
-        // if (vxlanId === null) {
-        //   return;
-        // }
         const newObj = {
           containerName: containerData.label,
           namespace: '1-' + containerData.netId,
@@ -290,7 +271,6 @@ class DockerEventListener {
         const networkInterfaces =
           await this.sshConnector.executeSshCommand(networkNamespaceCmd);
         const parsedINterfaces = parseIpLinkOutput(networkInterfaces);
-        //TODO verify by vxlan id
         const filteredVeths = parsedINterfaces.map((vethInterface) => {
           return { id: vethInterface.id, name: vethInterface.name };
         });
@@ -456,12 +436,6 @@ class DockerEventListener {
   }
 
   async listenToEvents(containersToListen): Promise<void> {
-    // if (
-    //   this.hasUnallowedValues(containersToListen, NO_ETH_NETWORKS) &&
-    //   !this.sshConnector.isConnected
-    // ) {
-    //   await this.connectSsh();
-    // }
     this.docker.getEvents((err, stream) => {
       if (err) {
         this.mainWindow.webContents.send('error', undefined);
@@ -542,12 +516,6 @@ class DockerEventListener {
   }
 
   async listenToEventsSecondary(containersToListen): Promise<void> {
-    // if (
-    //   this.hasUnallowedValues(containersToListen, NO_ETH_NETWORKS) &&
-    //   !this.sshConnector.isConnected
-    // ) {
-    //   await this.connectSsh();
-    // }
     this.docker.getEvents((err, stream) => {
       if (err) {
         return console.error('Error:', err);
@@ -649,7 +617,6 @@ class DockerEventListener {
       }, new Map());
 
       const result = Array.from(filteredNodes.values());
-      //TODO add validation for nodes
       result.forEach((nodeInfo) => {
         this.mainWindow.webContents.send(
           'node-vm-data',

@@ -360,12 +360,7 @@ export default function FifthDiagram() {
     node2: false,
   });
 
-  // Your existing ResizeObserver code
-  const resizeObserver = new ResizeObserver(
-    throttle((entries) => {
-      // Your resize handling logic
-    }, 100), // Adjust the throttle delay as needed
-  );
+  const resizeObserver = new ResizeObserver(throttle((entries) => {}, 100));
 
   const startEdges = useCallback((nodeId) => {
     setEdges((prevEdges) => {

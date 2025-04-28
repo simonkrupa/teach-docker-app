@@ -91,7 +91,6 @@ function setDockerEventListener(mainWindow: BrowserWindow, ipAddress: string) {
   if (sshConnector === null) {
     throw new Error('SSH connector is not initialized.');
   }
-  // config.host = ipAddress;
   dockerEventListener = new DockerEventListener(
     mainWindow,
     ipAddress,
@@ -172,23 +171,7 @@ if (isDebug) {
   require('electron-debug')();
 }
 
-// const installExtensions = async () => {
-//   const installer = require('electron-devtools-installer');
-//   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-//   const extensions = ['REACT_DEVELOPER_TOOLS'];
-
-//   return installer
-//     .default(
-//       extensions.map((name) => installer[name]),
-//       forceDownload,
-//     )
-//     .catch(console.log);
-// };
-
 const createWindow = async () => {
-  // if (isDebug) {
-  //   await installExtensions();
-  // }
   createFileIfNotExists(app.getPath('userData'));
 
   const RESOURCES_PATH = app.isPackaged
@@ -284,8 +267,6 @@ const createWindow = async () => {
     return { action: 'deny' };
   });
 
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
   new AppUpdater();
   // Start listening to events
 
@@ -327,7 +308,6 @@ const createWindow = async () => {
     });
 
     try {
-      // Attempt to get Docker version info
       await docker.version();
       console.log('Docker API is reachable at this IP address.');
       return true;

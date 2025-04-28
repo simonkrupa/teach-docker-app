@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import bridgeImage from 'assets/imgs/defaultbridgetask.jpg';
+import DropdownWithHint from '../../components/Hint';
 
 export default function DefaultBridgeTask() {
   const navigate = useNavigate();
@@ -25,12 +25,16 @@ export default function DefaultBridgeTask() {
         <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
       </ol>
 
-      {/* <SyntaxHighlighter language="bash" style={dracula}>
-        docker network ls
-      </SyntaxHighlighter>
-      <SyntaxHighlighter language="bash" style={dracula}>
-        docker run -d --name=my-nginx3 nginx
-      </SyntaxHighlighter> */}
+      <img
+        src={bridgeImage}
+        alt=""
+        style={{
+          width: '500px',
+          height: '500px',
+          display: 'block',
+          margin: '0 auto',
+        }}
+      />
       <Button
         onClick={handleProceedNavigation}
         className="generic-button"
@@ -38,6 +42,7 @@ export default function DefaultBridgeTask() {
       >
         Ďalej
       </Button>
+      <DropdownWithHint />
     </div>
   );
 }

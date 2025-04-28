@@ -44,30 +44,30 @@ const items: MenuItem[] = [
     0,
   ),
   getItem(
-    '1. Bridge sieť',
-    '/bridge',
+    '1. Predvolená sieť',
+    '/default-bridge',
     undefined,
     [
-      getItem('Bridge Overview', '/bridge/overview'),
-      getItem('Bridge Task', '/bridge/task'),
-      getItem('Bridge Diagram', '/bridge/first-diagram'),
+      getItem('Prehľad', '/default-bridge/overview'),
+      getItem('Úloha', '/default-bridge/task'),
+      getItem('Diagram', '/default-bridge/second-diagram'),
     ],
     undefined,
-    'bridge-item',
+    'default-bridge-item',
     true,
     1,
   ),
   getItem(
-    '2. Predvolený bridge',
-    '/default-bridge',
+    '2. Bridge sieť',
+    '/bridge',
     undefined,
     [
-      getItem('Default Bridge Overview', '/default-bridge/overview'),
-      getItem('Default Bridge Task', '/default-bridge/task'),
-      getItem('Default Bridge Diagram', '/default-bridge/second-diagram'),
+      getItem('Prehľad', '/bridge/overview'),
+      getItem('Úloha', '/bridge/task'),
+      getItem('Diagram', '/bridge/first-diagram'),
     ],
     undefined,
-    'default-bridge-item',
+    'bridge-item',
     true,
     2,
   ),
@@ -76,9 +76,9 @@ const items: MenuItem[] = [
     '/host',
     undefined,
     [
-      getItem('Host Overview', '/host/overview'),
-      getItem('Host Task', '/host/task'),
-      getItem('Host Diagram', '/host/third-diagram'),
+      getItem('Prehľad', '/host/overview'),
+      getItem('Úloha', '/host/task'),
+      getItem('Diagram', '/host/third-diagram'),
     ],
     undefined,
     'host-item',
@@ -90,9 +90,9 @@ const items: MenuItem[] = [
     '/none',
     undefined,
     [
-      getItem('None Overview', '/none/overview'),
-      getItem('None Task', '/none/task'),
-      getItem('None Diagram', '/none/fourth-diagram'),
+      getItem('Prehľad', '/none/overview'),
+      getItem('Úloha', '/none/task'),
+      getItem('Diagram', '/none/fourth-diagram'),
     ],
     undefined,
     'none-item',
@@ -104,9 +104,9 @@ const items: MenuItem[] = [
     '/macvlan',
     undefined,
     [
-      getItem('Macvlan Overview', '/macvlan/overview'),
-      getItem('Macvlan Task', '/macvlan/task'),
-      getItem('Macvlan Diagram', '/macvlan/sixth-diagram'),
+      getItem('Prehľad', '/macvlan/overview'),
+      getItem('Úloha', '/macvlan/task'),
+      getItem('Diagram', '/macvlan/sixth-diagram'),
     ],
     undefined,
     'macvlan-item',
@@ -118,9 +118,9 @@ const items: MenuItem[] = [
     '/ipvlan',
     undefined,
     [
-      getItem('Ipvlan Overview', '/ipvlan/overview'),
-      getItem('Ipvlan Task', '/ipvlan/task'),
-      getItem('Ipvlan Diagram', '/ipvlan/seventh-diagram'),
+      getItem('Prehľad', '/ipvlan/overview'),
+      getItem('Úloha', '/ipvlan/task'),
+      getItem('Diagram', '/ipvlan/seventh-diagram'),
     ],
     undefined,
     'ipvlan-item',
@@ -132,9 +132,9 @@ const items: MenuItem[] = [
     '/overlay',
     undefined,
     [
-      getItem('Overlay Overview', '/overlay/overview'),
-      getItem('Overlay Task', '/overlay/task'),
-      getItem('Overlay Diagram', '/overlay/fifth-diagram'),
+      getItem('Prehľad', '/overlay/overview'),
+      getItem('Úloha', '/overlay/task'),
+      getItem('Diagram', '/overlay/fifth-diagram'),
     ],
     undefined,
     'overlay-item',
@@ -189,7 +189,7 @@ export default function NavBar({ isCollapsed, toggleNavbar }) {
 
   return (
     <Sider
-      width={200}
+      width={230}
       collapsedWidth={0}
       collapsible
       collapsed={isCollapsed}

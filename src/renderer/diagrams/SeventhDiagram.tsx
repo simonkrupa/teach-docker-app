@@ -80,7 +80,7 @@ const initialNodes = [
   {
     id: '5',
     position: {
-      x: 180,
+      x: 250,
       y: 600,
     },
     type: 'lanNode',

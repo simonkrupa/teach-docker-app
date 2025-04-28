@@ -56,7 +56,6 @@ class SshConnector {
         let isPasswordPrompt = false;
         stream
           .on('close', (code, signal) => {
-            // If there's anything in stderr that isn't related to the password prompt, reject the promise
             if (stderr && !isPasswordPrompt) {
               reject(new Error(stderr));
             } else {
@@ -71,7 +70,7 @@ class SshConnector {
 
             // Check if the stderr data contains the password prompt message
             if (data.toString().includes('[sudo] password for')) {
-              isPasswordPrompt = true; // Mark that we've handled the password prompt
+              isPasswordPrompt = true;
             }
           });
       });

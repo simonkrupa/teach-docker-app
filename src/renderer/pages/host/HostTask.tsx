@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import hostImage from 'assets/imgs/hosttask.jpg';
+import DropdownWithHint from '../../components/Hint';
 
 export default function HostTask() {
   const navigate = useNavigate();
@@ -20,12 +20,16 @@ export default function HostTask() {
         </li>
         <li>Validácia prístupu ku kontajneru a jeho komunikácia.</li>
       </ol>
-      {/* <SyntaxHighlighter language="bash" style={dracula}>
-        netstat -tulnp
-      </SyntaxHighlighter>
-      <SyntaxHighlighter language="bash" style={dracula}>
-        docker run -d --name=my-nginx4 --network=host nginx
-      </SyntaxHighlighter> */}
+      <img
+        src={hostImage}
+        alt=""
+        style={{
+          width: '500px',
+          height: '500px',
+          display: 'block',
+          margin: '0 auto',
+        }}
+      />
       <Button
         onClick={handleProceedNavigation}
         className="generic-button"
@@ -33,6 +37,7 @@ export default function HostTask() {
       >
         Ďalej
       </Button>
+      <DropdownWithHint />
     </div>
   );
 }

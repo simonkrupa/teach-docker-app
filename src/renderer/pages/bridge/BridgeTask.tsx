@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import mybridgeImage from 'assets/imgs/mybridge.jpg';
+import DropdownWithHint from '../../components/Hint';
 
 export default function BridgeTask() {
   const navigate = useNavigate();
@@ -25,18 +25,16 @@ export default function BridgeTask() {
         </li>
         <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
       </ol>
-      {/* <SyntaxHighlighter language="bash" style={dracula}>
-        docker network create --driver bridge --subnet=172.19.0.0/16 my-bridge
-      </SyntaxHighlighter> */}
-
-      {/* <SyntaxHighlighter language="bash" style={dracula}>
-        docker run -d --name=my-nginx --network=my-bridge --ip=172.19.0.12 nginx
-      </SyntaxHighlighter>
-
-      <SyntaxHighlighter language="bash" style={dracula}>
-        docker run -d --name=my-nginx2 --network=my-bridge --ip=172.19.0.13
-        nginx
-      </SyntaxHighlighter> */}
+      <img
+        src={mybridgeImage}
+        alt=""
+        style={{
+          width: '500px',
+          height: '500px',
+          display: 'block',
+          margin: '0 auto',
+        }}
+      />
       <Button
         onClick={handleProceedNavigation}
         className="generic-button"
@@ -44,6 +42,7 @@ export default function BridgeTask() {
       >
         Ďalej
       </Button>
+      <DropdownWithHint />
     </div>
   );
 }

@@ -10,7 +10,6 @@ function parseIpLinkOutput(output) {
       /^(\d+): (\S+): <([^>]+)> mtu (\d+) .* state (\S+)/,
     );
     if (interfaceMatch) {
-      // If it's a new interface, start a new object
       const [, id, name, flags, mtu, state] = interfaceMatch;
       currentInterface = {
         id: parseInt(id, 10),
@@ -41,7 +40,7 @@ function parseHostNetworkInterface(input: string) {
 function getVethIdFromName(name: string): number | null {
   const match = name.match(/(\D+)(\d+)$/);
   if (match) {
-    const numericId = match[2]; // The second group contains the numeric ID
+    const numericId = match[2];
     return parseInt(numericId, 10);
   }
   console.error('Could not extract numeric ID');

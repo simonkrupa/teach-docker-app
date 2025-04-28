@@ -220,11 +220,6 @@ export default function SixthDiagram() {
           } else {
             setDeleteEdge(item.id);
           }
-          //TODO host ip addr
-          // if (item.desiredNetwork === 'host' && newData.status === 'running') {
-          //   newData.ip = item.data.ip;
-          // }
-
           return {
             ...item,
             data: {

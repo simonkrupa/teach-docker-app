@@ -1,7 +1,5 @@
 function parsePortMapping(portBindings) {
-  // Check if PortBindings is not empty
   if (Object.keys(portBindings).length > 0) {
-    //TODO what if multiple port mappings
     for (const key in portBindings) {
       if (portBindings.hasOwnProperty(key)) {
         const binding = portBindings[key][0]; // Get the first entry in the array

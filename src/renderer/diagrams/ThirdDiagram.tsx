@@ -112,7 +112,6 @@ export default function ThirdDiagram() {
             newData.network === item.desiredNetwork
           ) {
             setStartEdge(item.id);
-            //TODO fix host ip
             newData.ip = nodes[1].data.ip;
           } else {
             setDeleteEdge(item.id);
