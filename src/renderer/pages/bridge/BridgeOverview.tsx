@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
-import bridgeImage from 'assets/imgs/userbridge.png';
+import bridgeImage from 'assets/imgs/transuserbridge.png';
 import DropdownWithHint from '../../components/Hint';
 
 export default function BridgeOverview() {
@@ -42,8 +42,8 @@ export default function BridgeOverview() {
         src={bridgeImage}
         alt=""
         style={{
-          width: '641px',
-          height: '401px',
+          width: '561px',
+          height: '411px',
           display: 'block',
           margin: '0 auto',
         }}

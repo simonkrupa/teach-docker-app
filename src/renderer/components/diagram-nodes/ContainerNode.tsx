@@ -2,7 +2,6 @@ import { Handle, Position } from 'reactflow';
 import './ContainerNode.css';
 import { memo, useEffect, useState } from 'react';
 import { ContainerNodeProps } from '../../types/types';
-import DockerLogo from '../../../../assets/Docker.png';
 
 export function RunningState() {
   return (
@@ -78,11 +77,6 @@ const ContainerNode = memo(function ContainerNode(props: ContainerNodeProps) {
               {props.data.ip} {props.data.mac}
             </div>
           </div>
-          <img
-            className="docker-image-logo"
-            src={DockerLogo}
-            alt="docker logo"
-          />
           {/* {props.data.port ? (
             <div className="port-container-o">
               <div>Port: {props.data.port}</div>

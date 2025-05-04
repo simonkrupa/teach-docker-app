@@ -33,6 +33,7 @@ export default function IpvlanOverview() {
           height: '451px',
           display: 'block',
           margin: '0 auto',
+          marginTop: '20px',
         }}
       />
       <Button

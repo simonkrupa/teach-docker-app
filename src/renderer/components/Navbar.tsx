@@ -7,6 +7,9 @@ import { useProgress } from '../UserContext';
 import './Navbar.css';
 
 const { Sider } = Layout;
+const task = 'Úloha';
+const overview = 'Vysvetlenie';
+const diagram = 'Vypracovanie';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -48,9 +51,9 @@ const items: MenuItem[] = [
     '/default-bridge',
     undefined,
     [
-      getItem('Prehľad', '/default-bridge/overview'),
-      getItem('Úloha', '/default-bridge/task'),
-      getItem('Diagram', '/default-bridge/second-diagram'),
+      getItem(overview, '/default-bridge/overview'),
+      getItem(task, '/default-bridge/task'),
+      getItem(diagram, '/default-bridge/second-diagram'),
     ],
     undefined,
     'default-bridge-item',
@@ -62,9 +65,9 @@ const items: MenuItem[] = [
     '/bridge',
     undefined,
     [
-      getItem('Prehľad', '/bridge/overview'),
-      getItem('Úloha', '/bridge/task'),
-      getItem('Diagram', '/bridge/first-diagram'),
+      getItem(overview, '/bridge/overview'),
+      getItem(task, '/bridge/task'),
+      getItem(diagram, '/bridge/first-diagram'),
     ],
     undefined,
     'bridge-item',
@@ -76,9 +79,9 @@ const items: MenuItem[] = [
     '/host',
     undefined,
     [
-      getItem('Prehľad', '/host/overview'),
-      getItem('Úloha', '/host/task'),
-      getItem('Diagram', '/host/third-diagram'),
+      getItem(overview, '/host/overview'),
+      getItem(task, '/host/task'),
+      getItem(diagram, '/host/third-diagram'),
     ],
     undefined,
     'host-item',
@@ -90,9 +93,9 @@ const items: MenuItem[] = [
     '/none',
     undefined,
     [
-      getItem('Prehľad', '/none/overview'),
-      getItem('Úloha', '/none/task'),
-      getItem('Diagram', '/none/fourth-diagram'),
+      getItem(overview, '/none/overview'),
+      getItem(task, '/none/task'),
+      getItem(diagram, '/none/fourth-diagram'),
     ],
     undefined,
     'none-item',
@@ -104,9 +107,9 @@ const items: MenuItem[] = [
     '/macvlan',
     undefined,
     [
-      getItem('Prehľad', '/macvlan/overview'),
-      getItem('Úloha', '/macvlan/task'),
-      getItem('Diagram', '/macvlan/sixth-diagram'),
+      getItem(overview, '/macvlan/overview'),
+      getItem(task, '/macvlan/task'),
+      getItem(diagram, '/macvlan/sixth-diagram'),
     ],
     undefined,
     'macvlan-item',
@@ -118,9 +121,9 @@ const items: MenuItem[] = [
     '/ipvlan',
     undefined,
     [
-      getItem('Prehľad', '/ipvlan/overview'),
-      getItem('Úloha', '/ipvlan/task'),
-      getItem('Diagram', '/ipvlan/seventh-diagram'),
+      getItem(overview, '/ipvlan/overview'),
+      getItem(task, '/ipvlan/task'),
+      getItem(diagram, '/ipvlan/seventh-diagram'),
     ],
     undefined,
     'ipvlan-item',
@@ -132,9 +135,9 @@ const items: MenuItem[] = [
     '/overlay',
     undefined,
     [
-      getItem('Prehľad', '/overlay/overview'),
-      getItem('Úloha', '/overlay/task'),
-      getItem('Diagram', '/overlay/fifth-diagram'),
+      getItem(overview, '/overlay/overview'),
+      getItem(task, '/overlay/task'),
+      getItem(diagram, '/overlay/fifth-diagram'),
     ],
     undefined,
     'overlay-item',

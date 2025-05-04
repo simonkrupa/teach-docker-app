@@ -8,7 +8,7 @@ const LanNode = memo(function LanNode(props: any) {
       <Handle type="source" position={Position.Top} />
       <Handle type="target" position={Position.Top} />
       <div className="lan-container">
-        <div className="en-node-name">External Network</div>
+        <div className="en-node-name">Externá sieť</div>
         <div className="en-node-info">
           <div>CIDR: {props.data.cidr}</div>
           <div>MAC: {props.data.mac}</div>

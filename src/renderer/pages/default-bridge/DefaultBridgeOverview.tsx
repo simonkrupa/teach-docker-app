@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Button, Dropdown } from 'antd';
 import '../Pages.css';
-import bridgeImage from 'assets/imgs/bridge.png';
+import bridgeImage from 'assets/imgs/transdefaultbridge.drawio.png';
 import DropdownWithHint from '../../components/Hint';
 
 export default function DefaultBridgeOverview() {
@@ -16,11 +16,12 @@ export default function DefaultBridgeOverview() {
       <div
         style={{
           display: 'flex',
+          flexWrap: 'wrap',
           justifyContent: 'space-between',
           // alignItems: 'center',
         }}
       >
-        <div style={{ maxWidth: '50%' }}>
+        <div style={{ flex: '1 1 400px', maxWidth: '70%' }}>
           <p>
             Predvolená sieť bridge je predom vytvorená po nainštalovaní dockeru
             a je to izolovaná, interná sieť, ktorá umožňuje komunikáciu
@@ -79,7 +80,13 @@ export default function DefaultBridgeOverview() {
           src={bridgeImage}
           alt=""
           className="images"
-          style={{ height: '461px', width: '411px', marginTop: '20px' }}
+          style={{
+            height: '481px',
+            width: '491px',
+            marginTop: '20px',
+            marginLeft: '20px',
+            // flexShrink: 0,
+          }}
         />
       </div>
       <Button

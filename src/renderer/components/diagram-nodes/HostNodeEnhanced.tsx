@@ -106,7 +106,7 @@ const HostNodeEnhanced = memo(function HostNodeEnhanced(props: any) {
                 {componentToRender}
               </div>
               <div style={{ display: 'flex' }}>
-                <div className="host-info">Role: {props.data.role}</div>
+                <div className="host-info">Rola: {props.data.role}</div>
                 <div className="host-ip">IP: {props.data.ip}</div>
               </div>
             </div>

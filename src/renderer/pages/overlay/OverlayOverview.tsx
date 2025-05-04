@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { Button, Dropdown } from 'antd';
 import '../Pages.css';
-import overlayImage1 from 'assets/imgs/overlay1.png';
-import overlayImage2 from 'assets/imgs/overlay2.png';
-import overlaySwarmImage from 'assets/imgs/swarm-overlay.png';
+import overlayImage1 from 'assets/imgs/transpovelay1.png';
+import overlayImage2 from 'assets/imgs/transpoverlay2.png';
+import overlaySwarmImage from 'assets/imgs/transpoverlay3.png';
 import DropdownWithHint from '../../components/Hint';
 
 export default function OverlayOverview() {
@@ -28,36 +28,37 @@ export default function OverlayOverview() {
         synchronizovaní údajov o jednotlivých hostiteľských zariadeniach a ich
         sieťových údajoch. Toto je dôležité pri komunikácii, pretože poskytuje
         sieti overlay informácie, kde sa nachádza cieľový docker kontajner, na
-        ktorý chceme odoslať pakety. Demonštráciu overlay siete môžeme vidieť na
-        obrázku 9. Avšak komunikácia vrámci overlay siete nie je až tak
-        jednoduchá, pretože v skutočnosti dochádza ku viacvrstvovému zabaľovaniu
-        dát, ktoré posielame cez túto sieť. Na realizáciu tejto komunikácie sa
-        využíva technológia VXLAN. Segmenty dát posielané kontajnerom
-        prostredníctvom overlay siete dostávajú ip hlavičku obsahujúcu ip adresu
-        odosielateľa a príjmateľa. Ip paket je následne zaobalený ethernetovým
-        rámcom. Aby sme dokázali presunúť paket cez fyzickú sieť, je rámec
-        zaobalený VXLAN hlavičkou, ktorá obsahuje 24 bitové identifikačné číslo
-        siete - VNI. Dáta sú zbalené do UDP datagramu a ďalej dostávajú ip
-        hlavičku s ip adresou hostiteľského stroja, na ktorom sa docker
-        kontajner nachádza a ip adresou príjmateľského hostiteľského stroja, na
-        ktorom beží docker kontajner, ktorému dáta posielame. Paket je opäť
-        zabalený do ethernetového rámcu s mac adresami odosielateľa a príjmateľa
-        a takto sa dostáva cez fyzickú sieť do cieľového hostiteľského stroja,
-        kde je rámec postupne odbalený a dostáva sa do príslušného docker
-        kontajnera.
+        ktorý chceme odoslať pakety.
       </p>
       <img
         src={overlayImage1}
         alt=""
         className="images"
-        style={{ height: '231px', width: '501px' }}
+        style={{ height: '281px', width: '419px', marginTop: '20px' }}
       />
-      <p></p>
+      <p>
+        Avšak komunikácia vrámci overlay siete nie je až tak jednoduchá, pretože
+        v skutočnosti dochádza ku viacvrstvovému zabaľovaniu dát, ktoré
+        posielame cez túto sieť. Na realizáciu tejto komunikácie sa využíva
+        technológia VXLAN. Segmenty dát posielané kontajnerom prostredníctvom
+        overlay siete dostávajú ip hlavičku obsahujúcu ip adresu odosielateľa a
+        príjmateľa. Ip paket je následne zaobalený ethernetovým rámcom. Aby sme
+        dokázali presunúť paket cez fyzickú sieť, je rámec zaobalený VXLAN
+        hlavičkou, ktorá obsahuje 24 bitové identifikačné číslo siete - VNI.
+        Dáta sú zbalené do UDP datagramu a ďalej dostávajú ip hlavičku s ip
+        adresou hostiteľského stroja, na ktorom sa docker kontajner nachádza a
+        ip adresou príjmateľského hostiteľského stroja, na ktorom beží docker
+        kontajner, ktorému dáta posielame. Paket je opäť zabalený do
+        ethernetového rámcu s mac adresami odosielateľa a príjmateľa a takto sa
+        dostáva cez fyzickú sieť do cieľového hostiteľského stroja, kde je rámec
+        postupne odbalený a dostáva sa do príslušného docker kontajnera.
+      </p>
+
       <img
         src={overlayImage2}
         alt=""
         className="images"
-        style={{ height: '446px', width: '501px' }}
+        style={{ height: '421px', width: '451px', marginTop: '20px' }}
       />
       <p>
         Po vytvorení docker overlay siete prostredníctvom docker swarmu docker
@@ -90,7 +91,7 @@ export default function OverlayOverview() {
         src={overlaySwarmImage}
         alt=""
         className="images"
-        style={{ height: '291px', width: '481px' }}
+        style={{ height: '291px', width: '381px' }}
       />
       <Button
         onClick={handleProceedNavigation}

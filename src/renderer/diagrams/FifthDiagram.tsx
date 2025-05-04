@@ -268,7 +268,7 @@ const initialEdges = [
     target: '12',
     type: 'smoothstep',
     reconnectable: false,
-    label: 'Overlay in detail',
+    label: 'Detail overlay siete',
     labelStyle: { fill: 'black', fontWeight: 'bold', fontSize: '10px' },
   },
   {

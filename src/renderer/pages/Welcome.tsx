@@ -4,7 +4,6 @@ import { Button, Input, Alert } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useProgress } from '../UserContext';
 import './Welcome.css';
-import DockerLogo from '../../../assets/Docker.png';
 
 export default function Welcome() {
   const navigate = useNavigate();
@@ -97,9 +96,6 @@ export default function Welcome() {
             }
           />
         )}
-      </div>
-      <div className="second-col-welcome">
-        <img className="docker-logo" src={DockerLogo} alt="docker logo" />
       </div>
     </div>
   );

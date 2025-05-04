@@ -8,7 +8,7 @@ const OverlayNetworkNode = memo(function OverlayNetworkNode(props: any) {
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Top} id="12-1" />
       <Handle type="source" position={Position.Top} id="12-2" />
-      <div className="overlay-id">Namespace: {props.data.namespace}</div>
+      <div className="overlay-id">Menný priestor: {props.data.namespace}</div>
       <div className="containers-wrapper">
         <div className="veth-cont left">
           <div className="veth-box">

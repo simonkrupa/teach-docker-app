@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
-import hostImage from 'assets/imgs/host.png';
+import hostImage from 'assets/imgs/transhost.png';
 import DropdownWithHint from '../../components/Hint';
 
 export default function HostOverview() {
@@ -46,7 +46,12 @@ export default function HostOverview() {
           src={hostImage}
           alt=""
           className="images"
-          style={{ height: '321px', width: '361px', marginTop: '20px' }}
+          style={{
+            height: '331px',
+            width: '451px',
+            marginTop: '20px',
+            marginLeft: '20px',
+          }}
         />
       </div>
       <Button

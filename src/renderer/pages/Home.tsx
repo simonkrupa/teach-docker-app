@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import './Pages.css';
-import dockerArch from 'assets/imgs/dockerarch.png';
-import dockerImg from 'assets/imgs/docker.png';
+import dockerArch from 'assets/imgs/dockerarchtransparent.png';
+import dockerImg from 'assets/imgs/docker-arch-transp.png';
 import { useProgress } from '../UserContext';
 
 export default function Home() {
@@ -47,7 +47,7 @@ export default function Home() {
           // alignItems: 'center',
         }}
       >
-        <p style={{ maxWidth: '40%' }}>
+        <p style={{ maxWidth: '60%' }}>
           Docker je open-source platforma pre kontajnerizáciu aplikácií, pre
           zjednodušenie ich vývoja a nasadenia. Docker vytvára takzvané
           kontajnere. Tieto kontajnere obsahujú aplikácie, všetky potrebné
@@ -65,7 +65,7 @@ export default function Home() {
           src={dockerImg}
           alt=""
           className="images"
-          style={{ height: '316px', width: '240px' }}
+          style={{ height: '301px', width: '271px' }}
         />
       </div>
       <h3>Docker architektúra</h3>
@@ -92,7 +92,7 @@ export default function Home() {
         src={dockerArch}
         alt=""
         className="images"
-        style={{ height: '301px', width: '614px' }}
+        style={{ height: '291px', width: '589px' }}
       />
       <h3>Docker virtualizácia</h3>
       <p>

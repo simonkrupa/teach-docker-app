@@ -2,7 +2,6 @@ import { Handle, Position } from 'reactflow';
 import './ContainerNode.css';
 import { memo, useEffect, useState } from 'react';
 import { ContainerNodeProps } from '../../types/types';
-import DockerLogo from '../../../../assets/Docker.png';
 
 export function RunningState() {
   return (
@@ -86,11 +85,6 @@ const ContainerNodeEnhanced = memo(function ContainerNodeEnhanced(props) {
             <Handle type="source" id="handle2s" position={Position.Bottom} />
             <Handle type="target" id="handle2t" position={Position.Bottom} />
           </div>
-          <img
-            className="docker-image-logo"
-            src={DockerLogo}
-            alt="docker logo"
-          />
         </div>
       ) : (
         <div />
