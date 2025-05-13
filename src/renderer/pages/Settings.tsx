@@ -30,10 +30,9 @@ export default function Settings() {
   const [secondaryPasswordValue, setSecondaryPasswordValue] = useState('');
 
   const handleStartApp = () => {
-    //TODO temp
-    // if (!primaryIpValid || !secondaryIpValid) {
-    //   return;
-    // }
+    if (!primaryIpValid || !secondaryIpValid) {
+      return;
+    }
     window.electron.ipcRenderer.sendMessage('set-docker-vms', [
       primaryIpValue,
       secondaryIpValue,
@@ -189,14 +188,6 @@ export default function Settings() {
       if (secondaryIpEventListenerRef.current) {
         secondaryIpEventListenerRef.current();
       }
-      // window.electron.ipcRenderer.removeListener(
-      //   'validate-primary-ip',
-      //   validatePrimaryHandler,
-      // );
-      // window.electron.ipcRenderer.removeListener(
-      //   'validate-secondary-ip',
-      //   validateSecondaryHandler,
-      // );
     };
   }, []);
 
