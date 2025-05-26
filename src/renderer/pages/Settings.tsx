@@ -198,7 +198,7 @@ export default function Settings() {
       </h1>
       <h2 style={{ marginBottom: '3%' }}>
         Zadefinujte IP adresy a prihlasovacie údaje pre virtuálne stroje bežiace
-        docker.
+        Docker.
       </h2>
       <div style={{ display: 'flex' }}>
         <div className="primary-vm">

@@ -12,17 +12,17 @@ export default function IpvlanOverview() {
   };
   return (
     <div className="all-pages">
-      <h1>Prehľad - ipvlan sieť</h1>
+      <h1>Prehľad - IPVLAN sieť</h1>
       <p>
-        Docker poskytuje sieťový mód ipvlan v podobe ovládača ipvlan. Ipvlan
+        Docker poskytuje sieťový mód IPVLAN v podobe ovládača ipvlan. IPVLAN
         sieť umožňuje pripájanie kontajnerov priamo na hostiteľskú fyzickú sieť
-        pomocou virtuálnych podrozhraní, ktoré na rozdiel od macvlan siete
-        zdieľajú rovnakú mac adresu. Táto mac adresa je rovnaká ako mac adresa
-        rodičovského sieťového rozhrania. Ipvlan sieť pracuje na vrstve 2 a 3
-        oproti macvlan sieti, ktorá operuje len na sieťovej vrstve 2. Pri sieti
-        ipvlan nie je potrebný promiskuitný mód, čo prináša zvýšenie bezpečnosti
-        na rozdiel od macvlan siete. Ďalšou výhodou je podpora bezdrôtového
-        pripojenia, ktoré macvlan sieť nepodporuje.
+        pomocou virtuálnych podrozhraní, ktoré na rozdiel od MACVLAN siete
+        zdieľajú rovnakú MAC adresu. Táto MAC adresa je rovnaká ako MAC adresa
+        rodičovského sieťového rozhrania. IPVLAN sieť pracuje na vrstve 2 a 3
+        oproti MACVLAN sieti, ktorá operuje len na sieťovej vrstve 2. Pri sieti
+        IPVLAN nie je potrebný promiskuitný mód, čo prináša zvýšenie bezpečnosti
+        na rozdiel od MACVLAN siete. Ďalšou výhodou je podpora bezdrôtového
+        pripojenia, ktoré MACVLAN sieť nepodporuje.
       </p>
 
       <img

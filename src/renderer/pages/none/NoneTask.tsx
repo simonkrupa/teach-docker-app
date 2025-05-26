@@ -15,7 +15,7 @@ export default function NoneTask() {
       <h1>Úloha - none sieť</h1>
       <ol>
         <li>
-          Vytvorenie docker kontajnera pripojeného na docker none sieť s názvom
+          Vytvorenie Docker kontajnera pripojeného na Docker none sieť s názvom
           my-nginx5.
         </li>
         <li>Validácia prístupu ku kontajneru a jeho komunikácia.</li>

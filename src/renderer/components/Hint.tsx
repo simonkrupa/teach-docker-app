@@ -58,17 +58,17 @@ export default function DropdownWithHint() {
         <Option value="list_networks">Zoznam sietí</Option>
         <Option value="inspect">Zobrazenie informácií o kontajneri</Option>
         <Option value="net_inspect">Zobrazenie informácií o sieti</Option>
-        <Option value="swarm">Vytvorenie swarmu</Option>
-        <Option value="swarm_join">Pripojenie do swarmu</Option>
-        <Option value="swarm_leave">Opustenie swarmu</Option>
-        <Option value="swarm_list">Zoznam uzlov v swarm</Option>
+        <Option value="swarm">Vytvorenie Swarm-u</Option>
+        <Option value="swarm_join">Pripojenie do Swarm-u</Option>
+        <Option value="swarm_leave">Opustenie Swarm-u</Option>
+        <Option value="swarm_list">Zoznam uzlov v Swarm</Option>
         <Option value="exec">Spustenie príkazu v kontajneri</Option>
         <Option value="ipaddr">Zobrazenie sieťových rozhraní</Option>
         <Option value="bridge">Zobrazenie linuxových bridgov</Option>
-        <Option value="edit_docker_service">Úprava docker služby</Option>
+        <Option value="edit_docker_service">Úprava Docker služby</Option>
         <Option value="restart_daemon">Reštartovanie daemona</Option>
-        <Option value="restart_docker">Reštartovanie dockeru</Option>
-        <Option value="docker_events">Zobrazenie udalostí dockeru</Option>
+        <Option value="restart_docker">Reštartovanie Dockeru</Option>
+        <Option value="docker_events">Zobrazenie udalostí Dockeru</Option>
         <Option value="namespace_command">Príkaz v mennom priestore</Option>
         <Option value="net_namespace_cmd">
           Príkaz v sieťovom mennom priestore

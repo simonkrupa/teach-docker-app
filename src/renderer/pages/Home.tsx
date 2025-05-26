@@ -23,15 +23,15 @@ export default function Home() {
     <div className="all-pages">
       <h1>Komunikácia kontajnerov</h1>
       <p>
-        Toto je domovská stránka aplikácie na výučbu komunikácie docker
+        Toto je domovská stránka aplikácie na výučbu komunikácie Docker
         kontajnerov.
       </p>
       <p>
         Aplikácia obsahuje úlohy na demonštráciu všetkých dostupných druhov
-        docker sietí. Každá úloha obsahuje v prvej sekcií teoretickú časť danej
-        docker siete. V druhej časti je špecifikovaná praktická úloha. V tretej
+        Docker sietí. Každá úloha obsahuje v prvej sekcií teoretickú časť danej
+        Docker siete. V druhej časti je špecifikovaná praktická úloha. V tretej
         časti sa nachádza vizualizačné plátno, kde sa odzrkadľuje aktuálny stav
-        docker kontajnerov, sietí a sieťových prvkov relevantných pre danú
+        Docker kontajnerov, sietí a sieťových prvkov relevantných pre danú
         úlohu.
       </p>
 
@@ -53,10 +53,10 @@ export default function Home() {
           kontajnere. Tieto kontajnere obsahujú aplikácie, všetky potrebné
           závislosti, knižnice a nástroje pre beh týchto aplikácií. Kontajnere
           sú izolované od vonkajšieho prostredia rovnako ako virtuálne stroje.
-          Na rozdiel od virtuálnych strojov si docker kontajnere nevytvárajú
+          Na rozdiel od virtuálnych strojov si Docker kontajnere nevytvárajú
           vlastný operačný systém, ale pracujú na rovnakom operačnom systéme ako
           ich hostiteľské zariadenie. Hlavnou výhodou tohto rozdielu je to, že
-          docker kontajnere sú týmto menej záťažové pre systém a rýchlejšie
+          Docker kontajnere sú týmto menej záťažové pre systém a rýchlejšie
           spustiteľné. Kontajnere sú jednoducho prenášateľné, keďže všetky
           závislosti potrebné na beh kontajnerizovanej aplikácie sú
           predefinované v obraze kontajnera
@@ -70,22 +70,22 @@ export default function Home() {
       </div>
       <h3>Docker architektúra</h3>
       <p>
-        Prácu s dockerom sprostredkovávajú dva základné objekty - kontajnere a
+        Prácu s Dockerom sprostredkovávajú dva základné objekty - kontajnere a
         obrazy. Docker obraz je vzor so sadou inštrukcií, podľa ktorých sa má
-        vytvoriť docker kontajner. Kontajner je inštancia docker obrazu, s
+        vytvoriť Docker kontajner. Kontajner je inštancia Docker obrazu, s
         ktorou vieme pracovať, vieme ju zastaviť, vymazať, modifikovať. Docker
-        využíva klient-server architektúru. Za fungovaním dockeru stoja tri
-        komponenty: docker klient, docker daemon, docker registry. Docker klient
+        využíva klient-server architektúru. Za fungovaním Dockeru stoja tri
+        komponenty: Docker klient, Docker daemon, Docker registry. Docker klient
         je vrstva, pomocou ktorej používateľ interaguje s dockerom, môže to byť
-        prostredníctvom terminálu, docker desktopu, čo je grafické rozhranie
-        dockeru alebo iného externého rozhrania. Docker klient komunikuje s
-        docker daemonom prostredníctvom REST API. Úlohou docker daemonu je
+        prostredníctvom terminálu, Docker desktopu, čo je grafické rozhranie
+        Dockeru alebo iného externého rozhrania. Docker klient komunikuje s
+        Docker daemonom prostredníctvom REST API. Úlohou Docker daemonu je
         príjmať signály od klienta a podľa nich vytvárať alebo modifikovať
-        docker kontajnere, obrazy, siete. Aj klient, aj daemon môžu bežať na
+        Docker kontajnere, obrazy, siete. Aj klient, aj daemon môžu bežať na
         jednom hostiteľskom zariadení. Úlohou daemonu je spravovať register
-        obrazov v hostiteľskom zariadení, ale takisto komunikuje s online docker
-        registrom, nazývaným tiež dockerhub, kde môže nahrávať alebo sťahovať
-        docker obrazy. Tento register slúži na nahrávanie docker obrazov, ktoré
+        obrazov v hostiteľskom zariadení, ale takisto komunikuje s online Docker
+        registrom, nazývaným tiež Dockerhub, kde môže nahrávať alebo sťahovať
+        Docker obrazy. Tento register slúži na nahrávanie Docker obrazov, ktoré
         sú sprístupnené verejnosti alebo určitej skupine ľudí.
       </p>
       <img
@@ -113,7 +113,7 @@ export default function Home() {
         nachádza v každom druhu menného priestoru. Poznáme pid menný priestor,
         ktorý zabezpečuje, že procesy v rámci jedného menného priestoru môžu
         vidieť iba ostatné procesy toho istého menného priestoru, čiže každý
-        docker kontajner vidí len svoje vlastné procesy, akoby bol jediným
+        Docker kontajner vidí len svoje vlastné procesy, akoby bol jediným
         zariadením v systéme. Sieťový menný priestor umožňuje každému kontajneru
         udeľovať a izolovať ich vlastné sieťové zdroje. Používateľské menné
         priestory slúžia na oddelenie právomocí rovnakých používateľov naprieč

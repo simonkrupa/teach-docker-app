@@ -103,7 +103,7 @@ const items: MenuItem[] = [
     4,
   ),
   getItem(
-    '5. Macvlan sieť',
+    '5. MACVLAN sieť',
     '/macvlan',
     undefined,
     [
@@ -117,7 +117,7 @@ const items: MenuItem[] = [
     5,
   ),
   getItem(
-    '6. Ipvlan sieť',
+    '6. IPVLAN sieť',
     '/ipvlan',
     undefined,
     [

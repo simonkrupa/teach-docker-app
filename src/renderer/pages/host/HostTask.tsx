@@ -15,7 +15,7 @@ export default function HostTask() {
       <h1>Úloha - host sieť</h1>
       <ol>
         <li>
-          Vytvorenie docker kontajnera pripojeného na docker host sieť s názvom
+          Vytvorenie Docker kontajnera pripojeného na Docker host sieť s názvom
           my-nginx4.
         </li>
         <li>Validácia prístupu ku kontajneru a jeho komunikácia.</li>

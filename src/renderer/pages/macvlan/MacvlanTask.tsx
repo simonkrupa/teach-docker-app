@@ -12,15 +12,15 @@ export default function MacvlanTask() {
   };
   return (
     <div className="all-pages">
-      <h1>Úloha - macvlan sieť</h1>
+      <h1>Úloha - MACVLAN sieť</h1>
       <ol>
-        <li>Vytvorenie docker macvlan siete s názvom my-macvlan.</li>
+        <li>Vytvorenie Docker MACVLAN siete s názvom my-macvlan.</li>
         <li>
-          Vytvorenie 2 nginx docker kontajnerov pripojených na docker macvlan
+          Vytvorenie 2 nginx Docker kontajnerov pripojených na Docker MACVLAN
           sieť s názvami my-nginx8 a my-nginx10.
         </li>
         <li>
-          Vytvorenie nginx kontajnera pripojeného na docker host sieť s názvom
+          Vytvorenie nginx kontajnera pripojeného na Docker host sieť s názvom
           my-nginx9.
         </li>
         <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
@@ -30,7 +30,7 @@ export default function MacvlanTask() {
         otestujte vzájomnú komunikáciu kontajnerov pomocou IP adresy a názvu
         kontajnera. Ingress si môžeme overiť prístupom na port 80 kde sa
         nachádza nginx server. Porovnajte rozdiely medzi nginx kontajnermi na
-        macvlan a host sieti.
+        MACVLAN a host sieti.
       </p>
       <img
         src={macvlanImage}

@@ -17,23 +17,23 @@ export default function BridgeOverview() {
         Používateľom definovaná bridge sieť je vytváraná samotným používateľom a
         rovnako ako predvolená sieť bridge, je vytvorená podľa ovládača bridge.
         V linux ekosystéme ide opäť o linuxový bridge, ktorý dostáva názov podľa
-        identifikačného čísla docker bridge siete a prefixu br-.
+        identifikačného čísla Docker bridge siete a prefixu br-.
       </p>
       <p>
         Umožňuje prístupnejšiu modifikáciu siete bez potreby reštartovania
         Dockeru. Pri vytváraní siete vieme zadefinovať vlastnú podsieť, z ktorej
-        následne všetky pripojené kontajnere dostávajú vlastnú ip adresu.
+        následne všetky pripojené kontajnere dostávajú vlastnú IP adresu.
       </p>
       <p>
         Narozdiel od predvolenej siete bridge, je súčasťou používateľom
-        definovanej bridge siete aj DNS mechanizmus, ktorý umožňuje mapovanie ip
+        definovanej bridge siete aj DNS mechanizmus, ktorý umožňuje mapovanie IP
         adries kontajnerov podľa ich názvu, čiže pri komunikácii medzi viacerými
         kontajnermi pripojenými na jednu bridge sieť môžeme používať na vzájomnú
         komunikáciu aj názvy kontajnerov.
       </p>
       <p>
         Na obrázku vidíme demonštráciu používateľom definovanú sieť bridge s
-        názvom my-bridge a rovnako tak aj predvolenú docker bridge sieť. Vrámci
+        názvom my-bridge a rovnako tak aj predvolenú Docker bridge sieť. Vrámci
         týchto sietí vidíme v druhom riadku názov linuxového bridgu. V prípade
         potreby je možné jeden kontajner pripojiť na viacero sietí naraz,
         kontajner dostane nové sieťové rozhranie.

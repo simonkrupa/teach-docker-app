@@ -23,23 +23,23 @@ export default function DefaultBridgeOverview() {
       >
         <div style={{ flex: '1 1 400px', maxWidth: '70%' }}>
           <p>
-            Predvolená sieť bridge je predom vytvorená po nainštalovaní dockeru
+            Predvolená sieť bridge je predom vytvorená po nainštalovaní Dockeru
             a je to izolovaná, interná sieť, ktorá umožňuje komunikáciu
             kontajnerov nachádzajúcich sa na tejto sieti v rámci jedného
-            hostiteľského zariadenia. V rámci docker sietí má názov bridge a je
-            vytvorená podľa ovládača bridge. Interne je docker bridge vlastne
+            hostiteľského zariadenia. V rámci Docker sietí má názov bridge a je
+            vytvorená podľa ovládača bridge. Interne je Docker bridge vlastne
             sieťový komponent bridge v rámci Linux ekosystému a jeho sieťovej
             haldy pod názvom docker0, čo si vieme overiť príkazom na
             vylistovanie sieťových rozhraní v hostiteľskom počítači, na ktorom
             beží Docker. Predvolená je z dôvodu, že po vytvorení akéhokoľvek
-            docker kontajnera bez špecifikácie jeho siete, je tento kontajner
+            Docker kontajnera bez špecifikácie jeho siete, je tento kontajner
             pripojený práve na túto bridge sieť.
           </p>
           <p>
-            Predvolená docker bridge sieť dostáva vlastnú podsieť a bránu. Z
-            tohto ip rozmedzia následne všetky kontajnere vytvorené na tejto
-            sieti dostávajú vlastnú ip adresu. Na 11 priraďovanie ip adries
-            slúži zabudovaný service IPAM. Interná knižnica dockeru, ktorá je
+            Predvolená Docker bridge sieť dostáva vlastnú podsieť a bránu. Z
+            tohto IP rozmedzia následne všetky kontajnere vytvorené na tejto
+            sieti dostávajú vlastnú IP adresu. Na 11 priraďovanie IP adries
+            slúži zabudovaný service IPAM. Interná knižnica Dockeru, ktorá je
             zodpovedná za vybratie voľného adresového rozmedzia pre predvolenú
             sieť bridge. Toto nastavenie je konfigurovateľné upravením
             konfiguračného súboru daemon.json. V prípade, že sme explicitne
@@ -65,7 +65,7 @@ export default function DefaultBridgeOverview() {
             ingress komunikáciu, takéto mapovanie môžeme zadefinovať pri
             vytváraní kontajnera. Predvolená sieť bridge nezahŕňa DNS
             mechanizmus pre kontajnere, ktoré sú naňu 12 pripojené, na
-            kontajnere sa vieme dotazovať len pomocou ip adresy.
+            kontajnere sa vieme dotazovať len pomocou IP adresy.
           </p>
           <p>
             Akonáhle je kontajner pripojený na sieť bridge, dostáva sieťové

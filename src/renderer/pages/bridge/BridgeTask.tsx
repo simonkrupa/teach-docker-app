@@ -13,15 +13,15 @@ export default function BridgeTask() {
   return (
     <div className="all-pages">
       <h1>Úloha - bridge sieť</h1>
-      <p>Úloha pre realizáciu docker bridge siete:</p>
+      <p>Úloha pre realizáciu Docker bridge siete:</p>
       <ol>
         <li>
-          Vytvorenie novej docker siete bridge s názvom my-bridge s podsieťou
+          Vytvorenie novej Docker siete bridge s názvom my-bridge s podsieťou
           172.19.0.0
         </li>
         <li>
           Vytvorenie 2 nginx kontajnerov s názvami my-nginx a my-nginx2
-          pripojených na my-bridge sieť.
+          pripojených na my-bridge sieť, kde my-nginx ma IP adresu 172.19.0.12 a my-nginx2 IP adresu 172.19.0.13.
         </li>
         <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
       </ol>

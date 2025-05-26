@@ -12,11 +12,11 @@ export default function IpvlanTask() {
   };
   return (
     <div className="all-pages">
-      <h1>Úloha - ipvlan sieť</h1>
+      <h1>Úloha - IPVLAN sieť</h1>
       <ol>
-        <li>Vytvorenie docker ipvlan siete s názvom my-ipvlan.</li>
+        <li>Vytvorenie Docker IPVLAN siete s názvom my-ipvlan.</li>
         <li>
-          Vytvorenie 2 busybox docker kontajnerov pripojených na docker ipvlan
+          Vytvorenie 2 busybox Docker kontajnerov pripojených na Docker IPVLAN
           sieť s názvami busybox-1 a busybox-2.
         </li>
         <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
@@ -26,7 +26,7 @@ export default function IpvlanTask() {
         otestujte vzájomnú komunikáciu kontajnerov pomocou IP adresy a názvu
         kontajnera. Ingress si môžeme overiť prístupom na port 80 kde sa
         nachádza nginx server. Porovnajte rozdiely medzi nginx kontajnermi na
-        ipvlan a macvlan sieti.
+        IPVLAN a MACVLAN sieti.
       </p>
       <img
         src={ipvlanImage}

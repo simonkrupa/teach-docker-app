@@ -70,7 +70,7 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
       </div>
       <div className="framebar-username">{username}</div>
 
-      <div className="appName">Komunikácia docker kontajnerov</div>
+      <div className="appName">Komunikácia Docker kontajnerov</div>
       <Button
         onClick={handleMinimizeClick}
         className="controlBtn no-drag"

@@ -24,7 +24,7 @@ export default function HostOverview() {
           Hostiteľská sieť odstraňuje akúkoľvek izoláciu medzi hostiteľom a
           kontajnermi, čiže kontajnere majú priamy prístup k sieťovému
           prostrediu hostiteľa a využívajú jeho sieťové parametre. Tým pádom má
-          kontajner využívajúci sieť host rovnakú ip adresu akou je ip adresa
+          kontajner využívajúci sieť host rovnakú IP adresu akou je IP adresa
           hostiteľského zariadenia. Výhodou využitia siete host je zrýchlenie
           výkonu aplikácie bežiacej v kontajneri, to znamená, odovzdávanie a
           príjmanie paketov prebieha rýchlejšie, keďže kontajner je pripojený
@@ -37,9 +37,9 @@ export default function HostOverview() {
           bridge, kde je potrebné špecificky nastaviť port, ktorý bude odhalený.
           Ďalšou nevýhodou je, že port, ktorý používa kontajner na hosťovskej
           sieti, už nie sme schopní použiť pre inú aplikáciu, čo spôsobuje
-          značné obmedzenie pri používaní viacerých docker kontajnerov. Na
+          značné obmedzenie pri používaní viacerých Docker kontajnerov. Na
           obrázku 7 môžeme vidieť hostiteľský počítač, na ktorom beží služba SSH
-          na porte 22 a nginx docker kontajner pripojený na docker sieť host na
+          na porte 22 a nginx Docker kontajner pripojený na Docker sieť host na
           port 80.
         </p>
         <img

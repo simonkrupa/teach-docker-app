@@ -59,8 +59,8 @@ export default function Welcome() {
         <h1 className="header-welcome">Úvod</h1>
         <h2 className="header-h2">Komunikácia kontajnerov</h2>
         <p className="welcome-font-p">
-          Vitajte v aplikácie pre výučbu komunikácie docker kontajnerov. Táto
-          aplikácia vám pomôže porozumieť konceptom docker sieti prostredníctvom
+          Vitajte v aplikácie pre výučbu komunikácie Docker kontajnerov. Táto
+          aplikácia vám pomôže porozumieť konceptom Docker sieti prostredníctvom
           teoretických častí a praktických úloh, ktoré budú vizualizovať váš
           aktuálny progres.
         </p>

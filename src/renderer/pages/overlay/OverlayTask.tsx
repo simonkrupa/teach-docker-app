@@ -15,10 +15,10 @@ export default function OverlayTask() {
       <h1>Úloha - overlay sieť</h1>
       <ol>
         <li>
-          Vytvorenie docker swarmu a pripojenie druhého virtuálneho stroja do
-          swarmu.
+          Vytvorenie Docker Swarm-u a pripojenie druhého virtuálneho stroja do
+          Swarm-u.
         </li>
-        <li>Vytvorenie docker overlay siete s názvom my-overlay.</li>
+        <li>Vytvorenie Docker overlay siete s názvom my-overlay.</li>
         <li>
           Vytvorenie nginx kontajnera na manažérskom stroji s názvom my-nginx6 a
           vytvore- nie nginx kontajnera na pracovníkovi s názvom my-nginx7.
