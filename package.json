@@ -224,8 +224,11 @@
     },
     "win": {
       "target": [
-        "nsis"
+        "portable"
       ]
+    },
+    "portable": {
+      "artifactName": "LearnDockerNet_portable.exe"
     },
     "linux": {
       "target": [

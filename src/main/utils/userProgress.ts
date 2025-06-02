@@ -4,7 +4,8 @@ import * as path from 'path';
 let filePath = '';
 
 function createFileIfNotExists(appPath: string): void {
-  const dbFolderPath = path.join(appPath, 'userProgress');
+  const dbFolderPath = path.join(process.resourcesPath, 'userProgress');
+  // const dbFolderPath = path.join(appPath, 'userProgress');
   const dbFilePath = path.join(dbFolderPath, 'usernamesStore.json');
   console.log('Checking if file exists', appPath);
   if (!fs.existsSync(dbFolderPath)) {
