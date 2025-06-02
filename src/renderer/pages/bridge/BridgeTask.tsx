@@ -2,9 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 import mybridgeImage from 'assets/imgs/mybridge.jpg';
+import { useTranslation } from 'react-i18next';
 import DropdownWithHint from '../../components/Hint';
 
 export default function BridgeTask() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleProceedNavigation = () => {
@@ -12,25 +14,14 @@ export default function BridgeTask() {
   };
   return (
     <div className="all-pages">
-      <h1>Úloha - bridge sieť</h1>
-      <p>Úloha pre realizáciu Docker bridge siete:</p>
+      <h1>{t('bridge_task_title')}</h1>
+      <p>{t('bridge_task_intro')}</p>
       <ol>
-        <li>
-          Vytvorenie novej Docker siete bridge s názvom my-bridge s podsieťou
-          172.19.0.0
-        </li>
-        <li>
-          Vytvorenie 2 nginx kontajnerov s názvami my-nginx a my-nginx2
-          pripojených na my-bridge sieť, kde my-nginx ma IP adresu 172.19.0.12 a my-nginx2 IP adresu 172.19.0.13.
-        </li>
-        <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
+        <li>{t('bridge_task_step_1')}</li>
+        <li>{t('bridge_task_step_2')}</li>
+        <li>{t('bridge_task_step_3')}</li>
       </ol>
-      <p>
-        Pre testovanie egress komunikácie môžete využiť príkaz ping. Takisto
-        otestujte vzájomnú komunikáciu kontajnerov pomocou IP adresy a názvu
-        kontajnera. Ingress si môžeme overiť prístupom na port 80 kde sa
-        nachádza nginx server.
-      </p>
+      <p>{t('bridge_task_validation')}</p>
       <img
         src={mybridgeImage}
         alt=""
@@ -46,7 +37,7 @@ export default function BridgeTask() {
         className="generic-button"
         type="primary"
       >
-        Ďalej
+        {t('next')}
       </Button>
       <DropdownWithHint />
     </div>

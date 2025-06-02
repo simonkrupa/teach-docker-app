@@ -2,9 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 import ipvlanImage from 'assets/imgs/ipvlan.drawio.png';
+import { useTranslation } from 'react-i18next';
 import DropdownWithHint from '../../components/Hint';
 
 export default function IpvlanOverview() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleProceedNavigation = () => {
@@ -12,18 +14,8 @@ export default function IpvlanOverview() {
   };
   return (
     <div className="all-pages">
-      <h1>Prehľad - IPVLAN sieť</h1>
-      <p>
-        Docker poskytuje sieťový mód IPVLAN v podobe ovládača ipvlan. IPVLAN
-        sieť umožňuje pripájanie kontajnerov priamo na hostiteľskú fyzickú sieť
-        pomocou virtuálnych podrozhraní, ktoré na rozdiel od MACVLAN siete
-        zdieľajú rovnakú MAC adresu. Táto MAC adresa je rovnaká ako MAC adresa
-        rodičovského sieťového rozhrania. IPVLAN sieť pracuje na vrstve 2 a 3
-        oproti MACVLAN sieti, ktorá operuje len na sieťovej vrstve 2. Pri sieti
-        IPVLAN nie je potrebný promiskuitný mód, čo prináša zvýšenie bezpečnosti
-        na rozdiel od MACVLAN siete. Ďalšou výhodou je podpora bezdrôtového
-        pripojenia, ktoré MACVLAN sieť nepodporuje.
-      </p>
+      <h1>{t('ipvlan_overview_title')}</h1>
+      <p>{t('ipvlan_overview_paragraph_1')}</p>
 
       <img
         src={ipvlanImage}
@@ -41,7 +33,7 @@ export default function IpvlanOverview() {
         className="generic-button"
         type="primary"
       >
-        Ďalej
+        {t('next')}
       </Button>
       <DropdownWithHint />
     </div>

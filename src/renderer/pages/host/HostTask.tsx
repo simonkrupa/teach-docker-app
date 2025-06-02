@@ -2,9 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 import hostImage from 'assets/imgs/hosttask.jpg';
+import { useTranslation } from 'react-i18next';
 import DropdownWithHint from '../../components/Hint';
 
 export default function HostTask() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleProceedNavigation = () => {
@@ -12,20 +14,12 @@ export default function HostTask() {
   };
   return (
     <div className="all-pages">
-      <h1>Úloha - host sieť</h1>
+      <h1>{t('host_task_title')}</h1>
       <ol>
-        <li>
-          Vytvorenie Docker kontajnera pripojeného na Docker host sieť s názvom
-          my-nginx4.
-        </li>
-        <li>Validácia prístupu ku kontajneru a jeho komunikácia.</li>
+        <li>{t('host_task_step_1')}</li>
+        <li>{t('host_task_step_2')}</li>
       </ol>
-      <p>
-        Pre testovanie egress komunikácie môžete využiť príkaz ping. Takisto
-        otestujte vytvorenie viacerích nginx kontajnerov na sieti host súčasne.
-        Ingress si môžeme overiť prístupom na port 80 kde sa nachádza nginx
-        server.
-      </p>
+      <p>{t('host_task_description')}</p>
       <img
         src={hostImage}
         alt=""
@@ -41,7 +35,7 @@ export default function HostTask() {
         className="generic-button"
         type="primary"
       >
-        Ďalej
+        {t('next')}
       </Button>
       <DropdownWithHint />
     </div>

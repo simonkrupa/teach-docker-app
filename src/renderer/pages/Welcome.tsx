@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, Alert } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
@@ -6,6 +7,7 @@ import { useProgress } from '../UserContext';
 import './Welcome.css';
 
 export default function Welcome() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const userProgressRef = useRef<() => void | null>(null);
@@ -56,21 +58,16 @@ export default function Welcome() {
   return (
     <div className="welcome-page">
       <div className="first-col-welcome">
-        <h1 className="header-welcome">Úvod</h1>
-        <h2 className="header-h2">Komunikácia kontajnerov</h2>
-        <p className="welcome-font-p">
-          Vitajte v aplikácie pre výučbu komunikácie Docker kontajnerov. Táto
-          aplikácia vám pomôže porozumieť konceptom Docker sieti prostredníctvom
-          teoretických častí a praktických úloh, ktoré budú vizualizovať váš
-          aktuálny progres.
-        </p>
+        <h1 className="header-welcome">{t('introduction')}</h1>
+        <h2 className="header-h2">{t('name')}</h2>
+        <p className="welcome-font-p">{t('welcome_desc')}</p>
         <br />
         <br />
-        <h3 className="header-h3">Zadefinujte používateľské meno</h3>
+        <h3 className="header-h3">{t('define_username')}</h3>
         <Input
           size="large"
           className="input-welcome"
-          placeholder="Používateľské meno"
+          placeholder={t('placeholder_username')}
           prefix={<UserOutlined />}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -82,7 +79,7 @@ export default function Welcome() {
           className="button-welcome"
           type="primary"
         >
-          Štart
+          {t('start')}
         </Button>
         <br />
         {alertInfo.visible && (

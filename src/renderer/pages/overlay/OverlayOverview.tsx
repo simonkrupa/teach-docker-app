@@ -1,12 +1,14 @@
 import { useNavigate } from 'react-router-dom';
-import { Button, Dropdown } from 'antd';
+import { Button } from 'antd';
 import '../Pages.css';
 import overlayImage1 from 'assets/imgs/transpovelay1.png';
 import overlayImage2 from 'assets/imgs/transpoverlay2.png';
 import overlaySwarmImage from 'assets/imgs/transpoverlay3.png';
+import { useTranslation } from 'react-i18next';
 import DropdownWithHint from '../../components/Hint';
 
 export default function OverlayOverview() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleProceedNavigation = () => {
@@ -14,45 +16,15 @@ export default function OverlayOverview() {
   };
   return (
     <div className="all-pages">
-      <h1>Prehľad - overlay sieť</h1>
-      <p>
-        Doposiaľ sme si predstavili len možnosti prepojenia kontajnerov v rámci
-        jedného hostiteľského počítača. Nevyhnuteľnou potrebou v reálnom,
-        produkčnom prostredí je taktiež komunikácia a prepájanie kontajnerov
-        naprieč viacerými hostiteľskými strojmi, na ktorých beží Docker. Na
-        tento účel nám slúži overlay sieť. Na realizáciu Docker overlay siete
-        musíme vytvoriť Docker Swarm na hlavnom hostiteľskom zariadení, ktoré
-        bude zohrávať úlohu manažéra a pripojiť všetky ostatné hostiteľské
-        zariadenia do tohto Swarm-u. Tieto zvyšné hostiteľské stroje sa budú
-        nazývať pracovníci. Docker Swarm nám slúži pri získavaní, zachovávaní a
-        synchronizovaní údajov o jednotlivých hostiteľských zariadeniach a ich
-        sieťových údajoch. Toto je dôležité pri komunikácii, pretože poskytuje
-        sieti overlay informácie, kde sa nachádza cieľový Docker kontajner, na
-        ktorý chceme odoslať pakety.
-      </p>
+      <h1>{t('overlay_overview_title')}</h1>
+      <p>{t('overlay_overview_intro_1')}</p>
       <img
         src={overlayImage1}
         alt=""
         className="images"
         style={{ height: '281px', width: '419px', marginTop: '20px' }}
       />
-      <p>
-        Avšak komunikácia vrámci overlay siete nie je až tak jednoduchá, pretože
-        v skutočnosti dochádza ku viacvrstvovému zabaľovaniu dát, ktoré
-        posielame cez túto sieť. Na realizáciu tejto komunikácie sa využíva
-        technológia VXLAN. Segmenty dát posielané kontajnerom prostredníctvom
-        overlay siete dostávajú IP hlavičku obsahujúcu IP adresu odosielateľa a
-        príjmateľa. IP paket je následne zaobalený ethernetovým rámcom. Aby sme
-        dokázali presunúť paket cez fyzickú sieť, je rámec zaobalený VXLAN
-        hlavičkou, ktorá obsahuje 24 bitové identifikačné číslo siete - VNI.
-        Dáta sú zbalené do UDP datagramu a ďalej dostávajú IP hlavičku s IP
-        adresou hostiteľského stroja, na ktorom sa Docker kontajner nachádza a
-        IP adresou príjmateľského hostiteľského stroja, na ktorom beží Docker
-        kontajner, ktorému dáta posielame. Paket je opäť zabalený do
-        ethernetového rámcu s MAC adresami odosielateľa a príjmateľa a takto sa
-        dostáva cez fyzickú sieť do cieľového hostiteľského stroja, kde je rámec
-        postupne odbalený a dostáva sa do príslušného Docker kontajnera.
-      </p>
+      <p>{t('overlay_overview_intro_2')}</p>
 
       <img
         src={overlayImage2}
@@ -60,33 +32,9 @@ export default function OverlayOverview() {
         className="images"
         style={{ height: '421px', width: '451px', marginTop: '20px' }}
       />
-      <p>
-        Po vytvorení Docker overlay siete prostredníctvom Docker Swarm-u Docker
-        engine automaticky vytvára VXLAN tunel a linux bridge v mennom sieťovom
-        priestore pod rovnakým názvom ako je id overlay siete. Čiže tieto
-        sieťové prvky sa nevytvárajú v mennom sieťovom priestore hostiteľského
-        počítača, ale sú izolované do vlastného menného sieťo- vého priestoru.
-        Tu sa taktiež nachádza virtuálny ethernetový pár, ktorý prepája sieťové
-        rozhranie nachádzajúce sa v priestore Docker kontajnera a linuxový
-        bridge nachádzajúci sa v mennom sieťovom priestore siete. Z bridgu sú
-        dáta presúvané do VXLAN tunela.
-      </p>
-      <p>
-        Docker Swarm manažér po vytvorení overlay siete zabezpečuje vytvorenie
-        úložiska, ktoré bude držať údaje o všetkých kontajneroch, ich VTEP a VNI
-        nachádzajúcej sa v danej overlay sieti. Manažér je zodpovedný za
-        synchronizáciu týchto údajov medzi všetkými pracovníkmi v Swarm-e a v
-        prípade, že do siete sa pripojí nové zariadenie, všetky zvyšné
-        zariadenia sú touto udalosťou oboznámené a ich úložisko sa aktualizuje.
-      </p>
-      <p>
-        V prípade využitia Docker swamu Docker engine taktiež automaticky
-        vytvorí Docker bridge sieť pod názvom docker gwbridge v mennom priestore
-        hostiteľského stroja, na ktorú sa napája ďalšie sieťové rozhranie
-        nachádzajúce sa v Docker kontajneri. Docker gwbridge plní funkciu
-        egressu, výstupu dát z kontajnera do vonkajšieho sveta a komunikácia
-        medzi kontajnermi je zakázaná.
-      </p>
+      <p>{t('overlay_overview_intro_3')}</p>
+      <p>{t('overlay_overview_intro_4')}</p>
+      <p>{t('overlay_overview_intro_5')}</p>
       <img
         src={overlaySwarmImage}
         alt=""
@@ -98,7 +46,7 @@ export default function OverlayOverview() {
         className="generic-button"
         type="primary"
       >
-        Ďalej
+        {t('next')}
       </Button>
       <DropdownWithHint />
     </div>

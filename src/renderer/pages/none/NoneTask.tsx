@@ -2,9 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 import noneImage from 'assets/imgs/nonetask.jpg';
+import { useTranslation } from 'react-i18next';
 import DropdownWithHint from '../../components/Hint';
 
 export default function NoneTask() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleProceedNavigation = () => {
@@ -12,19 +14,12 @@ export default function NoneTask() {
   };
   return (
     <div className="all-pages">
-      <h1>Úloha - none sieť</h1>
+      <h1>{t('none_task_title')}</h1>
       <ol>
-        <li>
-          Vytvorenie Docker kontajnera pripojeného na Docker none sieť s názvom
-          my-nginx5.
-        </li>
-        <li>Validácia prístupu ku kontajneru a jeho komunikácia.</li>
+        <li>{t('none_task_step_create_container')}</li>
+        <li>{t('none_task_step_validate_access')}</li>
       </ol>
-      <p>
-        Pre testovanie egress komunikácie môžete využiť príkaz ping. Takisto
-        otestujte vzájomnú komunikáciu kontajnerov pomocou IP adresy. Ingress si
-        môžeme overiť prístupom na port 80 kde sa nachádza nginx server.
-      </p>
+      <p>{t('none_task_description')}</p>
       <img
         src={noneImage}
         alt=""
@@ -40,7 +35,7 @@ export default function NoneTask() {
         className="generic-button"
         type="primary"
       >
-        Ďalej
+        {t('next')}
       </Button>
       <DropdownWithHint />
     </div>

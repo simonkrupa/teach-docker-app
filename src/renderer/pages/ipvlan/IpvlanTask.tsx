@@ -2,9 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 import ipvlanImage from 'assets/imgs/ipvlantask.jpg';
+import { useTranslation } from 'react-i18next';
 import DropdownWithHint from '../../components/Hint';
 
 export default function IpvlanTask() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleProceedNavigation = () => {
@@ -12,22 +14,13 @@ export default function IpvlanTask() {
   };
   return (
     <div className="all-pages">
-      <h1>Úloha - IPVLAN sieť</h1>
+      <h1>{t('ipvlan_task_title')}</h1>
       <ol>
-        <li>Vytvorenie Docker IPVLAN siete s názvom my-ipvlan.</li>
-        <li>
-          Vytvorenie 2 busybox Docker kontajnerov pripojených na Docker IPVLAN
-          sieť s názvami busybox-1 a busybox-2.
-        </li>
-        <li>Validácia prístupu ku kontajnerom a ich komunikácia.</li>
+        <li>{t('ipvlan_task_step_1')}</li>
+        <li>{t('ipvlan_task_step_2')}</li>
+        <li>{t('ipvlan_task_step_3')}</li>
       </ol>
-      <p>
-        Pre testovanie egress komunikácie môžete využiť príkaz ping. Takisto
-        otestujte vzájomnú komunikáciu kontajnerov pomocou IP adresy a názvu
-        kontajnera. Ingress si môžeme overiť prístupom na port 80 kde sa
-        nachádza nginx server. Porovnajte rozdiely medzi nginx kontajnermi na
-        IPVLAN a MACVLAN sieti.
-      </p>
+      <p>{t('ipvlan_task_description')}</p>
       <img
         src={ipvlanImage}
         alt=""
@@ -43,7 +36,7 @@ export default function IpvlanTask() {
         className="generic-button"
         type="primary"
       >
-        Ďalej
+        {t('next')}
       </Button>
       <DropdownWithHint />
     </div>

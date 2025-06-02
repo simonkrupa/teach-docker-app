@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button, Input, Alert } from 'antd';
 import './Pages.css';
 import './Settings.css';
 
 export default function Settings() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const primaryIpEventListenerRef = useRef<() => void | null>(null);
   const secondaryIpEventListenerRef = useRef<() => void | null>(null);
@@ -85,7 +87,7 @@ export default function Settings() {
       setAlertInfoPrimary({
         visible: true,
         type: 'error',
-        message: 'IP adresa primárneho virtuálneho stroja nemôže byť prázdna.',
+        message: t('settings_error_empty'),
       });
       // setLoadingPrimaryTest(false);
       return;
@@ -94,7 +96,7 @@ export default function Settings() {
       setAlertInfoPrimary({
         visible: true,
         type: 'error',
-        message: 'IP adresy nemôžu byť rovnaké pre obe virtuálne stroje.',
+        message: t('settings_error_same'),
       });
       // setLoadingPrimaryTest(false);
       return;
@@ -113,8 +115,7 @@ export default function Settings() {
       setAlertInfoSecondary({
         visible: true,
         type: 'error',
-        message:
-          'IP adresa sekundárneho virtuálneho stroja nemôže byť prázdna.',
+        message: t('settings_error_empty2'),
       });
       return;
     }
@@ -122,7 +123,7 @@ export default function Settings() {
       setAlertInfoSecondary({
         visible: true,
         type: 'error',
-        message: 'IP adresy nemôžu byť rovnaké pre obe virtuálne stroje.',
+        message: t('settings_error_same'),
       });
       return;
     }
@@ -140,14 +141,14 @@ export default function Settings() {
         setAlertInfoPrimary({
           visible: true,
           type: 'success',
-          message: 'Spojenie s virtuálnym strojom prebehlo úspešne.',
+          message: t('settings_conn_success'),
         });
         setPrimaryIpValid(true);
       } else {
         setAlertInfoPrimary({
           visible: true,
           type: 'error',
-          message: 'Spojenie s virtuálnym strojom zlyhalo.',
+          message: t('settings_conn_failure'),
         });
         setPrimaryIpValid(false);
       }
@@ -159,14 +160,14 @@ export default function Settings() {
         setAlertInfoSecondary({
           visible: true,
           type: 'success',
-          message: 'Spojenie s virtuálnym strojom prebehlo úspešne.',
+          message: t('settings_conn_success'),
         });
         setSecondaryIpValid(true);
       } else {
         setAlertInfoSecondary({
           visible: true,
           type: 'error',
-          message: 'Spojenie s virtuálnym strojom zlyhalo.',
+          message: t('settings_conn_failure'),
         });
         setSecondaryIpValid(false);
       }
@@ -194,15 +195,12 @@ export default function Settings() {
   return (
     <div className="settings-page">
       <h1 className="header-name" style={{ marginBottom: '0' }}>
-        Nastavenia
+        {t('settings')}
       </h1>
-      <h2 style={{ marginBottom: '3%' }}>
-        Zadefinujte IP adresy a prihlasovacie údaje pre virtuálne stroje bežiace
-        Docker.
-      </h2>
+      <h2 style={{ marginBottom: '3%' }}>{t('settings_define_vms')}</h2>
       <div style={{ display: 'flex' }}>
         <div className="primary-vm">
-          <h3>IP adresa primárneho virtuálneho stroja</h3>
+          <h3>{t('settings_ip_primary')}</h3>
 
           <Input
             className="input-component"
@@ -211,14 +209,14 @@ export default function Settings() {
             variant="filled"
           />
           <div className="vm-credentials">
-            <h4 className="h4-credentials">Používateľské meno</h4>
+            <h4 className="h4-credentials">{t('placeholder_username')}</h4>
             <Input
               className="input-component"
               variant="filled"
               value={primaryUserNameValue}
               onChange={handlePrimaryUserNameChange}
             />
-            <h4 className="h4-credentials">Používateľské heslo</h4>
+            <h4 className="h4-credentials">{t('username_password')}</h4>
             <Input.Password
               className="input-component"
               variant="filled"
@@ -233,7 +231,7 @@ export default function Settings() {
             loading={loadingPrimaryTest}
             style={{ width: '100%', marginTop: '2em', marginBottom: '1em' }}
           >
-            Pripojenie
+            {t('connection')}
           </Button>
           {alertInfoPrimary.visible && (
             <Alert
@@ -258,7 +256,7 @@ export default function Settings() {
         </div>
 
         <div className="primary-vm">
-          <h3>IP adresa sekundárneho virtuálneho stroja</h3>
+          <h3>{t('settings_ip_sec')}</h3>
 
           <Input
             className="input-component"
@@ -267,14 +265,14 @@ export default function Settings() {
             variant="filled"
           />
           <div className="vm-credentials">
-            <h4 className="h4-credentials">Používateľské meno</h4>
+            <h4 className="h4-credentials">{t('placeholder_username')}</h4>
             <Input
               className="input-component"
               variant="filled"
               value={secondaryUserNameValue}
               onChange={handleSecondaryUserNameChange}
             />
-            <h4 className="h4-credentials">Používateľské heslo</h4>
+            <h4 className="h4-credentials">{t('username_password')}</h4>
             <Input.Password
               className="input-component"
               variant="filled"
@@ -289,7 +287,7 @@ export default function Settings() {
             loading={loadingSecondaryTest}
             style={{ width: '100%', marginTop: '2em', marginBottom: '1em' }}
           >
-            Pripojenie
+            {t('connection')}
           </Button>
           {alertInfoSecondary.visible && (
             <Alert
@@ -317,7 +315,7 @@ export default function Settings() {
         </div>
       </div>
       <Button onClick={handleStartApp} className="submit-button" type="primary">
-        Použiť
+        {t('apply')}
       </Button>
     </div>
   );

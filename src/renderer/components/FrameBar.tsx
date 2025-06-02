@@ -8,9 +8,12 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import './FrameBar.css';
+import { useTranslation } from 'react-i18next';
 import { useProgress } from '../UserContext';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function FrameBar({ isCollapsed, toggleNavbar }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { setUserData, username } = useProgress();
   const location = useLocation();
@@ -70,7 +73,9 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
       </div>
       <div className="framebar-username">{username}</div>
 
-      <div className="appName">Komunikácia Docker kontajnerov</div>
+      <div className="appName">{t('name')}</div>
+      <LanguageSwitcher />
+
       <Button
         onClick={handleMinimizeClick}
         className="controlBtn no-drag"

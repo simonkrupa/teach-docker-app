@@ -2,9 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 import hostImage from 'assets/imgs/transhost.png';
+import { useTranslation } from 'react-i18next';
 import DropdownWithHint from '../../components/Hint';
 
 export default function HostOverview() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleProceedNavigation = () => {
@@ -12,7 +14,7 @@ export default function HostOverview() {
   };
   return (
     <div className="all-pages">
-      <h1>Prehľad - host sieť</h1>
+      <h1>{t('host_overview_title')}</h1>
       <div
         style={{
           display: 'flex',
@@ -20,28 +22,7 @@ export default function HostOverview() {
           // alignItems: 'center',
         }}
       >
-        <p style={{ maxWidth: '50%' }}>
-          Hostiteľská sieť odstraňuje akúkoľvek izoláciu medzi hostiteľom a
-          kontajnermi, čiže kontajnere majú priamy prístup k sieťovému
-          prostrediu hostiteľa a využívajú jeho sieťové parametre. Tým pádom má
-          kontajner využívajúci sieť host rovnakú IP adresu akou je IP adresa
-          hostiteľského zariadenia. Výhodou využitia siete host je zrýchlenie
-          výkonu aplikácie bežiacej v kontajneri, to znamená, odovzdávanie a
-          príjmanie paketov prebieha rýchlejšie, keďže kontajner je pripojený
-          priamo na sieťové rozhranie hosťovského stroja, bez prítomnosti
-          ďalších sieťových technológií v medziprostredí ako napríklad NAT,
-          bridge, VXLAN tunel. Nevýhodou je, že kontajner je priamo odhalený pre
-          vonkajší svet, čím aplikáciu vystavujeme väčšiemu bezpečnostnému
-          riziku. Ktokoľvek má prístup k hosťovskému stroju, má takisto prístup
-          ku kontajneru, to znamená, ingress je povolený na rozdiel od siete
-          bridge, kde je potrebné špecificky nastaviť port, ktorý bude odhalený.
-          Ďalšou nevýhodou je, že port, ktorý používa kontajner na hosťovskej
-          sieti, už nie sme schopní použiť pre inú aplikáciu, čo spôsobuje
-          značné obmedzenie pri používaní viacerých Docker kontajnerov. Na
-          obrázku 7 môžeme vidieť hostiteľský počítač, na ktorom beží služba SSH
-          na porte 22 a nginx Docker kontajner pripojený na Docker sieť host na
-          port 80.
-        </p>
+        <p style={{ maxWidth: '50%' }}>{t('host_overview_description')}</p>
         <img
           src={hostImage}
           alt=""
@@ -59,7 +40,7 @@ export default function HostOverview() {
         className="generic-button"
         type="primary"
       >
-        Ďalej
+        {t('next')}
       </Button>
       <DropdownWithHint />
     </div>

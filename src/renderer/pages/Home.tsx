@@ -3,9 +3,11 @@ import { Button } from 'antd';
 import './Pages.css';
 import dockerArch from 'assets/imgs/dockerarchtransparent.png';
 import dockerImg from 'assets/imgs/docker-arch-transp.png';
+import { useTranslation } from 'react-i18next';
 import { useProgress } from '../UserContext';
 
 export default function Home() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { setUserData, progress, username } = useProgress();
 
@@ -21,24 +23,11 @@ export default function Home() {
 
   return (
     <div className="all-pages">
-      <h1>Komunikácia kontajnerov</h1>
-      <p>
-        Toto je domovská stránka aplikácie na výučbu komunikácie Docker
-        kontajnerov.
-      </p>
-      <p>
-        Aplikácia obsahuje úlohy na demonštráciu všetkých dostupných druhov
-        Docker sietí. Každá úloha obsahuje v prvej sekcií teoretickú časť danej
-        Docker siete. V druhej časti je špecifikovaná praktická úloha. V tretej
-        časti sa nachádza vizualizačné plátno, kde sa odzrkadľuje aktuálny stav
-        Docker kontajnerov, sietí a sieťových prvkov relevantných pre danú
-        úlohu.
-      </p>
+      <h1>{t('name')}</h1>
+      <p>{t('home_this_is')}</p>
+      <p>{t('home_p_1')}</p>
 
-      <p>
-        Pre splnenie úlohy je potrebné overiť správnosť úlohy tlačidlom
-        nachádzajúcim sa na vizualizačnom plátne úlohy.
-      </p>
+      <p>{t('home_p_2')}</p>
       <h2>Docker</h2>
       <div
         style={{
@@ -47,20 +36,7 @@ export default function Home() {
           // alignItems: 'center',
         }}
       >
-        <p style={{ maxWidth: '60%' }}>
-          Docker je open-source platforma pre kontajnerizáciu aplikácií, pre
-          zjednodušenie ich vývoja a nasadenia. Docker vytvára takzvané
-          kontajnere. Tieto kontajnere obsahujú aplikácie, všetky potrebné
-          závislosti, knižnice a nástroje pre beh týchto aplikácií. Kontajnere
-          sú izolované od vonkajšieho prostredia rovnako ako virtuálne stroje.
-          Na rozdiel od virtuálnych strojov si Docker kontajnere nevytvárajú
-          vlastný operačný systém, ale pracujú na rovnakom operačnom systéme ako
-          ich hostiteľské zariadenie. Hlavnou výhodou tohto rozdielu je to, že
-          Docker kontajnere sú týmto menej záťažové pre systém a rýchlejšie
-          spustiteľné. Kontajnere sú jednoducho prenášateľné, keďže všetky
-          závislosti potrebné na beh kontajnerizovanej aplikácie sú
-          predefinované v obraze kontajnera
-        </p>
+        <p style={{ maxWidth: '60%' }}>{t('home_p_3')}</p>
         <img
           src={dockerImg}
           alt=""
@@ -68,66 +44,23 @@ export default function Home() {
           style={{ height: '301px', width: '271px' }}
         />
       </div>
-      <h3>Docker architektúra</h3>
-      <p>
-        Prácu s Dockerom sprostredkovávajú dva základné objekty - kontajnere a
-        obrazy. Docker obraz je vzor so sadou inštrukcií, podľa ktorých sa má
-        vytvoriť Docker kontajner. Kontajner je inštancia Docker obrazu, s
-        ktorou vieme pracovať, vieme ju zastaviť, vymazať, modifikovať. Docker
-        využíva klient-server architektúru. Za fungovaním Dockeru stoja tri
-        komponenty: Docker klient, Docker daemon, Docker registry. Docker klient
-        je vrstva, pomocou ktorej používateľ interaguje s dockerom, môže to byť
-        prostredníctvom terminálu, Docker desktopu, čo je grafické rozhranie
-        Dockeru alebo iného externého rozhrania. Docker klient komunikuje s
-        Docker daemonom prostredníctvom REST API. Úlohou Docker daemonu je
-        príjmať signály od klienta a podľa nich vytvárať alebo modifikovať
-        Docker kontajnere, obrazy, siete. Aj klient, aj daemon môžu bežať na
-        jednom hostiteľskom zariadení. Úlohou daemonu je spravovať register
-        obrazov v hostiteľskom zariadení, ale takisto komunikuje s online Docker
-        registrom, nazývaným tiež Dockerhub, kde môže nahrávať alebo sťahovať
-        Docker obrazy. Tento register slúži na nahrávanie Docker obrazov, ktoré
-        sú sprístupnené verejnosti alebo určitej skupine ľudí.
-      </p>
+      <h3>{t('docker_arch')}</h3>
+      <p>{t('home_p_4')}</p>
       <img
         src={dockerArch}
         alt=""
         className="images"
         style={{ height: '291px', width: '589px' }}
       />
-      <h3>Docker virtualizácia</h3>
-      <p>
-        Docker dosahuje virtualizáciu prostredia za pomoci cgroups a menných
-        priestorov. Úlohou cgroups je limitovanie a kontrolovanie systémových
-        prostriedkov pre skupiny procesov ako operačná pamäť, procesor. Majú
-        stromovú štruktúru, kde koreňom štruktúry je samotný root a potomkovia
-        sú skupiny procesov, ktoré zdieľajú rovnaké zdroje. Koreňová cgroup
-        obsahuje všetky procesy systému. Existuje viacero typov cgroups a každý
-        proces je reprezentovaný v každom type cgroups. Existujú napríklad
-        pamäťové cgroups, ktoré alokujú a limitujú špecifickú časť pamäte pre
-        skupinu procesov. Keď sa rozhodneme alokovať určité množstvo pamäte pre
-        špecifickú skupinu procesov, táto informácia prechádza cez koreň cgroup
-        štruktúry, ktorý zabezpečí, aby žiadna iná skupina nevyužila túto časť
-        pamäte. Na druhú stranu menné priestory limitujú, čo môže skupina
-        procesov vidieť. Menné priestory sú taktiež reprezentované stromovou
-        štruktúrou. Opäť existuje viacero menných priestorov a každý proces sa
-        nachádza v každom druhu menného priestoru. Poznáme pid menný priestor,
-        ktorý zabezpečuje, že procesy v rámci jedného menného priestoru môžu
-        vidieť iba ostatné procesy toho istého menného priestoru, čiže každý
-        Docker kontajner vidí len svoje vlastné procesy, akoby bol jediným
-        zariadením v systéme. Sieťový menný priestor umožňuje každému kontajneru
-        udeľovať a izolovať ich vlastné sieťové zdroje. Používateľské menné
-        priestory slúžia na oddelenie právomocí rovnakých používateľov naprieč
-        mennými priestormi. Čiže jeden používateľ systému je namapovaný na iné
-        identifikačné číslo v mennom priestore hostiteľského zariadenia ako v
-        prostredí kontajnera.
-      </p>
+      <h3>{t('docker_visual')}</h3>
+      <p>{t('home_p_5')}</p>
 
       <Button
         onClick={handleProceedNavigation}
         className="generic-button"
         type="primary"
       >
-        Štart
+        {t('start')}
       </Button>
     </div>
   );
