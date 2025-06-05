@@ -2,12 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 import macvlanImage from 'assets/imgs/transpmacvlan.png';
+import macvlanImageEN from 'assets/imgs/en/transpmacvlan.png';
 import { useTranslation } from 'react-i18next';
 import DropdownWithHint from '../../components/Hint';
 
 export default function MacvlanOverview() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+
+  const selectedImage = i18n.language === 'en' ? macvlanImageEN : macvlanImage;
 
   const handleProceedNavigation = () => {
     navigate('/macvlan/task');
@@ -29,7 +32,7 @@ export default function MacvlanOverview() {
           <p>{t('macvlan_overview_paragraph_3')}</p>
         </div>
         <img
-          src={macvlanImage}
+          src={selectedImage}
           alt=""
           className="images"
           style={{

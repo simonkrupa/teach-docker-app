@@ -2,12 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 import bridgeImage from 'assets/imgs/transuserbridge.png';
+import bridgeImageEN from 'assets/imgs/en/transuserbridge.png';
 import { useTranslation } from 'react-i18next';
 import DropdownWithHint from '../../components/Hint';
 
 export default function BridgeOverview() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+
+  const selectedImage = i18n.language === 'en' ? bridgeImageEN : bridgeImage;
 
   const handleProceedNavigation = () => {
     navigate('/bridge/task');
@@ -20,7 +23,7 @@ export default function BridgeOverview() {
       <p>{t('bridge_overview_p3')}</p>
       <p>{t('bridge_overview_p4')}</p>
       <img
-        src={bridgeImage}
+        src={selectedImage}
         alt=""
         style={{
           width: '561px',

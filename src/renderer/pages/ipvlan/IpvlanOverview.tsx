@@ -2,12 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 import ipvlanImage from 'assets/imgs/ipvlan.drawio.png';
+import ipvlanImageEN from 'assets/imgs/en/ipvlan.drawio.png';
 import { useTranslation } from 'react-i18next';
 import DropdownWithHint from '../../components/Hint';
 
 export default function IpvlanOverview() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+
+  const selectedImage = i18n.language === 'en' ? ipvlanImageEN : ipvlanImage;
 
   const handleProceedNavigation = () => {
     navigate('/ipvlan/task');
@@ -18,7 +21,7 @@ export default function IpvlanOverview() {
       <p>{t('ipvlan_overview_paragraph_1')}</p>
 
       <img
-        src={ipvlanImage}
+        src={selectedImage}
         alt=""
         style={{
           width: '411px',

@@ -3,13 +3,18 @@ import { Button } from 'antd';
 import './Pages.css';
 import dockerArch from 'assets/imgs/dockerarchtransparent.png';
 import dockerImg from 'assets/imgs/docker-arch-transp.png';
+import dockerArchEN from 'assets/imgs/en/dockerarch.png';
+import dockerImgEN from 'assets/imgs/en/docker.png';
 import { useTranslation } from 'react-i18next';
 import { useProgress } from '../UserContext';
 
 export default function Home() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { setUserData, progress, username } = useProgress();
+
+  const selectedImage1 = i18n.language === 'en' ? dockerArchEN : dockerArch;
+  const selectedImage2 = i18n.language === 'en' ? dockerImgEN : dockerImg;
 
   const handleProceedNavigation = () => {
     if (progress === '1') {
@@ -38,7 +43,7 @@ export default function Home() {
       >
         <p style={{ maxWidth: '60%' }}>{t('home_p_3')}</p>
         <img
-          src={dockerImg}
+          src={selectedImage2}
           alt=""
           className="images"
           style={{ height: '301px', width: '271px' }}
@@ -47,7 +52,7 @@ export default function Home() {
       <h3>{t('docker_arch')}</h3>
       <p>{t('home_p_4')}</p>
       <img
-        src={dockerArch}
+        src={selectedImage1}
         alt=""
         className="images"
         style={{ height: '291px', width: '589px' }}

@@ -2,12 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import '../Pages.css';
 import hostImage from 'assets/imgs/transhost.png';
+import hostImageEN from 'assets/imgs/en/transhost.png';
 import { useTranslation } from 'react-i18next';
 import DropdownWithHint from '../../components/Hint';
 
 export default function HostOverview() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+
+  const selectedImage = i18n.language === 'en' ? hostImageEN : hostImage;
 
   const handleProceedNavigation = () => {
     navigate('/host/task');
@@ -24,7 +27,7 @@ export default function HostOverview() {
       >
         <p style={{ maxWidth: '50%' }}>{t('host_overview_description')}</p>
         <img
-          src={hostImage}
+          src={selectedImage}
           alt=""
           className="images"
           style={{
