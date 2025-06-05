@@ -4,7 +4,7 @@ import '../Pages.css';
 import overlayImage1 from 'assets/imgs/transpovelay1.png';
 import overlayImage2 from 'assets/imgs/transpoverlay2.png';
 import overlaySwarmImage from 'assets/imgs/transpoverlay3.png';
-import overlayImage1EN from 'assets/imgs/transpoverlay1.png';
+import overlayImage1EN from 'assets/imgs/en/transpoverlay1.png';
 import overlayImage2EN from 'assets/imgs/en/transpoverlay2.png';
 import overlaySwarmImageEN from 'assets/imgs/en/transpoverlay3.png';
 import { useTranslation } from 'react-i18next';
