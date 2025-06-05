@@ -36,13 +36,13 @@ const NetworkNode = memo(function NetworkNode(props) {
               <b>{label}</b>
             </div>
             <div className="grid-item">
-              Ovládač: <b>{props.data.driver}</b>
+              Driver: <b>{props.data.driver}</b>
             </div>
             <div className="grid-item">
-              Podsieť: <b>{props.data.subnet}</b>
+              Subnet: <b>{props.data.subnet}</b>
             </div>
             <div className="grid-item">
-              Brána: <b>{props.data.gateway}</b>
+              Gateway: <b>{props.data.gateway}</b>
             </div>
           </div>
           <Handle type="source" id="host" position={Position.Bottom} />

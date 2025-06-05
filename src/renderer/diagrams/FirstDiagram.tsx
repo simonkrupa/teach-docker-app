@@ -13,6 +13,7 @@ import HostNode from '../components/diagram-nodes/HostNode';
 import VethNode from '../components/diagram-nodes/VethNode';
 
 import correctAnswers from '../data/correctAnswers/firstDiagram.json';
+import { useTranslation } from 'react-i18next';
 
 const nodeTypes = {
   containerNode: ContainerNode,
@@ -175,8 +176,7 @@ export default function FirstDiagram() {
   const [startEdge, setStartEdge] = useState(null);
   const [deleteEdge, setDeleteEdge] = useState(null);
   const navigate = useNavigate();
-
-  const resizeObserver = new ResizeObserver(throttle((entries) => {}, 100));
+  const { t } = useTranslation();
 
   const startEdges = useCallback((nodeId) => {
     setEdges((prevEdges) => {
@@ -426,23 +426,17 @@ export default function FirstDiagram() {
       >
         <Controls showInteractive={false} />
         {messageBoxState === 'success' && (
-          <MessageBox
-            type={messageBoxState}
-            message="Úloha bola úspešne splnená."
-          />
+          <MessageBox type={messageBoxState} message={t('success_task')} />
         )}
         {messageBoxState === 'error' && (
-          <MessageBox
-            type={messageBoxState}
-            message="Výsledok úlohy nie je v správnom stave."
-          />
+          <MessageBox type={messageBoxState} message={t('fail_task')} />
         )}
         <Button
           className="validateButton"
           type="primary"
           onClick={handleValidateAnswer}
         >
-          Overenie úlohy
+          {t('validate_task')}
         </Button>
       </ReactFlow>
     </div>

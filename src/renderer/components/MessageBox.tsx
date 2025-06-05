@@ -6,10 +6,12 @@ import {
   AiOutlineArrowRight,
   AiFillCloseCircle,
 } from 'react-icons/ai';
+import { useTranslation } from 'react-i18next';
 import { navigationMap, progressMap } from '../util/utilMaps';
 import { useProgress } from '../UserContext';
 
 export default function MessageBox({ type, message }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const nextLocation = navigationMap.get(location.pathname.split('/')[1]);
@@ -39,7 +41,7 @@ export default function MessageBox({ type, message }) {
           />
         )}
         <div className="message-container">
-          <h4 className="message-header">Zhrnutie</h4>
+          <h4 className="message-header">{t('summary')}</h4>
           <p className="message-text">{message}</p>
         </div>
         {type === 'success' && (

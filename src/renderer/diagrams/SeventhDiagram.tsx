@@ -13,6 +13,7 @@ import HostNode from '../components/diagram-nodes/HostNode';
 import LanNode from '../components/diagram-nodes/LanNode';
 
 import correctAnswers from '../data/correctAnswers/seventhDiagram.json';
+import { useTranslation } from 'react-i18next';
 
 const nodeTypes = {
   containerNode: ContainerNode,
@@ -153,6 +154,7 @@ export default function SeventhDiagram() {
   const [startEdge, setStartEdge] = useState({ node: null, newData: null });
   const [deleteEdge, setDeleteEdge] = useState({ node: null, newData: null });
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const startEdges = useCallback((nodeId) => {
     setEdges((prevEdges) => {
@@ -400,20 +402,17 @@ export default function SeventhDiagram() {
       >
         <Controls showInteractive={false} />
         {messageBoxState === 'success' && (
-          <MessageBox type={messageBoxState} message="Úloha úspešne splnená" />
+          <MessageBox type={messageBoxState} message={t('success_task')} />
         )}
         {messageBoxState === 'error' && (
-          <MessageBox
-            type={messageBoxState}
-            message="Úloha nesplnená, skontrolujte diagram"
-          />
+          <MessageBox type={messageBoxState} message={t('fail_task')} />
         )}
         <Button
           className="validateButton"
           type="primary"
           onClick={handleValidateAnswer}
         >
-          Overenie úlohy
+          {t('validate_task')}
         </Button>
       </ReactFlow>
     </div>

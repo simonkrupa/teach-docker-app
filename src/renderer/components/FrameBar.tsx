@@ -50,7 +50,7 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
         >
           {isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </Button>
-        <Tooltip placement="top" title="Nastavenia">
+        <Tooltip placement="top" title={t('settings')}>
           <Button
             onClick={() => navigate('/settings')}
             className="collapseBtn no-drag"
@@ -60,7 +60,7 @@ export default function FrameBar({ isCollapsed, toggleNavbar }) {
           </Button>
         </Tooltip>
         {showLogout && (
-          <Tooltip placement="top" title="Odhlásenie">
+          <Tooltip placement="top" title={t('logout')}>
             <Button
               onClick={handleLogoutAction}
               className="collapseBtn no-drag"

@@ -11,6 +11,7 @@ import MessageBox from '../components/MessageBox';
 import HostNode from '../components/diagram-nodes/HostNode';
 
 import correctAnswers from '../data/correctAnswers/fourthDiagram.json';
+import { useTranslation } from 'react-i18next';
 
 const nodeTypes = {
   containerNode: ContainerNode,
@@ -58,6 +59,7 @@ export default function FourthDiagram() {
   const [messageBoxState, setMessageBoxState] = useState('hidden');
   const errorEventListenerRef = useRef<() => void | null>(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const onEdit = useCallback((newData) => {
     setNodes((prevNodes) => {
@@ -184,20 +186,17 @@ export default function FourthDiagram() {
       >
         <Controls showInteractive={false} />
         {messageBoxState === 'success' && (
-          <MessageBox type={messageBoxState} message="Úloha úspešne splnená" />
+          <MessageBox type={messageBoxState} message={t('success_task')} />
         )}
         {messageBoxState === 'error' && (
-          <MessageBox
-            type={messageBoxState}
-            message="Úloha nesplnená, skontrolujte diagram"
-          />
+          <MessageBox type={messageBoxState} message={t('fail_task')} />
         )}
         <Button
           className="validateButton"
           type="primary"
           onClick={handleValidateAnswer}
         >
-          Overenie úlohy
+          {t('validate_task')}
         </Button>
       </ReactFlow>
     </div>

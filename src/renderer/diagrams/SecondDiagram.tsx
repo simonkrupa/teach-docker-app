@@ -12,6 +12,7 @@ import MessageBox from '../components/MessageBox';
 import VethNode from '../components/diagram-nodes/VethNode';
 
 import correctAnswers from '../data/correctAnswers/secondDiagram.json';
+import { useTranslation } from 'react-i18next';
 
 const nodeTypes = {
   containerNode: ContainerNode,
@@ -169,6 +170,7 @@ export default function SecondDiagram() {
   const [startEdge, setStartEdge] = useState(null);
   const [deleteEdge, setDeleteEdge] = useState(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const startEdges = useCallback((nodeId) => {
     setEdges((prevEdges) => {
@@ -410,20 +412,17 @@ export default function SecondDiagram() {
       >
         <Controls showInteractive={false} />
         {messageBoxState === 'success' && (
-          <MessageBox type={messageBoxState} message="Úloha úspešne splnená" />
+          <MessageBox type={messageBoxState} message={t('success_task')} />
         )}
         {messageBoxState === 'error' && (
-          <MessageBox
-            type={messageBoxState}
-            message="Úloha nesplnená, skontrolujte diagram"
-          />
+          <MessageBox type={messageBoxState} message={t('fail_task')} />
         )}
         <Button
           className="validateButton"
           type="primary"
           onClick={handleValidateAnswer}
         >
-          Overenie úlohy
+          {t('validate_task')}
         </Button>
       </ReactFlow>
     </div>

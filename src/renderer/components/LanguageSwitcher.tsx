@@ -1,6 +1,4 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'antd';
 import { GB, SK } from 'country-flag-icons/react/3x2';
 
 const LanguageSwitcher = () => {

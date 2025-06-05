@@ -17,6 +17,7 @@ import correctAnswers from '../data/correctAnswers/fifthDiagram.json';
 import ContainerNodeEnhanced from '../components/diagram-nodes/ContainerNodeEnhanced';
 import VethNode from '../components/diagram-nodes/VethNode';
 import OverlayNetworkNode from '../components/diagram-nodes/OverlayNetworkNode';
+import { useTranslation } from 'react-i18next';
 
 const nodeTypes = {
   containerNode: ContainerNode,
@@ -359,8 +360,7 @@ export default function FifthDiagram() {
     node1: false,
     node2: false,
   });
-
-  const resizeObserver = new ResizeObserver(throttle((entries) => {}, 100));
+  const { t } = useTranslation();
 
   const startEdges = useCallback((nodeId) => {
     setEdges((prevEdges) => {
@@ -781,20 +781,17 @@ export default function FifthDiagram() {
       >
         <Controls showInteractive={false} />
         {messageBoxState === 'success' && (
-          <MessageBox type={messageBoxState} message="Úloha úspešne splnená" />
+          <MessageBox type={messageBoxState} message={t('success_task')} />
         )}
         {messageBoxState === 'error' && (
-          <MessageBox
-            type={messageBoxState}
-            message="Úloha nesplnená, skontrolujte diagram"
-          />
+          <MessageBox type={messageBoxState} message={t('fail_task')} />
         )}
         <Button
           className="validateButton"
           type="primary"
           onClick={handleValidateAnswer}
         >
-          Overenie úlohy
+          {t('validate_task')}
         </Button>
       </ReactFlow>
     </div>
